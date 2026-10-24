@@ -1,0 +1,333 @@
+[
+  {
+    "year": "2024/25",
+    "id": "ct-top10-bl-2024-25-final",
+    "title": "¿Qué 10 clubes terminaron arriba en la Bundesliga 2024/25?",
+    "difficulty": "medio",
+    "season": "2024/25",
+    "answers": [
+      "Bayern Múnich",
+      "Bayer Leverkusen",
+      "Eintracht Frankfurt",
+      "Borussia Dortmund",
+      "Friburgo",
+      "Mainz 05",
+      "RB Leipzig",
+      "Werder Bremen",
+      "Stuttgart",
+      "Borussia Mönchengladbach"
+    ],
+    "metric_values": [
+      82,
+      69,
+      60,
+      57,
+      55,
+      52,
+      51,
+      51,
+      50,
+      45
+    ],
+    "source_url": "https://www.bundesliga.com/en/bundesliga/matchday/2024-2025/33/fc-bayern-muenchen-vs-borussia-moenchengladbach/table",
+    "aliases": {
+      "Bayern Múnich": [
+        "Bayern Munich",
+        "Bayern",
+        "FC Bayern",
+        "Bayern München"
+      ],
+      "Bayer Leverkusen": [
+        "Leverkusen",
+        "Bayer 04 Leverkusen"
+      ],
+      "Eintracht Frankfurt": [
+        "Frankfurt",
+        "Eintracht"
+      ],
+      "Borussia Dortmund": [
+        "Dortmund",
+        "BVB"
+      ],
+      "Friburgo": [
+        "Freiburg",
+        "SC Freiburg"
+      ],
+      "Mainz 05": [
+        "Mainz",
+        "FSV Mainz 05",
+        "Mainz 05"
+      ],
+      "RB Leipzig": [
+        "Leipzig",
+        "RasenBallsport Leipzig"
+      ],
+      "Werder Bremen": [
+        "Bremen",
+        "Werder"
+      ],
+      "Stuttgart": [
+        "VfB Stuttgart"
+      ],
+      "Borussia Mönchengladbach": [
+        "Mönchengladbach",
+        "Monchengladbach",
+        "Gladbach"
+      ]
+    },
+    "category": "Bundesliga",
+    "competition": "Bundesliga",
+    "metric": "Puntos en la clasificación final",
+    "unit": "pts",
+    "rank_rule": "Orden oficial de la clasificación final de la liga, incluidos sus criterios reglamentarios de desempate",
+    "cutoff": "2024/25 (temporada finalizada)",
+    "verified_at": "2026-10-20",
+    "audit_status": "verified_official",
+    "source": "Bundesliga — clasificación oficial",
+    "version": 2
+  },
+  {
+    "year": "2023/24",
+    "id": "ct-top10-bl-2023-24-final",
+    "title": "¿Qué 10 clubes terminaron arriba en la Bundesliga 2023/24?",
+    "difficulty": "medio",
+    "season": "2023/24",
+    "answers": [
+      "Bayer Leverkusen",
+      "Stuttgart",
+      "Bayern Múnich",
+      "RB Leipzig",
+      "Borussia Dortmund",
+      "Eintracht Frankfurt",
+      "Hoffenheim",
+      "Heidenheim",
+      "Werder Bremen",
+      "Friburgo"
+    ],
+    "metric_values": [
+      90,
+      73,
+      72,
+      65,
+      63,
+      47,
+      46,
+      42,
+      42,
+      42
+    ],
+    "source_url": "https://www.bundesliga.com/en/bundesliga/matchday/2023-2024/33/vfl-bochum-1848-vs-bayer-04-leverkusen/table",
+    "aliases": {
+      "Bayer Leverkusen": [
+        "Leverkusen",
+        "Bayer 04 Leverkusen"
+      ],
+      "Stuttgart": [
+        "VfB Stuttgart"
+      ],
+      "Bayern Múnich": [
+        "Bayern Munich",
+        "Bayern",
+        "FC Bayern"
+      ],
+      "RB Leipzig": [
+        "Leipzig"
+      ],
+      "Borussia Dortmund": [
+        "Dortmund",
+        "BVB"
+      ],
+      "Eintracht Frankfurt": [
+        "Frankfurt",
+        "Eintracht"
+      ],
+      "Hoffenheim": [
+        "TSG Hoffenheim"
+      ],
+      "Heidenheim": [
+        "FC Heidenheim",
+        "1. FC Heidenheim 1846"
+      ],
+      "Werder Bremen": [
+        "Bremen",
+        "Werder"
+      ],
+      "Friburgo": [
+        "Freiburg",
+        "SC Freiburg"
+      ]
+    },
+    "category": "Bundesliga",
+    "competition": "Bundesliga",
+    "metric": "Puntos en la clasificación final",
+    "unit": "pts",
+    "rank_rule": "Orden oficial de la clasificación final de la liga, incluidos sus criterios reglamentarios de desempate",
+    "cutoff": "2023/24 (temporada finalizada)",
+    "verified_at": "2026-10-20",
+    "audit_status": "verified_official",
+    "source": "Bundesliga — clasificación oficial",
+    "version": 2
+  },
+  {
+    "year": "2022/23",
+    "id": "ct-top10-bl-2022-23-final",
+    "title": "¿Qué 10 clubes terminaron arriba en la Bundesliga 2022/23?",
+    "difficulty": "difícil",
+    "season": "2022/23",
+    "answers": [
+      "Bayern Múnich",
+      "Borussia Dortmund",
+      "RB Leipzig",
+      "Union Berlin",
+      "Friburgo",
+      "Bayer Leverkusen",
+      "Eintracht Frankfurt",
+      "Wolfsburgo",
+      "Mainz 05",
+      "Borussia Mönchengladbach"
+    ],
+    "metric_values": [
+      71,
+      71,
+      66,
+      62,
+      59,
+      50,
+      50,
+      49,
+      46,
+      43
+    ],
+    "source_url": "https://www.bundesliga.com/de/bundesliga/liveticker-ergebnisse-tabelle/2022-2023/34",
+    "aliases": {
+      "Bayern Múnich": [
+        "Bayern Munich",
+        "Bayern"
+      ],
+      "Borussia Dortmund": [
+        "Dortmund",
+        "BVB"
+      ],
+      "RB Leipzig": [
+        "Leipzig"
+      ],
+      "Union Berlin": [
+        "1. FC Union Berlin",
+        "Union"
+      ],
+      "Friburgo": [
+        "Freiburg",
+        "SC Freiburg"
+      ],
+      "Bayer Leverkusen": [
+        "Leverkusen"
+      ],
+      "Eintracht Frankfurt": [
+        "Frankfurt",
+        "Eintracht"
+      ],
+      "Wolfsburgo": [
+        "Wolfsburg",
+        "VfL Wolfsburg"
+      ],
+      "Mainz 05": [
+        "Mainz",
+        "FSV Mainz 05"
+      ],
+      "Borussia Mönchengladbach": [
+        "Mönchengladbach",
+        "Gladbach",
+        "Monchengladbach"
+      ]
+    },
+    "category": "Bundesliga",
+    "competition": "Bundesliga",
+    "metric": "Puntos en la clasificación final",
+    "unit": "pts",
+    "rank_rule": "Orden oficial de la clasificación final de la liga, incluidos sus criterios reglamentarios de desempate",
+    "cutoff": "2022/23 (temporada finalizada)",
+    "verified_at": "2026-10-20",
+    "audit_status": "verified_official",
+    "source": "Bundesliga — clasificación oficial",
+    "version": 2
+  },
+  {
+    "year": "2024/25",
+    "id": "ct-top10-pl-2024-25-final",
+    "title": "¿Qué 10 clubes terminaron arriba en la Premier League 2024/25?",
+    "difficulty": "medio",
+    "season": "2024/25",
+    "answers": [
+      "Liverpool",
+      "Arsenal",
+      "Manchester City",
+      "Chelsea",
+      "Newcastle United",
+      "Aston Villa",
+      "Nottingham Forest",
+      "Brighton & Hove Albion",
+      "Bournemouth",
+      "Brentford"
+    ],
+    "metric_values": [
+      84,
+      74,
+      71,
+      69,
+      66,
+      66,
+      65,
+      61,
+      56,
+      56
+    ],
+    "source_url": "https://www.premierleague.com/en/tables/premier-league/2024-25/matchweek-38",
+    "aliases": {
+      "Liverpool": [
+        "Liverpool FC"
+      ],
+      "Arsenal": [
+        "Arsenal FC"
+      ],
+      "Manchester City": [
+        "Man City",
+        "Manchester City FC"
+      ],
+      "Chelsea": [
+        "Chelsea FC"
+      ],
+      "Newcastle United": [
+        "Newcastle",
+        "Newcastle Utd"
+      ],
+      "Aston Villa": [
+        "Villa"
+      ],
+      "Nottingham Forest": [
+        "Nottingham",
+        "Forest",
+        "Nott'm Forest"
+      ],
+      "Brighton & Hove Albion": [
+        "Brighton",
+        "Brighton and Hove Albion"
+      ],
+      "Bournemouth": [
+        "AFC Bournemouth"
+      ],
+      "Brentford": [
+        "Brentford FC"
+      ]
+    },
+    "category": "Premier League",
+    "competition": "Premier League",
+    "metric": "Puntos en la clasificación final",
+    "unit": "pts",
+    "rank_rule": "Orden oficial de la clasificación final de la liga, incluidos sus criterios reglamentarios de desempate",
+    "cutoff": "2024/25 (temporada finalizada)",
+    "verified_at": "2026-10-20",
+    "audit_status": "verified_official",
+    "source": "Premier League — clasificación oficial",
+    "version": 2
+  }
+]

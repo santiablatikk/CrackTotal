@@ -1,0 +1,156 @@
+name: Crack Total 6.0 responsive and gameplay QA
+
+# Checks the pull request, not production. Compares baseline and candidate.
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'assets/css/**'
+      - 'assets/js/pasalache.js'
+      - 'assets/js/pasala-duel-client.js'
+      - 'assets/js/top10.js'
+      - 'assets/js/wordle-futbol.js'
+      - 'assets/js/quiensabemas_1v1.js'
+      - 'assets/js/mentiroso.js'
+      - 'assets/data/**'
+      - 'scripts/**'
+      - 'server/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'pasalache.html'
+      - 'pasala-1v1.html'
+      - 'top10.html'
+      - 'wordle-futbol.html'
+      - 'quiensabemas.html'
+      - 'mentiroso.html'
+      - 'games.html'
+      - 'assets/css/games-hub-6.css'
+      - 'scripts/hub_6_smoke.cjs'
+      - 'scripts/no_career_smoke.cjs'
+      - 'index.html'
+      - 'scripts/qa_browser_52.cjs'
+      - 'scripts/games_visual_52_smoke.js'
+      - 'scripts/wordle_6_layout_smoke.cjs'
+      - 'assets/js/wordle-futbol.js'
+      - '.github/workflows/games-visual-qa-52.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout baseline before visual refactor
+        uses: actions/checkout@v4
+        with:
+          ref: 773939268eb8d96346505dc9177b3ff4a7ca22a4
+          path: before
+
+      - name: Checkout pull request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: after
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Parse game clients and browser QA before running integration tests
+        working-directory: after
+        run: |
+          node --check scripts/qa_browser_52.cjs
+          node --check assets/js/quiensabemas_1v1.js
+          node --check assets/js/mentiroso.js
+          node --check assets/js/pasala-duel-client.js
+          node --check assets/js/pasalache.js
+          node --check assets/js/wordle-futbol.js
+
+      - name: Run application test suite
+        working-directory: after
+        run: |
+          npm ci
+          npm test
+
+      - name: Capture baseline at mobile and desktop sizes
+        if: always()
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node after/scripts/qa_browser_52.cjs \
+            --root before \
+            --out "$RUNNER_TEMP/ct-visual-52/before" \
+            --widths 360,1366 \
+            --baseline
+
+      - name: Audit six updated game entry screens at ten viewport widths
+        if: always()
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node after/scripts/qa_browser_52.cjs \
+            --root after \
+            --out "$RUNNER_TEMP/ct-visual-52/after"
+
+
+      - name: Audit representative in-match layouts with deterministic display fixtures
+        if: always()
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node after/scripts/qa_browser_52.cjs \
+            --root after \
+            --out "$RUNNER_TEMP/ct-visual-52/match-fixtures" \
+            --widths 320,360,390,768,1366 \
+            --fixture match
+
+      - name: Exercise real Wordle keyboard and saved progress on five viewport widths
+        if: always()
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node after/scripts/qa_browser_52.cjs \
+            --root after \
+            --out "$RUNNER_TEMP/ct-visual-52/wordle-live" \
+            --widths 320,360,390,768,1366 \
+            --games wordle-futbol.html \
+            --fixture wordle-live
+
+      - name: Audit six active-game stages on short phone and tablet screens
+        if: always()
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node after/scripts/qa_browser_52.cjs --root after --out "$RUNNER_TEMP/ct-visual-52/match-360x600" --widths 360 --height 600 --fixture match
+          node after/scripts/qa_browser_52.cjs --root after --out "$RUNNER_TEMP/ct-visual-52/match-390x667" --widths 390 --height 667 --fixture match
+          node after/scripts/qa_browser_52.cjs --root after --out "$RUNNER_TEMP/ct-visual-52/match-768x800" --widths 768 --height 800 --fixture match
+
+      - name: Audit Mentiroso long validation lists in actual Chromium
+        if: always()
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node after/scripts/qa_browser_52.cjs --root after --out "$RUNNER_TEMP/ct-visual-52/mentiroso-25-answers" --widths 320,360,390,768,1366 --games mentiroso.html --fixture bluff-long
+
+      - name: Audit QSM options with long football answers at five widths
+        if: always()
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node after/scripts/qa_browser_52.cjs --root after --out "$RUNNER_TEMP/ct-visual-52/qsm-long-choices" --widths 320,360,390,768,1366 --games quiensabemas.html --fixture qsm-long
+
+      - name: Audit redesigned game hub at ten viewport widths
+        if: always()
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node after/scripts/qa_browser_52.cjs \
+            --root after \
+            --out "$RUNNER_TEMP/ct-visual-52/game-hub" \
+            --widths 320,360,375,390,430,768,1024,1366,1440,1920 \
+            --games games.html
+
+      - name: Save before/after screenshots and viewport metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cracktotal-5-2-visual-audit
+          path: ${{ runner.temp }}/ct-visual-52
+          if-no-files-found: warn
+          retention-days: 14

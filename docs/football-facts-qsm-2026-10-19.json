@@ -1,0 +1,102 @@
+{
+  "cutoff": "2026-10-19",
+  "game": "Quién Sabe Más",
+  "level": 1,
+  "reviewedQuestions": 113,
+  "recoveredQuestions": 4,
+  "correctedQuestions": 1,
+  "newQuestions": 4,
+  "notes": "Registro de verificación editorial. Se preservan las propiedades antiguas de preguntas recuperadas y se agregan opciones compatibles con el motor de Quién Sabe Más. Sólo cubre las preguntas identificadas aquí, no certifica el resto del banco.",
+  "questions": [
+    {
+      "kind": "recovered",
+      "pregunta": "¿Qué club ganó la Copa Libertadores 2025?",
+      "respuesta": "Flamengo",
+      "respuesta_correcta": "B",
+      "verifiedAt": "2026-10-19",
+      "sourceUrls": [
+        "https://www.conmebol.com/noticias/flamengo-tetracampeon-de-la-conmebol-libertadores/"
+      ]
+    },
+    {
+      "kind": "recovered",
+      "pregunta": "¿Qué club ganó la Champions League 2024/25?",
+      "respuesta": "Paris Saint-Germain",
+      "respuesta_correcta": "C",
+      "verifiedAt": "2026-10-19",
+      "sourceUrls": [
+        "https://es.uefa.com/uefachampionsleague/news/0299-1de415d64a74-3b823c95e57a-1000--el-paris-saintgermain-gana-la-champions-league-exhibicion-y-primer-titulo-para-los-parisinos/"
+      ]
+    },
+    {
+      "kind": "recovered",
+      "pregunta": "¿Qué selección ganó el Mundial 2026?",
+      "respuesta": "España",
+      "respuesta_correcta": "D",
+      "verifiedAt": "2026-10-19",
+      "sourceUrls": [
+        "https://www.fifa.com/es/tournaments/mens/worldcup/canadamexicousa2026/articles/clasificacion-final-copa-mundial-2026"
+      ]
+    },
+    {
+      "kind": "recovered",
+      "pregunta": "¿Quién ganó el Balón de Oro 2025?",
+      "respuesta": "Ousmane Dembélé",
+      "respuesta_correcta": "B",
+      "verifiedAt": "2026-10-19",
+      "sourceUrls": [
+        "https://ballondor.com/es/winners?category=ballon-dor-men-winners"
+      ]
+    },
+    {
+      "kind": "corrected",
+      "pregunta": "¿Qué club brasileño es conocido como el Peixe y utiliza tradicionalmente los colores blanco y negro?",
+      "respuesta": "Santos",
+      "respuesta_correcta": "B",
+      "verifiedAt": "2026-10-19",
+      "sourceUrls": [
+        "https://www.santosfc.com.br/santos-o-semeador-de-estadios/"
+      ]
+    },
+    {
+      "kind": "new",
+      "pregunta": "¿Quién ganó el Balón de Oro al mejor jugador del Mundial masculino 2026?",
+      "respuesta": "Rodri",
+      "respuesta_correcta": "A",
+      "verifiedAt": "2026-10-19",
+      "sourceUrls": [
+        "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/award-winners"
+      ]
+    },
+    {
+      "kind": "new",
+      "pregunta": "¿Qué selección terminó subcampeona del Mundial masculino de la FIFA 2026?",
+      "respuesta": "Argentina",
+      "respuesta_correcta": "C",
+      "verifiedAt": "2026-10-19",
+      "sourceUrls": [
+        "https://www.fifa.com/es/tournaments/mens/worldcup/canadamexicousa2026/articles/clasificacion-final-copa-mundial-2026"
+      ]
+    },
+    {
+      "kind": "new",
+      "pregunta": "¿En qué ciudad se jugó la final de la Copa Libertadores 2025?",
+      "respuesta": "Lima",
+      "respuesta_correcta": "B",
+      "verifiedAt": "2026-10-19",
+      "sourceUrls": [
+        "https://www.conmebol.com/noticias/flamengo-tetracampeon-de-la-conmebol-libertadores/"
+      ]
+    },
+    {
+      "kind": "new",
+      "pregunta": "¿Con qué marcador le ganó el Paris Saint-Germain al Inter en la final de la Champions League 2024/25?",
+      "respuesta": "5-0",
+      "respuesta_correcta": "D",
+      "verifiedAt": "2026-10-19",
+      "sourceUrls": [
+        "https://es.uefa.com/uefachampionsleague/news/0299-1de415d64a74-3b823c95e57a-1000--el-paris-saintgermain-gana-la-champions-league-exhibicion-y-primer-titulo-para-los-parisinos/"
+      ]
+    }
+  ]
+}

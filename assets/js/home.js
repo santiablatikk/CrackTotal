@@ -188,6 +188,83 @@
         counters.forEach((counter) => observer.observe(counter));
     }
 
+    function initDailyChallenges() {
+        const title = document.getElementById('homeDailyTop10Title');
+        const context = document.getElementById('homeDailyTop10Context');
+        const status = document.getElementById('homeDailyTop10Status');
+        const date = document.getElementById('homeDailyDate');
+        const wordleStatus = document.getElementById('homeDailyWordleStatus');
+        if (!title || !context || !status || !date) return;
+
+        const utcKey = () => new Date().toISOString().slice(0, 10);
+        const localDayKey = () => {
+            const now = new Date();
+            return now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
+        };
+        const readSaved = (key) => {
+            try { return JSON.parse(localStorage.getItem(key) || 'null'); }
+            catch { return null; }
+        };
+
+        if (wordleStatus) {
+            const game = readSaved('wordle_game_state_v1');
+            const playedToday = game?.day === localDayKey();
+            wordleStatus.textContent = !playedToday ? 'Jugá el apellido de hoy · se renueva a tu medianoche.' :
+                game.finished ? (game.won ? '¡Ya lo resolviste hoy! Volvé mañana.' : 'Terminaste el Wordle de hoy. Volvé mañana.') :
+                game.board?.some(row => Array.isArray(row) && row.some(Boolean)) ? 'Tenés una partida empezada. Retomala.' :
+                'El apellido de hoy te está esperando.';
+        }
+
+        async function loadToday() {
+            const today = utcKey();
+            date.textContent = new Intl.DateTimeFormat('es-AR', {
+                timeZone: 'UTC', day: 'numeric', month: 'short'
+            }).format(new Date());
+            const fetchJson = async (path, optional) => {
+                try {
+                    const response = await fetch(path);
+                    if (!response.ok) throw new Error('Respuesta ' + response.status);
+                    const value = await response.json();
+                    return Array.isArray(value) ? value : [];
+                } catch (error) {
+                    if (optional) return [];
+                    throw error;
+                }
+            };
+            try {
+                const response = await fetch('assets/data/top10_verified_v2.json',{cache:'no-cache'});
+                if(!response.ok) throw new Error('No se pudo cargar el ranking oficial');
+                if(!window.CTTop10Verified) throw new Error('Falta el motor compartido Top 10');
+                const pool = await response.json();
+                // El teaser y el juego eligen del MISMO archivo inmutable y fecha UTC.
+                const topic = window.CTTop10Verified.pick(pool,today);
+                title.textContent = topic.title;
+                context.textContent = topic.competition+' '+topic.season+' · 10 equipos · 2 minutos · puestos oficiales.';
+                const saved = readSaved('top10_state_v1');
+                const savedDay = (() => {
+                    try { return localStorage.getItem('top10_last_day_v1'); }
+                    catch { return null; }
+                })();
+                const validSaved = savedDay === today && saved?.topicId === topic.id;
+                status.textContent = !validSaved ? 'NUEVO DESAFÍO / SIN JUGAR' :
+                    saved.finished ? ((saved.found?.length || 0) === 10 ? 'COMPLETADO / 10 DE 10' : 'FINALIZADO / ' + (saved.found?.length || 0) + ' DE 10') :
+                    'EN PROGRESO / ' + (saved.found?.length || 0) + ' DE 10';
+            } catch (error) {
+                title.textContent = 'DESCUBRÍ EL TOP 10 DE HOY.';
+                context.textContent = 'Abrí el juego para ver el desafío verificado disponible.';
+                status.textContent = 'DESAFÍO DIARIO / IR AL JUEGO';
+            }
+            return today;
+        }
+
+        let loadedDay = '';
+        loadToday().then(day => { loadedDay = day; });
+        // Si una pestaña permanece abierta después de medianoche UTC, renovamos el teaser.
+        window.setInterval(() => {
+            if (utcKey() !== loadedDay) loadToday().then(day => { loadedDay = day; });
+        }, 60 * 1000);
+    }
+
     function updateProfileLabels() {
         let playerName = '';
         try {
@@ -212,6 +289,7 @@
         initCatalog();
         initSearchShortcuts();
         initReveals();
+        initDailyChallenges();
         initCounters();
         updateProfileLabels();
         updateYear();

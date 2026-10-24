@@ -87,13 +87,12 @@
     <!-- CSS Links -->
     <!-- <link rel="stylesheet" href="assets/css/styles.css?v=202505272312"> -->
     <link rel="stylesheet" href="assets/css/base.css?v=20260803n">
-    <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260803n">
+    <link rel="stylesheet" href="assets/css/design-system/index.css?v=20261020v5">
     <link rel="stylesheet" href="assets/css/layout.css?v=20260803n">
-    <link rel="stylesheet" href="assets/css/pasalache.css?v=20260804a">
+    <link rel="stylesheet" href="assets/css/pasalache.css?v=20261023-readability6">
     <link rel="stylesheet" href="assets/css/modals.css?v=20260803n">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- AdSense Early Blocker - DEBE cargarse ANTES que AdSense -->
 
@@ -110,7 +109,7 @@
     <script src="assets/js/firebase-config.js"></script>
     <script src="assets/js/firebase-service.js"></script>
     <link rel="stylesheet" href="assets/css/home.css?v=20260804v">
-    <link rel="stylesheet" href="assets/css/game-shell.css?v=20260803n">
+    <link rel="stylesheet" href="assets/css/game-shell.css?v=20261021-premium4">
     <link rel="stylesheet" href="assets/css/discover.css?v=20260804v">
 </head>
 <body class="game-body ct-ds">
@@ -144,7 +143,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         </div>
                         <div class="player-name">Jugador</div>
-                        <div class="score" id="scoreDisplay">0/27</div>
+                        <div class="score" id="scoreDisplay">0/26</div>
                         
                         <!-- Control de Sonido -->
                         <div class="sound-control" id="soundControl">
@@ -161,12 +160,17 @@
             </div>
         </header>
 
+        <aside class="ct3-solo-duel-banner" aria-label="Modo multijugador Pasala Che">
+            <div><span class="ct3-solo-duel-kicker"><i class="fas fa-bolt" aria-hidden="true"></i> NUEVO MODO COMPETITIVO</span><strong>EL ROSCO AHORA SE JUEGA 1 CONTRA 1.</strong><p>Invitá a un amigo y respondan las mismas 26 preguntas en simultáneo.</p></div>
+            <a href="pasala-1v1.html">JUGAR ONLINE <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+        </aside>
         <main class="game-content" id="gameContainer" style="display: none;">
             <div class="container">
                 <div class="rosco-container">
+                    <p class="ct-game-eyebrow"><span class="ct-game-index">01 / ROSCO</span> 26 LETRAS · UN DESAFÍO</p>
                     <div class="game-instructions">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                        Responde preguntas para cada letra o pasa palabra para continuar con la siguiente
+                        Respondé las preguntas del rosco o tocá Pasala Che para seguir
                     </div>
                     
                     <div class="rosco-circle">
@@ -189,7 +193,7 @@
 
                             <form id="answerForm" class="answer-form">
                                 <div class="input-group">
-                                    <input type="text" id="answerInput" class="answer-input" placeholder="Tu respuesta..." autocomplete="off">
+                                    <input type="text" id="answerInput" class="answer-input" placeholder="Escribí tu respuesta…" aria-label="Tu respuesta" autocomplete="off">
                                     <button type="button" id="submitAnswerBtnIcon" class="submit-answer-icon-btn" aria-label="Enviar respuesta">
                                         <i class="fas fa-check"></i>
                                     </button>
@@ -234,14 +238,14 @@
     <script src="assets/js/services/progress/progress-bridge.js?v=20260801e"></script>
     <script src="assets/js/player-profile.js?v=20260801"></script>
     <script src="assets/js/main.js?v=20260801" defer></script>
-    <script src="assets/js/pasalache.js?v=202505272312"></script>
+    <script src="assets/js/pasalache.js?v=20261019a"></script>
 
     <!-- Modal de reglas del juego -->
     <div class="modal-overlay active" id="gameRulesModal">
         <div class="modal-content horizontal-modal">
             <h3 class="modal-title">🏆 PASALA CHE - REGLAS DEL JUEGO</h3>
             
-            <p class="game-promo">¡más de 1000 preguntas para jugar sin parar! ⚽️🇦🇷</p>
+            <p class="game-promo">Un rosco futbolero de 26 letras con preguntas que cambian en cada partida. ⚽️🇦🇷</p>
             
             <!-- Sección principal de dificultades -->
             <div class="difficulty-selection-section">

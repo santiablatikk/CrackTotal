@@ -1,3 +1,36 @@
+/* Crack Total 5.2 game shell — shared design tokens and semantic chrome. */
+body.ct-ds {
+  --ct-shell-bg: #101b1b;
+  --ct-shell-surface: #243b35;
+  --ct-shell-cream: #f4f2e9;
+  --ct-shell-muted: #cbdccf;
+  --ct-shell-lime: #b5eb53;
+  --ct-shell-copper: #d89b70;
+  --ct-shell-container: 1180px;
+  --ct-shell-gutter: clamp(12px, 3vw, 32px);
+  --ct-shell-radius: 16px;
+  --ct-stage-gap: clamp(12px, 1.8vw, 22px);
+  --ct-shell-focus: 3px solid var(--ct-shell-lime);
+}
+body.ct-ds,
+body.ct-ds * { box-sizing: border-box; }
+body.ct-ds :is(main, article, section, form, nav) { min-width: 0; }
+body.ct-ds :is(h1, h2, h3, p) { overflow-wrap: break-word; }
+body.ct-ds :is(input, textarea, select, button) {
+  font-family: "Manrope", system-ui, sans-serif;
+}
+body.ct-ds :is(input, textarea, select) {
+  min-width: 0;
+  max-width: 100%;
+}
+body.ct-ds :is(button, a, input, textarea, select):focus-visible {
+  outline: var(--ct-shell-focus);
+  outline-offset: 3px;
+}
+body.ct-ds :is(button, a) { -webkit-tap-highlight-color: rgba(181,235,83,.16); }
+body.ct-ds :is(button, input, select, textarea):disabled {
+  cursor: not-allowed;
+}
 /* Exit/chrome shell for in-match pages — Home parity without restyling gameplay boards */
 
 body.game-body.ct-ds,
@@ -8,14 +41,11 @@ body.wordle-body.ct-ds,
 body.futboleros-body.ct-ds {
     margin: 0;
     padding-top: 76px;
-    color: var(--home-text, var(--ct-text, #f7f9fc));
-    background:
-        radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.16), transparent 32rem),
-        radial-gradient(circle at 88% 30%, rgba(34, 197, 94, 0.11), transparent 28rem),
-        var(--home-bg, var(--ct-bg, #050b14));
+    color: var(--ct-cream, #f4f2e9);
+    background: var(--ct-shell-bg);
     overflow-x: hidden;
     min-height: 100vh;
-    font-family: "Montserrat", sans-serif;
+    font-family: var(--ct-font-sans,"Manrope",sans-serif);
 }
 
 body.game-body.ct-ds .breadcrumbs-container,
@@ -23,7 +53,7 @@ body.top10-body.ct-ds .breadcrumbs-container,
 body.mentiroso-body.ct-ds .breadcrumbs-container,
 body.qsm-1v1-body.ct-ds .breadcrumbs-container,
 body.wordle-body.ct-ds .breadcrumbs-container {
-    width: min(1180px, calc(100% - 40px));
+    width: min(var(--ct-shell-container), calc(100% - 2 * var(--ct-shell-gutter)));
     margin: 0.85rem auto 0.35rem;
 }
 
@@ -38,8 +68,9 @@ body.qsm-1v1-body.ct-ds .breadcrumb {
     margin: 0;
     padding: 0;
     list-style: none;
-    color: var(--home-muted, #aebbd0);
+    color: var(--ct-shell-muted);
     font-size: 0.85rem;
+    line-height: 1.55;
 }
 
 body.game-body.ct-ds .breadcrumb a,
@@ -47,8 +78,9 @@ body.top10-body.ct-ds .breadcrumb a,
 body.mentiroso-body.ct-ds .breadcrumb a,
 body.wordle-body.ct-ds .breadcrumb a,
 body.qsm-1v1-body.ct-ds .breadcrumb a {
-    color: var(--home-primary, #79f2a6);
-    text-decoration: none;
+    color: var(--ct-shell-lime);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
     font-weight: 700;
 }
 
@@ -62,13 +94,12 @@ body.wordle-body.ct-ds .breadcrumb-item + .breadcrumb-item::before {
     opacity: 0.7;
 }
 
+/* The game headers are chrome; Wordle and Top 10 own their hero treatment. */
 body.game-body.ct-ds .game-header,
 body.mentiroso-body.ct-ds .game-header,
-body.wordle-body.ct-ds .wordle-header,
-body.top10-body.ct-ds .top10-header,
 body.qsm-1v1-body.ct-ds .game-header {
-    background: rgba(11, 21, 36, 0.92);
-    border-bottom: 1px solid var(--home-line, rgba(255, 255, 255, 0.12));
+    background: rgba(16, 27, 27, 0.94);
+    border-bottom: 1px solid rgba(244, 242, 233, 0.13);
     box-shadow: none;
     -webkit-backdrop-filter: blur(14px);
     backdrop-filter: blur(14px);
@@ -84,8 +115,8 @@ body.game-body.ct-ds .game-header .game-title,
 body.mentiroso-body.ct-ds .game-title-header,
 body.wordle-body.ct-ds .wordle-header h1,
 body.top10-body.ct-ds .top10-header h1 {
-    font-family: "Oswald", var(--ct-font-display, sans-serif);
-    color: var(--home-text, #f7f9fc);
+    font-family: "Space Grotesk", "Manrope", sans-serif;
+    color: var(--ct-cream, #f4f2e9);
     letter-spacing: -0.02em;
 }
 
@@ -94,7 +125,7 @@ body.top10-body.ct-ds a:focus-visible,
 body.mentiroso-body.ct-ds a:focus-visible,
 body.wordle-body.ct-ds a:focus-visible,
 body.qsm-1v1-body.ct-ds a:focus-visible {
-    outline: 3px solid #fff;
+    outline: 3px solid #b5eb53;
     outline-offset: 3px;
 }
 
@@ -104,4 +135,34 @@ body.mentiroso-body.ct-ds .home-footer,
 body.qsm-1v1-body.ct-ds .home-footer,
 body.wordle-body.ct-ds .home-footer {
     margin-top: 2rem;
+}
+
+
+/* Premium game identity — one shared component for solo and Arena games. */
+body.ct-ds .ct-game-eyebrow {
+  display:flex;align-items:center;gap:clamp(10px,1.5vw,18px);
+  margin:0 0 20px;padding:0;
+  color:#cbdccf;
+  font:800 clamp(.67rem,.85vw,.8rem)/1.5 "Manrope",sans-serif;
+  letter-spacing:.12em;text-transform:uppercase;
+}
+body.ct-ds .ct-game-index {
+  display:inline-flex;align-items:center;justify-content:center;
+  flex:none;padding:7px 10px;border-radius:4px;
+  background:#b5eb53;color:#17251b;
+  font:800 .72rem/1.2 "Space Grotesk",sans-serif;
+  letter-spacing:.075em;
+}
+body.wordle-body.ct-ds .ct-game-eyebrow {justify-content:center;}
+body.game-body.ct-ds .rosco-container > .ct-game-eyebrow {
+  width:100%;justify-content:flex-start;margin-bottom:15px;
+}
+body.ct-ds :is(button,input,textarea,select):focus-visible {
+  outline:3px solid #b5eb53;outline-offset:3px;
+}
+@media(max-width:490px){
+  body.ct-ds .ct-game-eyebrow{flex-wrap:wrap;font-size:.66rem;gap:8px;}
+}
+@media(prefers-reduced-motion:reduce){
+  body.ct-ds *{scroll-behavior:auto;}
 }

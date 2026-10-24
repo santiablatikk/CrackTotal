@@ -53,6 +53,10 @@
       {
         "pregunta": "CONTIENE A: ¿Apellido del legendario delantero argentino 'Batigol'?",
         "respuesta": "Batistuta"
+      },
+      {
+        "pregunta": "¿Qué selección quedó subcampeona del Mundial masculino de la FIFA 2026?",
+        "respuesta": "Argentina"
       }
     ]
   },
@@ -102,6 +106,18 @@
       {
         "pregunta": "CONTIENE B: ¿Apellido del delantero francés que ganó el Balón de Oro 2022?",
         "respuesta": "Benzema"
+      },
+      {
+        "pregunta": "¿En qué ciudad húngara se disputó la final de la Champions League 2025/26?",
+        "respuesta": "Budapest"
+      },
+      {
+        "pregunta": "¿Qué club cordobés ganó el Torneo Apertura de Primera División de Argentina 2026?",
+        "respuesta": "Belgrano",
+        "respuestasAlternativas": [
+          "Belgrano de Córdoba",
+          "Club Atlético Belgrano"
+        ]
       }
     ]
   },
@@ -151,6 +167,20 @@
       {
         "pregunta": "CONTIENE C: ¿Nombre deportivo del extremo brasileño del Real Madrid, segundo en el Balón de Oro 2024?",
         "respuesta": "Vinicius Junior"
+      },
+      {
+        "pregunta": "¿Apellido del español elegido mejor jugador joven del Mundial de la FIFA 2026 (Pau …)?",
+        "respuesta": "Cubarsí",
+        "respuestasAlternativas": [
+          "Pau Cubarsí"
+        ]
+      },
+      {
+        "pregunta": "¿Qué club inglés ganó la UEFA Conference League 2025/26 ante Rayo Vallecano?",
+        "respuesta": "Crystal Palace",
+        "respuestasAlternativas": [
+          "Crystal Palace FC"
+        ]
       }
     ]
   },
@@ -179,7 +209,8 @@
       },
       {
         "pregunta": "¿Nombre y apellido del 10 argentino campeón del mundo 1986?",
-        "respuesta": "Diego Maradona"
+        "respuesta": "Diego Maradona",
+        "respuestasIncompletasCorregibles": ["Maradona"]
       },
       {
         "pregunta": "¿Apellido del histórico delantero marfileño del Chelsea, Didier …?",
@@ -200,6 +231,13 @@
       {
         "pregunta": "CONTIENE D: ¿Apellido del mediocampista uruguayo estrella del Real Madrid, Federico …?",
         "respuesta": "Valverde"
+      },
+      {
+        "pregunta": "¿Qué club colombiano perdió por penales la final de la Libertadores Femenina CONMEBOL 2025?",
+        "respuesta": "Deportivo Cali",
+        "respuestasAlternativas": [
+          "Asociación Deportivo Cali"
+        ]
       }
     ]
   },
@@ -236,11 +274,13 @@
       },
       {
         "pregunta": "¿Nombre completo del defensor brasileño estrella del Real Madrid?",
-        "respuesta": "Éder Militão"
+        "respuesta": "Éder Militão",
+        "respuestasIncompletasCorregibles": ["Militão"]
       },
       {
         "pregunta": "¿Nombre y apellido del campeón del mundo argentino que fichó por Chelsea en 2023?",
-        "respuesta": "Enzo Fernández"
+        "respuesta": "Enzo Fernández",
+        "respuestasIncompletasCorregibles": ["Fernández"]
       },
       {
         "pregunta": "¿Nombre y apellido del entrenador neerlandés del Manchester United 2022-2024?",
@@ -273,7 +313,8 @@
       },
       {
         "pregunta": "¿Nombre y apellido del central italiano Balón de Oro 2006?",
-        "respuesta": "Fabio Cannavaro"
+        "respuesta": "Fabio Cannavaro",
+        "respuestasIncompletasCorregibles": ["Cannavaro"]
       },
       {
         "pregunta": "¿Apodo del goleador colombiano Radamel Falcao García Zárate?",
@@ -281,11 +322,13 @@
       },
       {
         "pregunta": "¿Nombre completo del mediocampista uruguayo estrella del Real Madrid?",
-        "respuesta": "Federico Valverde"
+        "respuesta": "Federico Valverde",
+        "respuestasIncompletasCorregibles": ["Valverde"]
       },
       {
         "pregunta": "¿Nombre y apellido del goleador húngaro leyenda del Real Madrid?",
-        "respuesta": "Ferenc Puskás"
+        "respuesta": "Ferenc Puskás",
+        "respuestasIncompletasCorregibles": ["Puskás"]
       },
       {
         "pregunta": "¿Club italiano de Florencia con estadio Artemio Franchi?",
@@ -297,7 +340,15 @@
       },
       {
         "pregunta": "¿Nombre y apellido del ex mediocampista inglés del Chelsea que luego fue su DT?",
-        "respuesta": "Frank Lampard"
+        "respuesta": "Frank Lampard",
+        "respuestasIncompletasCorregibles": ["Lampard"]
+      },
+      {
+        "pregunta": "¿Nombre del español que marcó el gol de la final del Mundial de la FIFA 2026 (… Torres)?",
+        "respuesta": "Ferran",
+        "respuestasAlternativas": [
+          "Ferran Torres"
+        ]
       }
     ]
   },
@@ -318,7 +369,8 @@
       },
       {
         "pregunta": "¿Nombre y apellido del arquero italiano leyenda de Juventus y la Azzurra?",
-        "respuesta": "Gianluigi Buffon"
+        "respuesta": "Gianluigi Buffon",
+        "respuestasIncompletasCorregibles": ["Buffon"]
       },
       {
         "pregunta": "¿Apellido del delantero francés campeón del mundo 2018, Antoine …?",
@@ -338,11 +390,19 @@
       },
       {
         "pregunta": "¿Nombre y apellido del chileno apodado 'Pitbull'?",
-        "respuesta": "Gary Medel"
+        "respuesta": "Gary Medel",
+        "respuestasIncompletasCorregibles": ["Medel"]
       },
       {
         "pregunta": "CONTIENE G: ¿Apellido del lateral argentino campeón del mundo 2022, Nicolás …?",
         "respuesta": "Tagliafico"
+      },
+      {
+        "pregunta": "¿Apellido de Cody, uno de los seis máximos goleadores de la EURO 2024?",
+        "respuesta": "Gakpo",
+        "respuestasAlternativas": [
+          "Cody Gakpo"
+        ]
       }
     ]
   },
@@ -359,19 +419,23 @@
       },
       {
         "pregunta": "¿Nombre y apellido del goleador mexicano leyenda del Real Madrid?",
-        "respuesta": "Hugo Sánchez"
+        "respuesta": "Hugo Sánchez",
+        "respuestasIncompletasCorregibles": ["Sánchez"]
       },
       {
         "pregunta": "¿Nombre y apellido del ex delantero argentino ídolo de River, goleador en Parma, Lazio e Inter?",
-        "respuesta": "Hernán Crespo"
+        "respuesta": "Hernán Crespo",
+        "respuestasIncompletasCorregibles": ["Crespo"]
       },
       {
         "pregunta": "¿Nombre y apellido del mediocampista mexicano ex Porto y Atlético?",
-        "respuesta": "Héctor Herrera"
+        "respuesta": "Héctor Herrera",
+        "respuestasIncompletasCorregibles": ["Herrera"]
       },
       {
         "pregunta": "¿Nombre y apellido del DT alemán que ganó el sextete con el Bayern en 2020?",
-        "respuesta": "Hansi Flick"
+        "respuesta": "Hansi Flick",
+        "respuestasIncompletasCorregibles": ["Flick"]
       },
       {
         "pregunta": "¿Apodo del potente delantero brasileño ex Porto y Zenit?",
@@ -380,6 +444,13 @@
       {
         "pregunta": "CONTIENE H: ¿Apellido del mediocampista inglés estrella del Real Madrid, Jude …?",
         "respuesta": "Bellingham"
+      },
+      {
+        "pregunta": "¿Apellido del jugador de Arsenal que marcó en la final de Champions League 2025/26 (Kai …)?",
+        "respuesta": "Havertz",
+        "respuestasAlternativas": [
+          "Kai Havertz"
+        ]
       }
     ]
   },
@@ -416,7 +487,23 @@
       },
       {
         "pregunta": "¿Nombre y apellido del delantero español leyenda del Celta de Vigo?",
-        "respuesta": "Iago Aspas"
+        "respuesta": "Iago Aspas",
+        "respuestasIncompletasCorregibles": ["Aspas"]
+      },
+      {
+        "pregunta": "¿Qué club mendocino se consagró campeón de la Copa Argentina 2025?",
+        "respuesta": "Independiente Rivadavia",
+        "respuestasAlternativas": [
+          "Independiente Rivadavia de Mendoza",
+          "Club Sportivo Independiente Rivadavia"
+        ]
+      },
+      {
+        "pregunta": "¿Qué selección ganó la Eurocopa femenina de la UEFA 2025 tras vencer por penales a España?",
+        "respuesta": "Inglaterra",
+        "respuestasAlternativas": [
+          "England"
+        ]
       }
     ]
   },
@@ -433,19 +520,23 @@
       },
       {
         "pregunta": "¿Nombre y apellido del 10 colombiano Bota de Oro del Mundial 2014?",
-        "respuesta": "James Rodríguez"
+        "respuesta": "James Rodríguez",
+        "respuestasIncompletasCorregibles": ["Rodríguez"]
       },
       {
         "pregunta": "¿Nombre completo del máximo ídolo de Boca Juniors apodado 'El Román'?",
-        "respuesta": "Juan Román Riquelme"
+        "respuesta": "Juan Román Riquelme",
+        "respuestasIncompletasCorregibles": ["Riquelme"]
       },
       {
         "pregunta": "¿Nombre y apellido del delantero portugués que brilló en Atlético Madrid y Barcelona?",
-        "respuesta": "João Félix"
+        "respuesta": "João Félix",
+        "respuestasIncompletasCorregibles": ["Félix"]
       },
       {
         "pregunta": "¿Nombre y apellido del técnico portugués multicampeón con Porto e Inter?",
-        "respuesta": "José Mourinho"
+        "respuesta": "José Mourinho",
+        "respuestasIncompletasCorregibles": ["Mourinho"]
       },
       {
         "pregunta": "¿Nombre y apellido del lateral izquierdo español leyenda del Barcelona que jugó junto a Messi en Inter Miami?",
@@ -453,11 +544,20 @@
       },
       {
         "pregunta": "¿Nombre completo del central croata figura del Manchester City?",
-        "respuesta": "Joško Gvardiol"
+        "respuesta": "Joško Gvardiol",
+        "respuestasIncompletasCorregibles": ["Gvardiol"]
       },
       {
         "pregunta": "¿Nombre completo del extremo inglés que brilló en el Borussia Dortmund antes de fichar por el Manchester United?",
-        "respuesta": "Jadon Sancho"
+        "respuesta": "Jadon Sancho",
+        "respuestasIncompletasCorregibles": ["Sancho"]
+      },
+      {
+        "pregunta": "¿Apellido del autor del único gol de Tottenham en la final de la Europa League 2024/25?",
+        "respuesta": "Johnson",
+        "respuestasAlternativas": [
+          "Brennan Johnson"
+        ]
       }
     ]
   },
@@ -486,15 +586,25 @@
       },
       {
         "pregunta": "¿Nombre y apellido del arquero español que reforzó al Real Madrid en 2023/24?",
-        "respuesta": "Kepa Arrizabalaga"
+        "respuesta": "Kepa Arrizabalaga",
+        "respuestasIncompletasCorregibles": ["Arrizabalaga"]
       },
       {
         "pregunta": "¿Nombre completo del extremo francés autor del gol de la final de la Champions 2020 para el Bayern?",
-        "respuesta": "Kingsley Coman"
+        "respuesta": "Kingsley Coman",
+        "respuestasIncompletasCorregibles": ["Coman"]
       },
       {
         "pregunta": "¿Nombre y apellido del goleador neerlandés ex Schalke y Ajax?",
-        "respuesta": "Klaas-Jan Huntelaar"
+        "respuesta": "Klaas-Jan Huntelaar",
+        "respuestasIncompletasCorregibles": ["Huntelaar"]
+      },
+      {
+        "pregunta": "¿Nombre de pila del francés Mbappé, Bota de Oro del Mundial de la FIFA 2026?",
+        "respuesta": "Kylian",
+        "respuestasAlternativas": [
+          "Kylian Mbappé"
+        ]
       }
     ]
   },
@@ -531,11 +641,19 @@
       },
       {
         "pregunta": "¿Nombre completo del joven crack del Barcelona y España?",
-        "respuesta": "Lamine Yamal"
+        "respuesta": "Lamine Yamal",
+        "respuestasIncompletasCorregibles": ["Yamal"]
       },
       {
         "pregunta": "¿Nombre y apellido del defensor argentino campeón del mundo 2022 en Manchester United?",
         "respuesta": "Lisandro Martínez"
+      },
+      {
+        "pregunta": "¿Qué club argentino fue campeón de la CONMEBOL Sudamericana 2025?",
+        "respuesta": "Lanús",
+        "respuestasAlternativas": [
+          "Club Atlético Lanús"
+        ]
       }
     ]
   },
@@ -560,7 +678,8 @@
       },
       {
         "pregunta": "¿Nombre y apellido del arquero alemán campeón del mundo 2014?",
-        "respuesta": "Manuel Neuer"
+        "respuesta": "Manuel Neuer",
+        "respuestasIncompletasCorregibles": ["Neuer"]
       },
       {
         "pregunta": "¿Apellido del delantero francés estrella del Real Madrid, Kylian …?",
@@ -573,6 +692,20 @@
       {
         "pregunta": "¿Apellido del arquero argentino ídolo del Aston Villa, Emiliano …?",
         "respuesta": "Martínez"
+      },
+      {
+        "pregunta": "¿Apellido del francés que ganó la Bota de Oro del Mundial de la FIFA 2026 con diez goles?",
+        "respuesta": "Mbappé",
+        "respuestasAlternativas": [
+          "Kylian Mbappé"
+        ]
+      },
+      {
+        "pregunta": "¿Qué selección derrotó a Argentina en la final del Mundial Sub-20 de la FIFA 2025 disputado en Chile?",
+        "respuesta": "Marruecos",
+        "respuestasAlternativas": [
+          "Morocco"
+        ]
       }
     ]
   },
@@ -601,7 +734,8 @@
       },
       {
         "pregunta": "¿Nombre completo del lateral argentino campeón del mundo?",
-        "respuesta": "Nahuel Molina"
+        "respuesta": "Nahuel Molina",
+        "respuestasIncompletasCorregibles": ["Molina"]
       }
     ]
   },
@@ -655,6 +789,10 @@
       {
         "pregunta": "¿Apellido del mediocampista alemán campeón del mundo 2014, Mesut …?",
         "respuesta": "Özil"
+      },
+      {
+        "pregunta": "¿En qué ciudad se jugó la final de la UEFA Women's Champions League 2025/26?",
+        "respuesta": "Oslo"
       }
     ]
   },
@@ -707,7 +845,8 @@
       },
       {
         "pregunta": "¿Nombre y apellido del 10 argentino campeón con Valencia y Benfica?",
-        "respuesta": "Pablo Aimar"
+        "respuesta": "Pablo Aimar",
+        "respuestasIncompletasCorregibles": ["Aimar"]
       },
       {
         "pregunta": "¿Apellido del ex defensor del Barcelona, Gerard …?",
@@ -732,6 +871,20 @@
       {
         "pregunta": "¿Apellido del histórico goleador de Boca Juniors, Martín …?",
         "respuesta": "Palermo"
+      },
+      {
+        "pregunta": "¿Qué club ganó la Champions League 2025/26 tras superar a Arsenal por penales?",
+        "respuesta": "Paris Saint-Germain",
+        "respuestasAlternativas": [
+          "PSG"
+        ]
+      },
+      {
+        "pregunta": "¿Apellido de Ewa, máxima goleadora de la Women's Champions League 2025/26 con 11 tantos?",
+        "respuesta": "Pajor",
+        "respuestasAlternativas": [
+          "Ewa Pajor"
+        ]
       }
     ]
   },
@@ -748,7 +901,8 @@
       },
       {
         "pregunta": "¿Nombre completo del DT español ex Betis y Barcelona?",
-        "respuesta": "Quique Setién"
+        "respuesta": "Quique Setién",
+        "respuestasIncompletasCorregibles": ["Setién"]
       },
       {
         "pregunta": "¿Apellido del delantero italiano ex Sampdoria, Fabio …?",
@@ -830,6 +984,13 @@
       {
         "pregunta": "¿Nombre completo del zaguero portugués estrella del Manchester City?",
         "respuesta": "Rúben Dias"
+      },
+      {
+        "pregunta": "¿Nombre deportivo del español ganador del Balón de Oro del Mundial de la FIFA 2026?",
+        "respuesta": "Rodri",
+        "respuestasAlternativas": [
+          "Rodrigo Hernández"
+        ]
       }
     ]
   },
@@ -845,7 +1006,7 @@
         "respuesta": "San Lorenzo"
       },
       {
-        "pregunta": "¿Nombre completo del estadio del Real Madrid remodelado y reinaugurado en 2023?",
+        "pregunta": "¿Cómo se llama el estadio del Real Madrid sometido a una gran remodelación durante la década de 2020?",
         "respuesta": "Santiago Bernabéu"
       },
       {
@@ -891,6 +1052,20 @@
       {
         "pregunta": "¿Estadio de Milán compartido por Inter y Milan?",
         "respuesta": "San Siro"
+      },
+      {
+        "pregunta": "¿Apellido del arquero español que recibió el Guante de Oro del Mundial de la FIFA 2026 (Unai …)?",
+        "respuesta": "Simón",
+        "respuestasAlternativas": [
+          "Unai Simón"
+        ]
+      },
+      {
+        "pregunta": "¿Apellido de Ismaïla, máximo goleador de la UEFA Conference League 2025/26 con nueve goles?",
+        "respuesta": "Sarr",
+        "respuestasAlternativas": [
+          "Ismaïla Sarr"
+        ]
       }
     ]
   },
@@ -936,6 +1111,13 @@
       {
         "pregunta": "¿Club mexicano de la Liga MX con estadio Nemesio Díez?",
         "respuesta": "Toluca"
+      },
+      {
+        "pregunta": "¿Qué club de Londres le ganó la final de la Europa League 2024/25 al Manchester United?",
+        "respuesta": "Tottenham",
+        "respuestasAlternativas": [
+          "Tottenham Hotspur"
+        ]
       }
     ]
   },
@@ -973,6 +1155,21 @@
       {
         "pregunta": "¿Sigla de la Unión de Asociaciones Europeas de Fútbol?",
         "respuesta": "UEFA"
+      },
+      {
+        "pregunta": "¿Nombre del arquero español ganador del Guante de Oro del Mundial de la FIFA 2026 (… Simón)?",
+        "respuesta": "Unai",
+        "respuestasAlternativas": [
+          "Unai Simón"
+        ]
+      },
+      {
+        "pregunta": "¿Nombre del estadio de Oslo donde se disputó la final femenina de Champions UEFA 2025/26?",
+        "respuesta": "Ullevaal",
+        "respuestasAlternativas": [
+          "Ullevaal Stadion",
+          "Estadio Ullevaal"
+        ]
       }
     ]
   },
@@ -1006,6 +1203,10 @@
       {
         "pregunta": "¿Apodo del mediocampista portugués Vítor Machado Ferreira, estrella del PSG?",
         "respuesta": "Vitinha"
+      },
+      {
+        "pregunta": "¿Nombre deportivo del mediocampista de PSG elegido jugador de la final de la Champions 2025/26?",
+        "respuesta": "Vitinha"
       }
     ]
   },
@@ -1034,11 +1235,19 @@
       },
       {
         "pregunta": "¿Nombre completo del histórico goleador inglés del Manchester United?",
-        "respuesta": "Wayne Rooney"
+        "respuesta": "Wayne Rooney",
+        "respuestasIncompletasCorregibles": ["Rooney"]
       },
       {
         "pregunta": "¿Apellido del lateral derecho inglés leyenda del Manchester City, Kyle …?",
         "respuesta": "Walker"
+      },
+      {
+        "pregunta": "¿Apellido de Adam, elegido jugador de la final de la UEFA Conference League 2025/26?",
+        "respuesta": "Wharton",
+        "respuestasAlternativas": [
+          "Adam Wharton"
+        ]
       }
     ]
   },
@@ -1055,7 +1264,8 @@
       },
       {
         "pregunta": "¿Nombre completo del extremo suizo ex Liverpool e Inter?",
-        "respuesta": "Xherdan Shaqiri"
+        "respuesta": "Xherdan Shaqiri",
+        "respuestasIncompletasCorregibles": ["Shaqiri"]
       },
       {
         "pregunta": "¿Apodo del Club Tijuana de la Liga MX?",
@@ -1063,7 +1273,8 @@
       },
       {
         "pregunta": "¿Nombre completo del mediapunta neerlandés surgido en el PSG?",
-        "respuesta": "Xavi Simons"
+        "respuesta": "Xavi Simons",
+        "respuestasIncompletasCorregibles": ["Simons"]
       },
       {
         "pregunta": "CONTIENE X: ¿Nombre de pila del ex delantero chileno del Barcelona y Arsenal, … Sánchez?",
@@ -1088,7 +1299,8 @@
       },
       {
         "pregunta": "¿Nombre completo del mediocampista marfileño leyenda del City?",
-        "respuesta": "Yaya Touré"
+        "respuesta": "Yaya Touré",
+        "respuestasIncompletasCorregibles": ["Touré"]
       },
       {
         "pregunta": "¿Club japonés campeón de la J1 League en 2019?",
@@ -1097,6 +1309,13 @@
       {
         "pregunta": "¿Apellido del extremo inglés ex Manchester United e Inter, Ashley …?",
         "respuesta": "Young"
+      },
+      {
+        "pregunta": "¿Apellido de Lamine, futbolista de 19 años que disputó la final del Mundial de la FIFA 2026 con España?",
+        "respuesta": "Yamal",
+        "respuestasAlternativas": [
+          "Lamine Yamal"
+        ]
       }
     ]
   },
@@ -1130,6 +1349,13 @@
       {
         "pregunta": "¿Apellido del delantero argentino ex Vélez y Boca, Mauro …?",
         "respuesta": "Zárate"
+      },
+      {
+        "pregunta": "¿Apellido de Yassir, autor de dos goles para Marruecos en la final del Mundial Sub-20 FIFA 2025?",
+        "respuesta": "Zabiri",
+        "respuestasAlternativas": [
+          "Yassir Zabiri"
+        ]
       }
     ]
   }

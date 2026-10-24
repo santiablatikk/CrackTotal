@@ -57,3 +57,37 @@
 .ct-ds .home-empty-state.ct-empty {
     gap: var(--ct-space-sm);
 }
+
+/* Crack Total 5.0 — canonical typography and interaction baseline.
+ * Shared semantics only: individual game layouts remain page-specific. */
+body.ct-ds{
+    font-family:var(--ct-font-sans);
+    font-size:16px;
+    line-height:1.6;
+    color:var(--ct-text);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+}
+body.ct-ds :is(h1,h2,h3,h4,h5,h6){
+    font-family:var(--ct-font-display);
+    letter-spacing:-.025em;
+    overflow-wrap:break-word;
+}
+body.ct-ds :is(button,input,select,textarea){
+    font-family:var(--ct-font-sans);
+    font-size:16px;
+}
+body.ct-ds :is(button,a,input,select,textarea,[tabindex]):focus-visible{
+    outline:3px solid var(--ct-primary);
+    outline-offset:3px;
+}
+body.ct-ds :is(p,li,dt,dd){overflow-wrap:break-word}
+body.ct-ds :is(input,textarea,select){min-width:0}
+body.ct-ds :is(button,[role="button"]){touch-action:manipulation}
+body.ct-ds :is(.ct-button,.home-nav-play,.home-button-primary,.primary-button){
+    font-weight:750;
+    letter-spacing:0;
+}
+@media(prefers-reduced-motion:reduce){
+  body.ct-ds{scroll-behavior:auto}
+}

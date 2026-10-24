@@ -55,44 +55,72 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/base.css?v=20260803m">
-    <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260803m">
+    <link rel="stylesheet" href="assets/css/design-system/index.css?v=20261020v5">
     <link rel="stylesheet" href="assets/css/home.css?v=20260804v">
     <link rel="stylesheet" href="assets/css/discover.css?v=20260804v">
     <link rel="stylesheet" href="assets/css/modals.css?v=20260803m">
+    <link rel="stylesheet" href="assets/css/crack-total-2.css?v=20261020v5">
+    <link rel="stylesheet" href="assets/css/games-hub-6.css?v=20261023a">
 
     <script src="assets/js/adsense-early-blocker.js?v=202506072312"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427" crossorigin="anonymous"></script>
 </head>
-<body class="discover-page ct-ds">
+<body class="discover-page ct-ds ct6-game-hub">
     <a href="#main-content" class="home-skip-link">Saltar al contenido principal</a>
     <div data-ct-navbar data-active="games"></div>
 
     <main id="main-content" class="discover-main">
-        <section class="discover-hero discover-hero--compact" aria-labelledby="games-hero-title">
-            <div class="home-shell">
-                <p class="home-eyebrow"><i class="fas fa-gamepad" aria-hidden="true"></i> Catálogo</p>
-                <h1 id="games-hero-title">Elegí tu próximo <span>desafío</span>.</h1>
-                <p class="discover-hero-lead">Roscos, desafíos diarios y duelos online. Entrá, elegí un juego y demostrá cuánto sabés.</p>
-                <div class="discover-greeting">
-                    <span>Hola, <strong id="playerNameDisplay">Jugador</strong></span>
-                    <button class="ct-button ct-button--secondary ct-button--sm" id="changeNameBtn" type="button" aria-label="Cambiar nombre de usuario">
-                        <i class="fas fa-pen" aria-hidden="true"></i>
-                        Cambiar
-                    </button>
+        <section class="ct6-hub-hero" aria-labelledby="games-hero-title">
+            <div class="home-shell ct6-hub-hero-grid">
+                <div class="ct6-hub-copy">
+                    <div class="ct6-hub-overline"><span class="ct6-hub-live-dot" aria-hidden="true"></span> CRACK TOTAL <span aria-hidden="true">/</span> TU CANCHA DIGITAL</div>
+                    <p class="ct6-hub-edition">CATÁLOGO DE JUEGOS <span>EDICIÓN 06</span></p>
+                    <h1 id="games-hero-title">EL FÚTBOL SE JUEGA.<em>EL CONOCIMIENTO SE DEMUESTRA.</em></h1>
+                    <p class="ct6-hub-lead">Un rosco que no perdona, desafíos diarios y duelos para jugar con amigos. Entrá solo o desafiá a alguien: vos elegís cómo competir.</p>
+                    <div class="ct6-hub-actions">
+                        <a class="ct6-hub-action ct6-hub-action--primary" href="pasala-1v1.html">DESAFIAR A UN AMIGO <span aria-hidden="true">↗</span></a>
+                        <a class="ct6-hub-action ct6-hub-action--outline" href="#juegos">EXPLORAR JUEGOS <span aria-hidden="true">↓</span></a>
+                    </div>
+                    <div class="discover-greeting ct6-hub-player">
+                        <span>EN LA CANCHA: <strong id="playerNameDisplay">Jugador</strong></span>
+                        <button class="ct-button ct-button--secondary ct-button--sm" id="changeNameBtn" type="button" aria-label="Cambiar nombre de usuario">EDITAR NOMBRE <span aria-hidden="true">✎</span></button>
+                    </div>
                 </div>
-                <div class="discover-hero-actions">
-                    <a class="home-button home-button-primary" href="pasalache.html">
-                        Empezar con Pasala Che
-                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
-                    </a>
-                    <a class="home-button home-button-secondary" href="#juegos">
-                        Ver todos
-                    </a>
-                </div>
+                <a class="ct6-hub-feature" href="pasala-1v1.html" aria-label="Entrar a Pasala Che 1v1, duelo online de dos roscos">
+                    <div class="ct6-hub-feature-top"><span>PARTIDO DESTACADO</span><span>01 / MODO COMPETITIVO</span></div>
+                    <div class="ct6-hub-feature-heading"><span>ARENA ONLINE</span><strong>PASALA CHE <em>1V1.</em></strong></div>
+                    <div class="ct6-hub-faceoff" aria-hidden="true">
+                        <div class="ct6-hub-ring"><span>26<small>LETRAS</small></span></div>
+                        <strong class="ct6-hub-versus">VS</strong>
+                        <div class="ct6-hub-ring ct6-hub-ring--rival"><span>26<small>LETRAS</small></span></div>
+                    </div>
+                    <div class="ct6-hub-feature-bottom"><span>POR TURNOS O EN ESPEJO</span><strong>ENTRAR AL DUELO ↗</strong></div>
+                    <small class="ct6-hub-caption">VISUAL ILUSTRATIVO · NO ES UNA PARTIDA EN VIVO</small>
+                </a>
             </div>
+            <div class="ct6-hub-baseline" aria-hidden="true"><div class="home-shell"><span>01 / ELEGÍ TU DESAFÍO</span><span>02 / JUGÁ EN LA CANCHA</span><span>03 / DEMOSTRÁ LO QUE SABÉS</span></div></div>
+        </section>
+
+        <section class="ct35-catalog-daily home-shell" aria-labelledby="catalogDailyTitle">
+            <div class="ct35-catalog-daily-lead">
+                <span class="home-eyebrow">DOS DESAFÍOS. CADA DÍA.</span>
+                <h2 id="catalogDailyTitle">ENTRÁ EN <span>CALOR.</span></h2>
+                <p>El tema del Top 10 cambia a las 00:00 UTC. Tu Wordle diario se renueva a la medianoche de tu dispositivo.</p>
+            </div>
+            <a class="ct35-catalog-daily-top" href="top10.html" aria-describedby="homeDailyTop10Status">
+                <span class="ct35-daily-overline">TOP 10 / <span id="homeDailyDate">HOY</span></span>
+                <strong id="homeDailyTop10Title" aria-live="polite">CARGANDO EL DESAFÍO…</strong>
+                <span id="homeDailyTop10Context">Diez respuestas y un reloj en contra.</span>
+                <span class="ct35-catalog-daily-footer"><b id="homeDailyTop10Status">Preparando…</b><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></span>
+            </a>
+            <a class="ct35-catalog-daily-wordle" href="wordle-futbol.html">
+                <span class="ct35-daily-overline">WORDLE / 6 INTENTOS</span>
+                <strong>LA PALABRA DEL DÍA.</strong>
+                <span id="homeDailyWordleStatus">Descubrí el apellido oculto.</span>
+                <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
+            </a>
         </section>
 
         <section class="home-section discover-section" id="juegos" aria-labelledby="catalog-title">
@@ -215,23 +243,25 @@
                         </div>
                     </a>
 
-                    <a class="home-game-card home-reveal" href="mi-carrera.html" data-categories="desafios jugadores clubes selecciones mundiales" data-search="mi carrera modo carrera futbolista clubes transferencia titulos">
+                    <a class="home-game-card home-reveal ct3-duel-card" href="pasala-1v1.html" data-categories="roscos trivias desafios mundiales clubes jugadores selecciones" data-search="pasala che uno contra uno 1v1 rosco online duelo amigos rival stream">
                         <div class="home-game-media">
-                            <img src="assets/images/blog/championss.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async">
-                            <span class="home-game-icon" aria-hidden="true"><i class="fas fa-shirt"></i></span>
-                            <span class="home-game-badge">Carrera</span>
+                            <img src="assets/images/portada.jpg" alt="" width="1024" height="682" loading="lazy" decoding="async">
+                            <span class="home-game-icon" aria-hidden="true"><i class="fas fa-bolt"></i></span>
+                            <span class="home-game-badge">Dos modalidades</span>
                         </div>
                         <div class="home-game-content">
-                            <h3>Mi Carrera</h3>
-                            <p class="home-game-description">Empezá joven, elegí tu club y viví temporadas, fichajes, títulos y un legado único.</p>
+                            <h3>Pasala Che 1v1</h3>
+                            <p class="home-game-description">Dos roscos por turnos o el mismo desafío en Espejo. Elegí cómo competir.</p>
                             <ul class="home-game-facts">
-                                <li><i class="fas fa-user" aria-hidden="true"></i> 1 jugador</li>
-                                <li><i class="fas fa-futbol" aria-hidden="true"></i> Modo carrera</li>
-                                <li><i class="fas fa-trophy" aria-hidden="true"></i> Legado</li>
+                                <li><i class="fas fa-users" aria-hidden="true"></i> 2 jugadores</li>
+                                <li><i class="fas fa-circle-notch" aria-hidden="true"></i> 26 letras</li>
+                                <li><i class="fas fa-wifi" aria-hidden="true"></i> Online</li>
                             </ul>
-                            <span class="home-game-action">Empezar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                            <span class="home-game-action">Entrar a la arena <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
                         </div>
                     </a>
+
+
 </div>
 
                 <div class="home-empty-state ct-empty" id="catalogEmptyState" hidden role="status">
@@ -292,7 +322,8 @@
     <script src="assets/js/components/modal.js?v=20260803m"></script>
     <script src="assets/js/player-profile.js?v=20260803m"></script>
     <script src="assets/js/main.js?v=20260803m" defer></script>
-    <script src="assets/js/home.js?v=20260803m" defer></script>
+    <script src="assets/js/top10-verified.js?v=20261020a"></script>
+    <script src="assets/js/home.js?v=20261019b" defer></script>
     <script src="assets/js/components/navbar.js?v=20260803n"></script>
     <script src="assets/js/components/footer.js?v=20260803n"></script>
     <script src="assets/js/components/shell.js?v=20260803n"></script>

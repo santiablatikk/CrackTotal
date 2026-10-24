@@ -6,8 +6,14 @@
 console.log("✨ quiensabemas_1v1.js cargado (v3 Renovada - Junio 2024)");
 
 // --- Configuración ---
+// La vista previa estática no debe usar inadvertidamente el servidor de producción.
+const QSM_PREVIEW = /(?:^|\.)netlify\.(?:app|com)$/i.test(location.hostname);
+const QSM_STAGING = new URLSearchParams(location.search).get('server');
+const QSM_STAGING_WS = QSM_STAGING && /^wss:\/\/[a-z0-9.-]+(?::\d+)?(?:\/[^?#]*)?$/i.test(QSM_STAGING) ? QSM_STAGING : null;
+const QSM_PREVIEW_WS = location.hostname === 'deploy-preview-1--zingy-haupia-53b742.netlify.app'
+    ? 'wss://cracktotal-arena-staging.onrender.com' : null;
 const CONFIG = {
-    WEBSOCKET_URL: 'wss://cracktotal-servidor.onrender.com',
+    WEBSOCKET_URL: QSM_PREVIEW ? (QSM_STAGING_WS || QSM_PREVIEW_WS) : 'wss://cracktotal-servidor.onrender.com',
     RECONNECT_DELAY: 3000,
     MAX_RECONNECT_ATTEMPTS: 5,
     TIME_PER_QUESTION: 20,
@@ -65,6 +71,18 @@ const DOM = {
 };
 
 // --- Game State ---
+const QSM_SESSION_KEY = 'ct-qsm-room-session-v1';
+const savedQsmSession = () => {
+    try { return JSON.parse(sessionStorage.getItem(QSM_SESSION_KEY) || 'null'); }
+    catch { return null; }
+};
+const saveQsmSession = payload => {
+    if (!payload || !payload.roomId || !payload.reconnectToken) return;
+    try { sessionStorage.setItem(QSM_SESSION_KEY, JSON.stringify({
+        roomId: payload.roomId, reconnectToken: payload.reconnectToken, gameType: 'quiensabemas'
+    })); } catch {}
+};
+const clearQsmSession = () => { try { sessionStorage.removeItem(QSM_SESSION_KEY); } catch {} };
 const gameState = {
     websocket: null,
     myPlayerId: null,
@@ -93,8 +111,28 @@ const gameState = {
     // Nuevas propiedades para reconexión
     reconnectAttempts: 0,
     reconnectTimer: null,
+    arenaCompatible: false,
+    arenaHandshakeTimer: null,
     lastMessageTimestamp: Date.now()
 };
+
+// Convert the server's {player1, player2} payload to the by-ID lookup
+// expected by scoreboards, turn ownership and opponent labels. Never use
+// object property names such as "player1" as actual player IDs.
+function qsmPlayersById(players) {
+    if (!players || typeof players !== 'object') return {};
+    const entries = Array.isArray(players) ? players :
+        Array.isArray(players.player1) ? players.player1 : Object.values(players);
+    const result = {};
+    for (const player of entries) {
+        if (!player || typeof player !== 'object' || !player.id) continue;
+        result[player.id] = {
+            id: player.id, name: String(player.name || 'Jugador').slice(0, 24),
+            score: Number.isFinite(Number(player.score)) ? Number(player.score) : 0
+        };
+    }
+    return result;
+}
 
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', initializeQSMApp);
@@ -111,10 +149,10 @@ async function initializeQSMApp() {
 
     loadPlayerName();
     updatePlayerNameInUI();
-    initializeWebSocket();
     setupEventListeners();
     showLobbyView();
     updateConnectionStatusUI(false, 'Conectando al servidor...');
+    initializeWebSocket();
 
     // Mostrar modal de introducción si es la primera vez
     if (DOM.qsmIntroModal && !localStorage.getItem(CONFIG.STORAGE_KEYS.INTRO_SHOWN)) {
@@ -209,6 +247,12 @@ function initializeWebSocket() {
         gameState.websocket.close();
     }
 
+    if (!CONFIG.WEBSOCKET_URL) {
+        updateConnectionStatusUI(false, 'Servidor de pruebas pendiente');
+        showLobbyMessage('Este preview es estático. Para probar el 1v1 de Quién Sabe Más, usá ?server=wss://TU-SERVIDOR-STAGING.', 'error', true);
+        disableLobbyButtons();
+        return;
+    }
     console.log(`🔌 Conectando a: ${CONFIG.WEBSOCKET_URL}`);
     updateConnectionStatusUI(false, 'Conectando...');
     showLobbyMessage('Conectando al servidor de juego...', 'info', false);
@@ -239,7 +283,19 @@ function initializeWebSocket() {
         console.log('✅ WebSocket Conectado!');
         updateConnectionStatusUI(true, 'Conectado');
         showLobbyMessage('¡Conectado! Listo para jugar.', 'success', true);
-        enableLobbyButtons();
+        if (QSM_PREVIEW) {
+            gameState.arenaCompatible = false;
+            disableLobbyButtons();
+            updateConnectionStatusUI(false, 'Comprobando compatibilidad de Arena…');
+            if (gameState.arenaHandshakeTimer) clearTimeout(gameState.arenaHandshakeTimer);
+            gameState.arenaHandshakeTimer = setTimeout(() => {
+                if (!gameState.arenaCompatible && gameState.websocket?.readyState === WebSocket.OPEN) {
+                    updateConnectionStatusUI(false, 'Servidor de pruebas desactualizado');
+                    showLobbyMessage('Render todavía no ejecuta Arena 5.2. Falta actualizar el servidor de staging.', 'error', true);
+                    disableLobbyButtons();
+                }
+            }, 4000);
+        } else enableLobbyButtons();
         gameState.reconnectAttempts = 0; // Resetear intentos de reconexión
         
         // Solicitar salas disponibles inmediatamente después de conectar
@@ -276,6 +332,7 @@ function initializeWebSocket() {
 
     gameState.websocket.onclose = (event) => {
         clearTimeout(connectionTimeout);
+        if (gameState.arenaHandshakeTimer) clearTimeout(gameState.arenaHandshakeTimer);
         const wasClean = event.wasClean;
         const reason = event.reason || (wasClean ? 'Desconexión normal' : 'Conexión interrumpida');
         console.log(`🔌 WebSocket Desconectado: ${reason} (Código: ${event.code})`);
@@ -283,15 +340,18 @@ function initializeWebSocket() {
         updateConnectionStatusUI(false, wasClean ? 'Desconectado' : 'Conexión perdida');
         gameState.websocket = null;
         
-        if (gameState.gameActive) {
-            showErrorInGame("Conexión perdida. La partida ha terminado.");
-            handleGameEnd({ reason: "Conexión perdida. Intenta jugar de nuevo." });
+        if (gameState.gameActive && QSM_PREVIEW && savedQsmSession()) {
+            stopQuestionTimer();
+            disableAnswerOptions();
+            showFeedbackInGame('Conexión interrumpida. Intentando recuperar tu partida…', 'info');
+        } else if (gameState.gameActive) {
+            showErrorInGame('Conexión perdida. La partida ha terminado.');
+            handleGameEnd({ reason: 'Conexión perdida. Intenta jugar de nuevo.' });
+            gameState.gameActive = false;
         } else {
             showLobbyMessage('Desconectado del servidor. Intentando reconectar...', 'error', true);
         }
-        
         disableLobbyButtons();
-        gameState.gameActive = false;
         scheduleReconnect();
     };
 
@@ -358,6 +418,23 @@ function handleServerMessage(message) {
     const { type, payload } = message;
     
     switch (type) {
+        case 'arena:hello':
+            if (QSM_PREVIEW) {
+                gameState.arenaCompatible = payload.protocol === 'cracktotal-arena-5.2' &&
+                    payload.features?.qsmResume === true;
+                if (gameState.arenaHandshakeTimer) clearTimeout(gameState.arenaHandshakeTimer);
+                if (gameState.arenaCompatible) {
+                    enableLobbyButtons();
+                    updateConnectionStatusUI(true, 'Arena 5.2 conectada');
+                    const saved = savedQsmSession();
+                    if (saved) sendToServer('resumeRoom', saved);
+                } else {
+                    updateConnectionStatusUI(false, 'Arena incompatible');
+                    showLobbyMessage('La versión de Arena no admite partidas 5.2. Actualizá el servicio de staging.', 'error', true);
+                    disableLobbyButtons();
+                }
+            }
+            break;
         case 'ping':
         case 'pong':
             // Responder al ping con un pong o ignorar el pong
@@ -402,6 +479,7 @@ function handleServerMessage(message) {
             break;
             
         case 'roomCreated':
+            saveQsmSession(payload);
             gameState.roomId = payload.roomId;
             gameState.isRoomCreator = true;
             gameState.players = {
@@ -417,9 +495,10 @@ function handleServerMessage(message) {
             break;
             
         case 'joinSuccess':
+            saveQsmSession(payload);
             gameState.roomId = payload.roomId;
             gameState.isRoomCreator = false;
-            gameState.players = payload.players;
+            gameState.players = qsmPlayersById(payload.players);
             showLobbyMessage(`¡Te has unido a la sala ${gameState.roomId}!`, 'success', true);
             switchToGameView(
                 Object.keys(gameState.players).length < 2 ? 
@@ -430,6 +509,63 @@ function handleServerMessage(message) {
             console.log('Unido exitosamente a la sala:', gameState.roomId, 'Jugadores:', gameState.players);
             break;
             
+        case 'roomResumed':
+            if (payload.gameType !== 'quiensabemas') break;
+            saveQsmSession(payload);
+            gameState.myPlayerId = payload.playerId;
+            gameState.roomId = payload.roomId;
+            gameState.players = qsmPlayersById(payload.players);
+            gameState.currentTurn = payload.currentTurn;
+            gameState.gameActive = !!payload.gameActive;
+            gameState.gamePhase = payload.gameActive ? 'playing' : 'waitingForOpponent';
+            gameState.currentQuestion = payload.question;
+            gameState.questionId = payload.questionId || null;
+            gameState.currentQuestionIndex = Math.max(0, (payload.questionNumber || 1) - 1);
+            gameState.totalQuestions = payload.totalQuestionsInLevel || gameState.totalQuestions;
+            gameState.reconnectAttempts = 0;
+            switchToGameView(payload.gameActive ? 'Partida recuperada.' : 'Esperando rival…');
+            updatePlayersHeaderUI();
+            if (payload.gameActive && payload.question) {
+                displayQuestionInUI();
+                if (payload.paused) {
+                    stopQuestionTimer();
+                    disableAnswerOptions();
+                    showFeedbackInGame('Esperando a que el rival se reconecte…', 'info');
+                }
+            }
+            break;
+        case 'opponentDisconnected':
+            if (gameState.gameActive) {
+                stopQuestionTimer();
+                disableAnswerOptions();
+                showFeedbackInGame('El rival perdió conexión. Esperando hasta 45 segundos…', 'info');
+            }
+            break;
+        case 'roomClockResumed':
+            if (gameState.gameActive && gameState.currentTurn === gameState.myPlayerId) {
+                startQuestionTimer(Math.ceil((payload.remainingMs || 20000) / 1000));
+            }
+            break;
+        case 'opponentReconnected':
+            if (gameState.gameActive && gameState.currentQuestion) displayQuestionInUI();
+            showFeedbackInGame('¡Conexión restablecida!', 'success');
+            break;
+        case 'rematchState':
+            if (DOM.playAgainQSMBtn && QSM_PREVIEW) {
+                const requested = payload.requested || [];
+                const waitingForOpponent = requested.includes(gameState.myPlayerId);
+                DOM.playAgainQSMBtn.textContent = waitingForOpponent
+                    ? 'Esperando revancha del rival…' : 'Aceptar revancha';
+                DOM.playAgainQSMBtn.disabled = waitingForOpponent;
+            }
+            break;
+        case 'resumeError':
+            clearQsmSession();
+            gameState.roomId = null;
+            gameState.gameActive = false;
+            showLobbyView();
+            showLobbyMessage(payload.error || 'La sala anterior ya no existe. Creá otra.', 'error', true);
+            break;
         case 'joinError':
             console.error("❌ Error al unirse a la sala:", payload.error);
             showLobbyMessage(payload.error || "Error al unirse a la sala", 'error', true);
@@ -437,7 +573,7 @@ function handleServerMessage(message) {
             break;
             
         case 'playerJoined':
-            gameState.players = payload.players;
+            gameState.players = qsmPlayersById(payload.players);
             updatePlayersHeaderUI();
             const newPlayerName = Object.values(gameState.players).find(p => p.name !== gameState.playerName)?.name || 'Un oponente';
             showFeedbackInGame(`${newPlayerName} se unió a la sala. ${gameState.isRoomCreator ? '¡Iniciando pronto!' : 'Preparándose para comenzar.'}`, 'info');
@@ -447,11 +583,18 @@ function handleServerMessage(message) {
             break;
             
         case 'gameStart':
+            if (DOM.qsmResultModal) DOM.qsmResultModal.style.display = 'none';
+            if (DOM.playAgainQSMBtn) {
+                DOM.playAgainQSMBtn.disabled = false;
+                DOM.playAgainQSMBtn.textContent = 'Revancha';
+            }
             gameState.gameActive = true;
             gameState.gamePhase = 'playing';
             gameState.gameStartTime = Date.now();
+            gameState.questionId = null;
             gameState.resultPublished = false;
-            gameState.players = payload.players;
+            gameState.progressReported = false;
+            gameState.players = qsmPlayersById(payload.players);
             gameState.currentTurn = payload.startingPlayerId;
             hideWaitingStateInGame();
             updatePlayersHeaderUI();
@@ -461,10 +604,11 @@ function handleServerMessage(message) {
             
         case 'newQuestion':
             gameState.currentQuestion = payload.question;
+            gameState.questionId = payload.questionId || null;
             gameState.currentQuestionIndex = payload.questionNumber - 1;
             gameState.totalQuestions = payload.totalQuestionsInLevel;
             gameState.currentTurn = payload.currentTurn;
-            gameState.players = payload.players;
+            gameState.players = qsmPlayersById(payload.players);
             
             displayQuestionInUI();
             updatePlayersHeaderUI();
@@ -476,7 +620,7 @@ function handleServerMessage(message) {
             
         case 'updateState':
             gameState.currentTurn = payload.currentTurn;
-            gameState.players = payload.players;
+            gameState.players = qsmPlayersById(payload.players);
             updatePlayersHeaderUI();
             break;
             
@@ -505,8 +649,8 @@ function handleServerMessage(message) {
                 actualPlayerAnswerText
             );
             
-            const feedbackText = isCorrect ? 
-                `¡Correcto! ${pointsAwarded ? ` (+${pointsAwarded} pts)` : ''}` : 
+            const feedbackText = payload.timedOut ? '¡Tiempo agotado! No sumaste puntos.' : isCorrect ?
+                `¡Correcto! ${pointsAwarded ? ` (+${pointsAwarded} pts)` : ''}` :
                 `Incorrecto. La respuesta correcta era: ${correctAnswerText}`;
                 
             showFeedbackInGame(
@@ -516,6 +660,7 @@ function handleServerMessage(message) {
             break;
             
         case 'gameOver':
+            if (!QSM_PREVIEW) clearQsmSession();
             gameState.gameActive = false;
             gameState.gamePhase = 'gameOver';
             handleGameEnd(payload);
@@ -566,7 +711,8 @@ function showLobbyView() {
     
     gameState.gamePhase = 'lobby';
     clearLobbyMessage();
-    enableLobbyButtons();
+    if (gameState.websocket?.readyState === WebSocket.OPEN) enableLobbyButtons();
+    else disableLobbyButtons();
     
     // Solicitar lista de salas disponibles
     if (gameState.websocket && gameState.websocket.readyState === WebSocket.OPEN) {
@@ -1220,14 +1366,21 @@ function displayQuestionInUI() {
     
     gameState.currentQuestion.options.forEach((optionText, index) => {
         const btn = document.createElement('button');
-        btn.className = 'modern-option';
+        // Keep the legacy JS hook while also using the canonical game UI
+        // component. Do not interpret questions from the server as HTML.
+        btn.type = 'button';
+        btn.className = 'modern-option option-btn';
         btn.dataset.optionText = optionText;
         btn.dataset.optionIndex = index;
-        
-        btn.innerHTML = `
-            <span class="option-letter">${optionLetters[index]}</span>
-            <span class="option-text">${optionText}</span>
-        `;
+        const letter = document.createElement('span');
+        letter.className = 'option-letter';
+        letter.textContent = optionLetters[index] || String(index + 1);
+        letter.setAttribute('aria-hidden', 'true');
+        const label = document.createElement('span');
+        label.className = 'option-text';
+        label.textContent = optionText;
+        btn.append(letter, label);
+        btn.setAttribute('aria-label', letter.textContent + ': ' + optionText);
         
         btn.onclick = () => submitAnswerToAPI(optionText, index, btn);
         DOM.optionsGrid.appendChild(btn);
@@ -1269,7 +1422,8 @@ function submitAnswerToAPI(selectedOptionText, selectedIndex, optionButton) {
     }
 
     sendToServer('submitAnswer', {
-        selectedIndex: selectedIndex
+        selectedIndex: selectedIndex,
+        questionId: gameState.questionId
     });
     
     showFeedbackInGame("Respuesta enviada...", "info");
@@ -1343,9 +1497,9 @@ function showErrorInGame(message) {
     showFeedbackInGame(message, 'error');
 }
 
-function startQuestionTimer() {
+function startQuestionTimer(seconds = gameState.timePerQuestion) {
     stopQuestionTimer();
-    gameState.timeLeft = gameState.timePerQuestion;
+    gameState.timeLeft = Math.max(1, Math.min(gameState.timePerQuestion, Math.ceil(seconds)));
     
     if (DOM.timerProgress) {
         DOM.timerProgress.style.width = '100%';
@@ -1581,6 +1735,13 @@ function setupEventListeners() {
     if (DOM.qsmResultModal) {
         if (DOM.playAgainQSMBtn) {
             DOM.playAgainQSMBtn.addEventListener('click', () => {
+                if (QSM_PREVIEW && gameState.roomId && !gameState.gameActive) {
+                    sendToServer('requestRematch', { gameType: 'quiensabemas' });
+                    DOM.playAgainQSMBtn.disabled = true;
+                    DOM.playAgainQSMBtn.textContent = 'Esperando revancha del rival…';
+                    return;
+                }
+                clearQsmSession();
                 DOM.qsmResultModal.style.display = 'none';
                 showLobbyView();
             });
@@ -1588,6 +1749,9 @@ function setupEventListeners() {
         
         if (DOM.goToLobbyFromResultsBtn) {
             DOM.goToLobbyFromResultsBtn.addEventListener('click', () => {
+                if (gameState.roomId) sendToServer('leaveRoom');
+                clearQsmSession();
+                gameState.roomId = null;
                 DOM.qsmResultModal.style.display = 'none';
                 showLobbyView();
             });

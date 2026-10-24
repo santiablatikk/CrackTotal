@@ -71,14 +71,18 @@
       "respuesta_correcta": "B"
     },
     {
-      "pregunta": "¿Cuántos goles marcó Cristiano Ronaldo en la Liga portuguesa con el Sporting?",
+      "pregunta": "¿Cuántos goles marcó Cristiano Ronaldo en la Primeira Liga con el Sporting CP durante la temporada 2002/03?",
       "opciones": {
         "A": "3",
         "B": "5",
         "C": "4",
         "D": "2"
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "A",
+      "audit_status": "verified_official",
+      "source_url": "https://fbref.com/en/squads/13dc44fd/2002-2003/roster/Sporting-CP-Roster-Details",
+      "verified_at": "2026-10-21",
+      "audit_reason": "3 goles de liga; los 5 corresponden a todas las competiciones"
     },
     {
       "pregunta": "¿Qué portero tiene más porterías a cero en la Premier League?",
@@ -131,14 +135,17 @@
       "respuesta_correcta": "B"
     },
     {
-      "pregunta": "¿Qué club pagó la cláusula de rescisión más alta de la historia por un jugador español?",
+      "pregunta": "¿Qué club abonó en 2019 la cláusula de rescisión de 120 millones de euros por el delantero francés Antoine Griezmann?",
       "opciones": {
         "A": "Atlético Madrid por Griezmann (120M)",
         "B": "Barcelona por Griezmann (120M)",
         "C": "Real Madrid por Morata (80M)",
         "D": "PSG por Neymar (222M, Brasil)"
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "audit_status": "verified_official",
+      "source_url": "https://www.fcbarcelona.es/es/futbol/primer-equipo/news/1277948/barca-sign-griezmann",
+      "verified_at": "2026-10-21"
     },
     {
       "pregunta": "¿Cuántos goles marcó Mbappé en el Mundial 2022?",
@@ -181,14 +188,18 @@
       "respuesta_correcta": "A"
     },
     {
-      "pregunta": "¿Qué entrenador tiene más partidos dirigidos en Champions League?",
+      "pregunta": "¿Qué entrenador fue el primero en alcanzar los 200 partidos dirigidos en la UEFA Champions League, durante 2023/24?",
       "opciones": {
-        "A": "Alex Ferguson (194)",
-        "B": "Arsène Wenger (178)",
-        "C": "Carlo Ancelotti (199)",
-        "D": "José Mourinho (151)"
+        "A": "Sir Alex Ferguson",
+        "B": "Arsène Wenger",
+        "C": "Carlo Ancelotti",
+        "D": "José Mourinho"
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "audit_status": "verified_official",
+      "source_url": "https://www.uefa.com/uefachampionsleague/news/0281-18096ab833ba-60100b78b635-1000--coaches-with-100-wins/",
+      "verified_at": "2026-10-21",
+      "audit_reason": "Evita cifras antiguas de partidos dirigidos y utiliza el hito verificado por UEFA"
     },
     {
       "pregunta": "¿En qué año se estableció el número máximo de 5 sustituciones?",

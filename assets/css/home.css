@@ -58,7 +58,7 @@ body.home-v2 {
     max-width: 760px;
     margin: 0;
     color: var(--home-text);
-    font-family: "Oswald", sans-serif;
+    font-family: "Space Grotesk", "Manrope", sans-serif;
     font-size: clamp(2rem, 4vw, 3.5rem);
     line-height: 1.02;
     letter-spacing: -0.025em;
@@ -119,7 +119,7 @@ body.home-v2 {
     flex: 0 0 auto;
     color: var(--home-text);
     text-decoration: none;
-    font-family: "Oswald", sans-serif;
+    font-family: "Space Grotesk", "Manrope", sans-serif;
     font-size: 1.35rem;
     font-weight: 700;
     letter-spacing: 0.02em;
@@ -267,7 +267,7 @@ body.home-v2 {
     margin: 0;
     max-width: 820px;
     color: #fff;
-    font-family: "Oswald", sans-serif;
+    font-family: "Space Grotesk", "Manrope", sans-serif;
     font-size: clamp(3.4rem, 8.2vw, 7.4rem);
     line-height: 0.92;
     letter-spacing: -0.045em;
@@ -429,7 +429,7 @@ body.home-v2 {
 .home-feature-card h3 {
     margin: 0.9rem 0 0.55rem;
     color: #fff;
-    font-family: "Oswald", sans-serif;
+    font-family: "Space Grotesk", "Manrope", sans-serif;
     font-size: clamp(2rem, 4vw, 3.5rem);
     line-height: 1;
 }
@@ -617,7 +617,7 @@ body.home-v2 {
 .home-game-card h3 {
     margin: 0;
     color: var(--home-text);
-    font-family: "Oswald", sans-serif;
+    font-family: "Space Grotesk", "Manrope", sans-serif;
     font-size: 1.55rem;
     letter-spacing: 0.01em;
 }
@@ -781,7 +781,7 @@ body.home-v2 {
 .home-story-card h3,
 .home-trivia-card h3 {
     margin: 0.8rem 0 0;
-    font-family: "Oswald", sans-serif;
+    font-family: "Space Grotesk", "Manrope", sans-serif;
     line-height: 1.08;
 }
 
@@ -895,7 +895,7 @@ body.home-v2 {
 .home-stat-value {
     display: block;
     color: var(--home-primary);
-    font-family: "Oswald", sans-serif;
+    font-family: "Space Grotesk", "Manrope", sans-serif;
     font-size: clamp(2.25rem, 5vw, 4rem);
     font-weight: 700;
     line-height: 1;
@@ -930,7 +930,7 @@ body.home-v2 {
 .home-cta h2 {
     margin: 0;
     color: #fff;
-    font-family: "Oswald", sans-serif;
+    font-family: "Space Grotesk", "Manrope", sans-serif;
     font-size: clamp(2rem, 5vw, 4rem);
     line-height: 1;
 }

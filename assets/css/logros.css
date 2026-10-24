@@ -28,7 +28,7 @@ body {
 }
 
 .logros-section h2 {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Space Grotesk', 'Manrope', sans-serif;
     font-size: clamp(1.8rem, 5vw, 2.5rem);
     background: linear-gradient(135deg, var(--primary-light, #ab8bfa), var(--accent, #FFB86C));
     -webkit-background-clip: text;
@@ -206,7 +206,7 @@ body {
 }
 
 .logro-title {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Space Grotesk', 'Manrope', sans-serif;
     font-size: 1.4rem;
     background: linear-gradient(135deg, var(--text, #FFFFFE), var(--text-light, #b0b8c4));
     -webkit-background-clip: text;
@@ -323,3 +323,15 @@ body {
         font-size: 3rem;
     }
 } 
+
+/* Crack Total 5.0 / awards with clear unlocked vs locked information */
+body.logros-page .logros-section h2{font:700 clamp(29px,3.7vw,49px)/1.2 var(--ct-font-display);letter-spacing:-.025em}
+body.logros-page .logros-description{font:500 16px/1.65 var(--ct-font-sans);color:var(--ct-text-muted);max-width:770px}
+body.logros-page .filter-btn{font:700 14px/1.35 var(--ct-font-sans);min-height:44px;padding:10px 16px;letter-spacing:0;border-radius:9px}
+body.logros-page .logro-card{background:#20362f;border:1px solid #506a58;border-radius:12px;padding:23px;box-shadow:none}
+body.logros-page .logro-card.locked{background:#1d2b28;border-color:#3b4c43;opacity:1}
+body.logros-page .logro-title{font:700 19px/1.32 var(--ct-font-display);letter-spacing:-.012em;color:#f4f2e9}
+body.logros-page .logro-description{font:500 14px/1.65 var(--ct-font-sans);color:#d7dfd2}
+body.logros-page .logro-status{font:700 13px/1.5 var(--ct-font-sans);letter-spacing:0}
+body.logros-page .logro-icon{border-radius:11px}
+@media(max-width:600px){body.logros-page .logro-card{padding:19px}}

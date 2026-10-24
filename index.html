@@ -30,8 +30,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Crack Total">
     <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
-    <title>Crack Total - Juegos y trivias de fútbol</title>
-    <meta name="description" content="Jugá desafíos y trivias de fútbol, competí con otros cracks y descubrí historias y actualidad futbolera en Crack Total.">
+    <title>Crack Total - Juegos de fútbol y duelos 1v1</title>
+    <meta name="description" content="Jugá Pasala Che, Top 10, Wordle Futbolero y duelos 1v1. Juegos de fútbol para competir con amigos y resolver desafíos diarios.">
     <link rel="icon" href="/portada.ico?v=20260801" type="image/x-icon">
     <link rel="canonical" href="https://cracktotal.com/">
     <link rel="alternate" hreflang="es" href="https://cracktotal.com/">
@@ -76,11 +76,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/base.css?v=20260801">
-    <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260801">
+    <link rel="stylesheet" href="assets/css/design-system/index.css?v=20261020v5">
     <link rel="stylesheet" href="assets/css/home.css?v=20260804v">
+    <link rel="stylesheet" href="assets/css/crack-total-2.css?v=20261020v5">
+    <link rel="stylesheet" href="assets/css/home-4.css?v=20261020v5">
     <link rel="preload" href="/assets/images/portada.jpg" as="image" type="image/jpeg" fetchpriority="high">
 
     <script src="assets/js/adsense-early-blocker.js?v=202506072312"></script>
@@ -109,23 +110,21 @@
             <ul class="home-nav-list" id="homeNavMenu">
                 <li><a class="home-nav-link" href="/" aria-current="page">Inicio</a></li>
                 <li><a class="home-nav-link" href="games.html">Juegos</a></li>
-                <li><a class="home-nav-link" href="#historias">Historias</a></li>
-                <li><a class="home-nav-link" href="blog.html">Actualidad</a></li>
+                <li><a class="home-nav-link" href="pasala-1v1.html">Arena 1v1</a></li>
                 <li><a class="home-nav-link" href="ranking.html">Rankings</a></li>
-                <li><a class="home-nav-link" href="logros.html">Logros</a></li>
                 <li><a class="home-nav-link" href="profile.html" data-profile-label>Perfil</a></li>
                 <li>
-                    <button class="home-nav-search" type="button" data-open-search>
+                    <a class="home-nav-search" href="games.html#juegos">
                         <i class="fas fa-search" aria-hidden="true"></i>
                         Buscar
-                    </button>
+                    </a>
                 </li>
             </ul>
 
             <button class="home-menu-toggle" id="homeMenuToggle" type="button" aria-controls="homeNavMenu" aria-expanded="false" aria-label="Abrir menú de navegación">
                 <i class="fas fa-bars" aria-hidden="true"></i>
             </button>
-            <a class="home-nav-play" href="#juegos">
+            <a class="home-nav-play" href="pasala-1v1.html">
                 <i class="fas fa-play" aria-hidden="true"></i>
                 Jugar
             </a>
@@ -133,358 +132,122 @@
     </header>
 
     <main id="main-content">
-        <section class="home-hero" aria-labelledby="hero-title">
-            <div class="home-hero-media" aria-hidden="true">
-                <img src="assets/images/portada.jpg" alt="" width="1024" height="682" loading="eager" decoding="async" fetchpriority="high">
-            </div>
-            <div class="home-hero-content home-shell">
-                <div class="home-hero-copy">
-                    <p class="home-eyebrow"><i class="fas fa-bolt" aria-hidden="true"></i> La cancha del conocimiento</p>
-                    <h1 id="hero-title">Demostrá que sabés más de <span>fútbol</span> que nadie.</h1>
-                    <p class="home-hero-lead">Roscos, desafíos diarios y duelos online en un solo lugar. Entrá, elegí un juego y empezá: no necesitás registrarte.</p>
-                    <div class="home-actions">
-                        <a class="home-button home-button-primary" href="pasalache.html">
-                            Empezar ahora
-                            <i class="fas fa-arrow-right" aria-hidden="true"></i>
-                        </a>
-                        <a class="home-button home-button-secondary" href="#juegos">
-                            <i class="fas fa-grip" aria-hidden="true"></i>
-                            Ver juegos
-                        </a>
-                    </div>
-                    <ul class="home-hero-meta" aria-label="Características principales">
-                        <li><i class="fas fa-check-circle" aria-hidden="true"></i> Acceso libre</li>
-                        <li><i class="fas fa-calendar-day" aria-hidden="true"></i> Desafíos diarios</li>
-                        <li><i class="fas fa-users" aria-hidden="true"></i> Modos 1 vs 1</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+        <section class="ct4-hero" aria-labelledby="hero-title">
+  <div class="ct4-hero-media" aria-hidden="true">
+    <img src="assets/images/portada.jpg" alt="" width="1024" height="682" loading="eager" decoding="async" fetchpriority="high">
+    <span class="ct4-hero-media-slice"></span>
+  </div>
+  <div class="ct4-hero-stencil" aria-hidden="true">CRACK<br>TOTAL</div>
+  <div class="ct4-hero-inner home-shell">
+    <div class="ct4-hero-copy">
+      <div class="ct4-hero-kicker"><span class="ct4-hero-kicker-bar"></span> TU CANCHA. TUS REGLAS. <span>EST. 2026</span></div>
+      <h1 id="hero-title"><span class="ct4-hero-title-line">EL FÚTBOL</span><span class="ct4-hero-title-line ct4-hero-title-second">SE <em>JUEGA</em></span><span class="ct4-hero-title-line ct4-hero-title-last">ACÁ<span class="ct4-hero-period">.</span></span></h1>
+      <div class="ct4-hero-intro"><p>¿Quién sabe más de fútbol? Ponete a prueba, resolvé el desafío del día o enfrentá a tus amigos en vivo.</p>
+      <div class="ct4-hero-actions"><a class="ct4-button ct4-button--primary" href="#juegos">JUGAR AHORA <span aria-hidden="true">↗</span></a><a class="ct4-button ct4-button--ghost" href="pasala-1v1.html">DESAFIAR A UN AMIGO <span aria-hidden="true">↗</span></a></div></div>
+    </div>
+    <div class="ct4-hero-photo-index" aria-hidden="true"><strong>01—05</strong><span>JUEGOS DE FÚTBOL<br>PARA COMPETIR</span></div>
+  </div>
+  <div class="ct4-hero-rail" aria-label="Explorá las modalidades"><span>CRACK TOTAL / PLATAFORMA FUTBOLERA</span><a href="#desafios-diarios">DESAFÍO DIARIO <span aria-hidden="true">↓</span></a><a href="pasala-1v1.html">ARENA 1V1 <span aria-hidden="true">↗</span></a></div>
+</section>
 
-        <section class="home-section home-shell" aria-labelledby="featured-title">
-            <div class="home-section-heading home-reveal">
-                <div>
-                    <p class="home-eyebrow">Para entrar en ritmo</p>
-                    <h2 id="featured-title">Dos desafíos. Una sola pregunta: ¿cuánto sabés?</h2>
-                </div>
-                <p>Empezá con el rosco principal o volvé cada día para completar un nuevo Top 10.</p>
-            </div>
-            <div class="home-featured-grid">
-                <a class="home-feature-card home-reveal" href="pasalache.html">
-                    <img src="assets/images/blog/worldcup.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async">
-                    <div class="home-feature-content">
-                        <span class="home-feature-kicker">Juego principal</span>
-                        <h3>Pasala Che</h3>
-                        <p>Recorré las 26 letras del rosco antes de que termine el tiempo.</p>
-                        <span class="home-feature-link">Jugar el rosco <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-                    </div>
-                </a>
-                <a class="home-feature-card home-reveal" href="top10.html">
-                    <img src="assets/images/blog/championss.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async">
-                    <div class="home-feature-content">
-                        <span class="home-feature-kicker">Desafío diario</span>
-                        <h3>Top 10</h3>
-                        <p>Encontrá los diez apellidos del tema del día en dos minutos.</p>
-                        <span class="home-feature-link">Resolver el Top 10 <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-                    </div>
-                </a>
-            </div>
-        </section>
+        <section class="ct4-arena home-shell" aria-labelledby="ct4-arena-title">
+ <div class="ct4-arena-topline"><span>01 / LA ARENA</span><span>CRACK TOTAL · MULTIJUGADOR</span></div>
+ <div class="ct4-arena-layout">
+   <div class="ct4-arena-content">
+      <p class="ct4-kicker">EL DUELO QUE NO TERMINA EN LOS 90'</p>
+      <h2 id="ct4-arena-title">LA ÚLTIMA<br><em>PALABRA.</em></h2>
+      <p>Dos jugadores. Dos roscos. Un rival que no te da respiro. Creá una sala, compartí el enlace y jugá online.</p>
+      <div class="ct4-arena-modes"><span><b>01</b> ROSCO POR TURNOS</span><span><b>02</b> ROSCO ESPEJO</span></div>
+      <a class="ct4-button ct4-button--primary" href="pasala-1v1.html">ENTRAR A LA ARENA <span aria-hidden="true">↗</span></a>
+   </div>
+   <div class="ct4-arena-visual" aria-label="Ilustración de dos roscos completos de 26 letras, uno por jugador">
+      <span class="ct4-stage-grid" aria-hidden="true"></span>
+      <div class="ct4-arena-faceoff" aria-hidden="true"><div class="ct4-display-ring ct4-display-ring--left"><div class="ct4-display-letter-track"><span style="--x:50.00%;--y:7.00%" aria-hidden="true">A</span><span style="--x:60.29%;--y:8.25%" aria-hidden="true">B</span><span style="--x:69.98%;--y:11.93%" aria-hidden="true">C</span><span style="--x:78.51%;--y:17.81%" aria-hidden="true">D</span><span style="--x:85.39%;--y:25.57%" aria-hidden="true">E</span><span style="--x:90.21%;--y:34.75%" aria-hidden="true">F</span><span style="--x:92.69%;--y:44.82%" aria-hidden="true">G</span><span style="--x:92.69%;--y:55.18%" aria-hidden="true">H</span><span style="--x:90.21%;--y:65.25%" aria-hidden="true">I</span><span style="--x:85.39%;--y:74.43%" aria-hidden="true">J</span><span style="--x:78.51%;--y:82.19%" aria-hidden="true">K</span><span style="--x:69.98%;--y:88.07%" aria-hidden="true">L</span><span style="--x:60.29%;--y:91.75%" aria-hidden="true">M</span><span style="--x:50.00%;--y:93.00%" aria-hidden="true">N</span><span style="--x:39.71%;--y:91.75%" aria-hidden="true">O</span><span style="--x:30.02%;--y:88.07%" aria-hidden="true">P</span><span style="--x:21.49%;--y:82.19%" aria-hidden="true">Q</span><span style="--x:14.61%;--y:74.43%" aria-hidden="true">R</span><span style="--x:9.79%;--y:65.25%" aria-hidden="true">S</span><span style="--x:7.31%;--y:55.18%" aria-hidden="true">T</span><span style="--x:7.31%;--y:44.82%" aria-hidden="true">U</span><span style="--x:9.79%;--y:34.75%" aria-hidden="true">V</span><span style="--x:14.61%;--y:25.57%" aria-hidden="true">W</span><span style="--x:21.49%;--y:17.81%" aria-hidden="true">X</span><span style="--x:30.02%;--y:11.93%" aria-hidden="true">Y</span><span style="--x:39.71%;--y:8.25%" aria-hidden="true">Z</span><b>01</b></div></div><span class="ct4-arena-vs">VS</span><div class="ct4-display-ring ct4-display-ring--right"><div class="ct4-display-letter-track"><span style="--x:50.00%;--y:7.00%" aria-hidden="true">A</span><span style="--x:60.29%;--y:8.25%" aria-hidden="true">B</span><span style="--x:69.98%;--y:11.93%" aria-hidden="true">C</span><span style="--x:78.51%;--y:17.81%" aria-hidden="true">D</span><span style="--x:85.39%;--y:25.57%" aria-hidden="true">E</span><span style="--x:90.21%;--y:34.75%" aria-hidden="true">F</span><span style="--x:92.69%;--y:44.82%" aria-hidden="true">G</span><span style="--x:92.69%;--y:55.18%" aria-hidden="true">H</span><span style="--x:90.21%;--y:65.25%" aria-hidden="true">I</span><span style="--x:85.39%;--y:74.43%" aria-hidden="true">J</span><span style="--x:78.51%;--y:82.19%" aria-hidden="true">K</span><span style="--x:69.98%;--y:88.07%" aria-hidden="true">L</span><span style="--x:60.29%;--y:91.75%" aria-hidden="true">M</span><span style="--x:50.00%;--y:93.00%" aria-hidden="true">N</span><span style="--x:39.71%;--y:91.75%" aria-hidden="true">O</span><span style="--x:30.02%;--y:88.07%" aria-hidden="true">P</span><span style="--x:21.49%;--y:82.19%" aria-hidden="true">Q</span><span style="--x:14.61%;--y:74.43%" aria-hidden="true">R</span><span style="--x:9.79%;--y:65.25%" aria-hidden="true">S</span><span style="--x:7.31%;--y:55.18%" aria-hidden="true">T</span><span style="--x:7.31%;--y:44.82%" aria-hidden="true">U</span><span style="--x:9.79%;--y:34.75%" aria-hidden="true">V</span><span style="--x:14.61%;--y:25.57%" aria-hidden="true">W</span><span style="--x:21.49%;--y:17.81%" aria-hidden="true">X</span><span style="--x:30.02%;--y:11.93%" aria-hidden="true">Y</span><span style="--x:39.71%;--y:8.25%" aria-hidden="true">Z</span><b>02</b></div></div></div>
+      <div class="ct4-stage-caption"><span>26 LETRAS POR ROSCO</span><span>VISTA ILUSTRATIVA · NO ES UNA PARTIDA EN VIVO</span></div>
+   </div>
+ </div>
+ <div class="ct4-arena-foot"><span>RESPONDÉ · PASÁ · CAMBIÁ EL TURNO</span><a href="pasala-1v1.html">ELEGÍ TU MODALIDAD ↗</a></div>
+</section>
 
-        <section class="home-section" id="juegos" aria-labelledby="catalog-title">
-            <div class="home-shell">
-                <div class="home-section-heading home-reveal">
-                    <div>
-                        <p class="home-eyebrow">Catálogo</p>
-                        <h2 id="catalog-title">Elegí tu próximo desafío.</h2>
-                    </div>
-                    <p>Filtrá por tema o buscá el juego que mejor encaja con tu estilo.</p>
-                </div>
+        <section class="ct4-catalog home-shell" id="juegos" aria-labelledby="catalog-title">
+  <div class="ct4-section-head ct4-catalog-head"><div><p class="ct4-kicker">02 / EL VESTUARIO</p><h2 id="catalog-title">ELEGÍ <em>TU JUEGO.</em></h2></div><p>Cinco maneras de demostrar cuánto sabés. Entrá en la que más te guste.</p></div>
+  <div class="ct4-game-grid">
+   <a class="ct4-game ct4-game--rosco" href="pasalache.html">
+    <div class="ct4-game-photo" aria-hidden="true"><img src="assets/images/blog/worldcup.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async"></div>
+    <span class="ct4-game-top">01 <span>EL CLÁSICO / INDIVIDUAL</span><i aria-hidden="true">↗</i></span>
+    <div class="ct4-rosco-visual" aria-hidden="true"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span></div>
+    <div class="ct4-game-info"><span class="ct4-game-label">CONTRARRELOJ · 26 LETRAS</span><h3>PASALA<br><em>CHE.</em></h3><p>Un rosco completo. Vos contra el reloj.</p><strong>JUGAR ROSCO <span aria-hidden="true">↗</span></strong></div>
+   </a>
+   <a class="ct4-game ct4-game--top" href="top10.html">
+    <span class="ct4-game-top">02 <span>DESAFÍO DIARIO</span><i aria-hidden="true">↗</i></span>
+    <div class="ct4-top-graphic" aria-hidden="true"><span>01</span><span>02</span><span>03</span><small>04—10</small></div>
+    <div class="ct4-game-info"><span class="ct4-game-label">UN RANKING · DIEZ RESPUESTAS</span><h3>TOP <em>10.</em></h3><p>Encontrá los diez nombres antes de que termine el tiempo.</p><strong>IR AL TOP 10 <span aria-hidden="true">↗</span></strong></div>
+   </a>
+   <a class="ct4-game ct4-game--wordle" href="wordle-futbol.html">
+    <span class="ct4-game-top">03 <span>PUZZLE DEL DÍA</span><i aria-hidden="true">↗</i></span>
+    <div class="ct4-wordle-board" aria-hidden="true"><span></span><span class="ct4-filled"></span><span></span><span class="ct4-yellow"></span><span></span><span></span><span></span><span></span><span class="ct4-filled"></span><span></span><span></span><span class="ct4-yellow"></span></div>
+    <div class="ct4-game-info"><span class="ct4-game-label">SEIS INTENTOS · UN APELLIDO</span><h3>WORDLE<br><em>FUTBOLERO.</em></h3><p>Una palabra. El desafío de todos los días.</p><strong>DESCUBRIR <span aria-hidden="true">↗</span></strong></div>
+   </a>
+   <a class="ct4-game ct4-game--qsm" href="quiensabemas.html">
+    <div class="ct4-game-photo" aria-hidden="true"><img src="assets/images/blog/championss.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async"></div>
+    <span class="ct4-game-top">04 <span>TRIVIA / 1 CONTRA 1</span><i aria-hidden="true">↗</i></span>
+    <div class="ct4-qsm-graphic" aria-hidden="true"><strong>VS</strong><span>QUIÉN SABE MÁS</span></div>
+    <div class="ct4-game-info"><h3>QUIÉN<br><em>SABE MÁS.</em></h3><p>Diez preguntas. Un duelo para medir lo que sabés.</p><strong>IR AL DUELO <span aria-hidden="true">↗</span></strong></div>
+   </a>
+   <a class="ct4-game ct4-game--mentiroso" href="mentiroso.html">
+    <span class="ct4-game-top">05 <span>RIESGO / ESTRATEGIA</span><i aria-hidden="true">↗</i></span>
+    <div class="ct4-bluff-graphic" aria-hidden="true"><span>¿ME<br>CREÉS?</span><b>!</b></div>
+    <div class="ct4-game-info"><h3>MENTIROSO<span>.</span></h3><p>Apostá cuánto sabés. Desafiá a tu rival.</p><strong>ACEPTAR EL RETO <span aria-hidden="true">↗</span></strong></div>
+   </a>
+  </div>
+  <a class="ct4-catalog-more" href="games.html"><span>VER TODOS LOS JUEGOS Y MODALIDADES</span><span aria-hidden="true">↗</span></a>
+</section>
 
-                <div class="home-catalog-toolbar home-reveal">
-                    <div class="home-search">
-                        <label class="sr-only" for="gameSearch">Buscar juegos</label>
-                        <i class="fas fa-search" aria-hidden="true"></i>
-                        <input id="gameSearch" type="search" placeholder="Buscar por juego, modo o tema…" autocomplete="off">
-                    </div>
-                    <div class="home-filters" role="group" aria-label="Filtrar juegos por categoría">
-                        <button class="home-filter" type="button" data-filter="todos" aria-pressed="true">Todos</button>
-                        <button class="home-filter" type="button" data-filter="roscos" aria-pressed="false">Roscos</button>
-                        <button class="home-filter" type="button" data-filter="trivias" aria-pressed="false">Trivias</button>
-                        <button class="home-filter" type="button" data-filter="desafios" aria-pressed="false">Desafíos</button>
-                        <button class="home-filter" type="button" data-filter="mundiales" aria-pressed="false">Mundiales</button>
-                        <button class="home-filter" type="button" data-filter="clubes" aria-pressed="false">Clubes</button>
-                        <button class="home-filter" type="button" data-filter="jugadores" aria-pressed="false">Jugadores</button>
-                        <button class="home-filter" type="button" data-filter="selecciones" aria-pressed="false">Selecciones</button>
-                    </div>
-                </div>
-                <p class="sr-only" id="catalogResultStatus" aria-live="polite"></p>
+        <section class="ct4-daily home-shell" id="desafios-diarios" aria-labelledby="ct35-daily-title">
+  <div class="ct4-section-head"><div><p class="ct4-kicker">03 / FECHA DE PARTIDO</p><h2 id="ct35-daily-title">VOLVÉ <em>MAÑANA.</em></h2></div><p>Dos desafíos distintos cada día. El de hoy todavía te está esperando.</p></div>
+  <div class="ct4-daily-grid">
+   <a class="ct4-daily-main ct42-daily-main" href="top10.html" aria-describedby="homeDailyTop10Status">
+     <div class="ct4-daily-top"><span>CRACK TOTAL / RANKING OFICIAL</span><span id="homeDailyDate">DÍA DE PARTIDO</span></div>
+     <div class="ct42-daily-body"><div class="ct42-daily-content"><span class="ct4-daily-small">TOP 10 · EL DESAFÍO DE HOY</span><h3 id="homeDailyTop10Title" aria-live="polite">CARGANDO EL RANKING…</h3><p id="homeDailyTop10Context">Diez equipos, diez puestos oficiales.</p></div>
+       <div class="ct42-daily-ranks" aria-hidden="true"><span>01 <i></i></span><span>02 <i></i></span><span>03 <i></i></span><span>04 <i></i></span><span>05 <i></i></span><span>06 <i></i></span><span>07 <i></i></span><span>08 <i></i></span><span>09 <i></i></span><span>10 <i></i></span></div>
+     </div>
+     <div class="ct4-daily-bottom"><span id="homeDailyTop10Status">Preparando desafío…</span><strong>JUGAR DESAFÍO <span aria-hidden="true">↗</span></strong></div>
+   </a>
+   <a class="ct4-daily-wordle" href="wordle-futbol.html">
+      <span class="ct4-daily-top"><span>WORDLE FUTBOLERO</span><span>DIARIO ↗</span></span>
+      <div class="ct4-wordle-daily-board" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div><h3>UNA PALABRA.<br><em>SEIS INTENTOS.</em></h3><p id="homeDailyWordleStatus">Cargando estado…</p></div>
+      <strong class="ct4-daily-link">JUGAR WORDLE <span aria-hidden="true">↗</span></strong>
+   </a>
+  </div>
+</section>
 
-                <div class="home-games-grid">
-                    <a class="home-game-card home-reveal" href="pasalache.html" data-categories="roscos trivias mundiales clubes jugadores selecciones" data-search="pasala che rosco contrarreloj un jugador">
-                        <div class="home-game-media">
-                            <img src="assets/images/blog/worldcup.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async">
-                            <span class="home-game-icon" aria-hidden="true"><i class="fas fa-circle-notch"></i></span>
-                            <span class="home-game-badge">Principal</span>
-                        </div>
-                        <div class="home-game-content">
-                            <h3>Pasala Che</h3>
-                            <p class="home-game-description">Un rosco futbolero de la A a la Z con ayudas, dificultad configurable y reloj en contra.</p>
-                            <ul class="home-game-facts">
-                                <li><i class="fas fa-user" aria-hidden="true"></i> 1 jugador</li>
-                                <li><i class="fas fa-font" aria-hidden="true"></i> 26 letras</li>
-                                <li><i class="fas fa-signal" aria-hidden="true"></i> 3 dificultades</li>
-                            </ul>
-                            <span class="home-game-action">Jugar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-                        </div>
-                    </a>
+        <section class="ct4-progress home-shell" aria-labelledby="ct4-progress-title">
+ <div class="ct4-progress-lead"><p class="ct4-kicker">04 / TU RECORRIDO</p><h2 id="ct4-progress-title">CADA PARTIDA<br><em>CUENTA.</em></h2><p>Revisá tus logros, seguí tus resultados y preparate para el próximo duelo.</p></div>
+ <nav class="ct4-progress-links" aria-label="Tu progreso en Crack Total">
+  <a href="ranking.html"><span>01 / COMPARÁ TUS RESULTADOS</span><strong>RANKINGS</strong><i aria-hidden="true">↗</i></a>
+  <a href="logros.html"><span>02 / TUS OBJETIVOS</span><strong>LOGROS</strong><i aria-hidden="true">↗</i></a>
+  <a href="profile.html"><span>03 / TU ESPACIO</span><strong>MI PERFIL</strong><i aria-hidden="true">↗</i></a>
+ </nav>
+</section>
 
-                    <a class="home-game-card home-reveal" href="top10.html" data-categories="trivias desafios mundiales clubes jugadores selecciones" data-search="top 10 diario diez apellidos trivia">
-                        <div class="home-game-media">
-                            <img src="assets/images/blog/championss.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async">
-                            <span class="home-game-icon" aria-hidden="true"><i class="fas fa-list-ol"></i></span>
-                            <span class="home-game-badge">Diario</span>
-                        </div>
-                        <div class="home-game-content">
-                            <h3>Top 10</h3>
-                            <p class="home-game-description">Adiviná los diez protagonistas del tema diario antes de que se agote el tiempo.</p>
-                            <ul class="home-game-facts">
-                                <li><i class="fas fa-user" aria-hidden="true"></i> 1 jugador</li>
-                                <li><i class="fas fa-list-ol" aria-hidden="true"></i> 10 respuestas</li>
-                                <li><i class="fas fa-clock" aria-hidden="true"></i> 2 minutos</li>
-                                <li><i class="fas fa-signal" aria-hidden="true"></i> Dificultad media</li>
-                            </ul>
-                            <span class="home-game-action">Jugar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-                        </div>
-                    </a>
+        </main>
 
-                    <a class="home-game-card home-reveal" href="wordle-futbol.html" data-categories="desafios jugadores clubes selecciones" data-search="wordle futbolero apellido jugador dt diario seis intentos">
-                        <div class="home-game-media">
-                            <img src="assets/images/blog/messi.jpg" alt="" width="1024" height="576" loading="lazy" decoding="async">
-                            <span class="home-game-icon" aria-hidden="true"><i class="fas fa-border-all"></i></span>
-                            <span class="home-game-badge">Diario</span>
-                        </div>
-                        <div class="home-game-content">
-                            <h3>Wordle Futbolero</h3>
-                            <p class="home-game-description">Descubrí el apellido oculto de un futbolista o entrenador en un máximo de seis intentos.</p>
-                            <ul class="home-game-facts">
-                                <li><i class="fas fa-user" aria-hidden="true"></i> 1 jugador</li>
-                                <li><i class="fas fa-dice-six" aria-hidden="true"></i> 6 intentos</li>
-                                <li><i class="fas fa-calendar-day" aria-hidden="true"></i> Diario</li>
-                                <li><i class="fas fa-signal" aria-hidden="true"></i> Dificultad media</li>
-                            </ul>
-                            <span class="home-game-action">Jugar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-                        </div>
-                    </a>
+    <footer class="home-footer ct4-footer">
+ <div class="home-shell">
+   <div class="ct4-footer-billboard"><span>EL PARTIDO SIGUE.</span><strong>LA PRÓXIMA<br><em>LA GANÁS VOS.</em></strong><a class="ct4-footer-cta" href="games.html">SEGUÍ JUGANDO <span aria-hidden="true">↗</span></a></div>
+   <div class="ct4-footer-main">
+     <div class="ct4-footer-brand"><a class="home-brand" href="/" aria-label="Crack Total, inicio"><span class="home-brand-mark" aria-hidden="true"><i class="fas fa-futbol"></i></span><span>Crack Total</span></a><p>Fútbol para jugarlo con la cabeza.</p></div>
+     <nav class="ct4-footer-links" aria-label="Juegos y cuenta"><strong>EXPLORÁ</strong><a href="games.html">Todos los juegos</a><a href="pasala-1v1.html">Arena 1v1</a><a href="ranking.html">Rankings</a><a href="logros.html">Logros</a><a href="profile.html">Perfil</a></nav>
+     <nav class="ct4-footer-links" aria-label="Acerca de Crack Total"><strong>CRACK TOTAL</strong><a href="blog.html">Artículos</a><a href="about.html">Acerca de</a><a href="contact.html">Contacto</a><button class="home-share" type="button" onclick="shareSite()">Compartir</button></nav>
+     <nav class="ct4-footer-links" aria-label="Información legal"><strong>LEGAL</strong><a href="privacy.html">Privacidad</a><a href="cookies.html">Cookies</a><a href="terminos.html">Términos</a><a href="ads-policy.html">Publicidad</a><a href="disclaimer.html">Aviso legal</a></nav>
+   </div>
+   <div class="home-footer-bottom"><span>© <span data-current-year>2026</span> CRACK TOTAL</span><span>HECHO PARA LOS QUE VIVEN EL FÚTBOL.</span></div>
+ </div>
+</footer>
+    
 
-                    <a class="home-game-card home-reveal" href="quiensabemas.html" data-categories="trivias desafios mundiales clubes jugadores selecciones" data-search="quien sabe mas online duelo preguntas uno contra uno">
-                        <div class="home-game-media">
-                            <img src="assets/images/portada.jpg" alt="" width="1024" height="682" loading="lazy" decoding="async">
-                            <span class="home-game-icon" aria-hidden="true"><i class="fas fa-brain"></i></span>
-                            <span class="home-game-badge">Online</span>
-                        </div>
-                        <div class="home-game-content">
-                            <h3>Quién Sabe Más</h3>
-                            <p class="home-game-description">Enfrentá a un rival en un duelo de diez preguntas y compará quién sabe más de fútbol.</p>
-                            <ul class="home-game-facts">
-                                <li><i class="fas fa-users" aria-hidden="true"></i> 1 vs 1</li>
-                                <li><i class="fas fa-question" aria-hidden="true"></i> 10 preguntas</li>
-                                <li><i class="fas fa-wifi" aria-hidden="true"></i> Online</li>
-                                <li><i class="fas fa-signal" aria-hidden="true"></i> Dificultad variable</li>
-                            </ul>
-                            <span class="home-game-action">Entrar al lobby <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-                        </div>
-                    </a>
-
-                    <a class="home-game-card home-reveal" href="mentiroso.html" data-categories="trivias desafios mundiales clubes selecciones" data-search="mentiroso online bluff engaño apuesta uno contra uno">
-                        <div class="home-game-media">
-                            <img src="assets/images/blog/worldcup.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async">
-                            <span class="home-game-icon" aria-hidden="true"><i class="fas fa-masks-theater"></i></span>
-                            <span class="home-game-badge">Online</span>
-                        </div>
-                        <div class="home-game-content">
-                            <h3>Mentiroso</h3>
-                            <p class="home-game-description">Apostá cuánto sabés, desafiá a tu rival y defendé tus respuestas bajo presión.</p>
-                            <ul class="home-game-facts">
-                                <li><i class="fas fa-users" aria-hidden="true"></i> 1 vs 1</li>
-                                <li><i class="fas fa-layer-group" aria-hidden="true"></i> 6 categorías</li>
-                                <li><i class="fas fa-wifi" aria-hidden="true"></i> Online</li>
-                                <li><i class="fas fa-signal" aria-hidden="true"></i> Dificultad estratégica</li>
-                            </ul>
-                            <span class="home-game-action">Entrar al lobby <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-                        </div>
-                    </a>
-
-                    <a class="home-game-card home-reveal" href="mi-carrera.html" data-categories="desafios jugadores clubes selecciones mundiales" data-search="mi carrera modo carrera futbolista clubes transferencia titulos">
-                        <div class="home-game-media">
-                            <img src="assets/images/blog/championss.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async">
-                            <span class="home-game-icon" aria-hidden="true"><i class="fas fa-shirt"></i></span>
-                            <span class="home-game-badge">Carrera</span>
-                        </div>
-                        <div class="home-game-content">
-                            <h3>Mi Carrera</h3>
-                            <p class="home-game-description">Empezá joven, elegí tu club y viví temporadas, fichajes, títulos y un legado único.</p>
-                            <ul class="home-game-facts">
-                                <li><i class="fas fa-user" aria-hidden="true"></i> 1 jugador</li>
-                                <li><i class="fas fa-futbol" aria-hidden="true"></i> Modo carrera</li>
-                                <li><i class="fas fa-trophy" aria-hidden="true"></i> Legado</li>
-                                <li><i class="fas fa-signal" aria-hidden="true"></i> Rejugable</li>
-                            </ul>
-                            <span class="home-game-action">Empezar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-                        </div>
-                    </a>
-</div>
-
-                <div class="home-empty-state ct-empty" id="catalogEmptyState" hidden role="status">
-                    <div class="ct-empty__icon" aria-hidden="true"><i class="fas fa-futbol"></i></div>
-                    <p class="ct-empty__title">Sin resultados</p>
-                    <p class="ct-empty__text">No encontramos juegos con ese filtro. Probá otra categoría o búsqueda.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="home-section home-editorial" id="historias" aria-labelledby="stories-title">
-            <div class="home-shell">
-                <div class="home-section-heading home-reveal">
-                    <div>
-                        <p class="home-eyebrow">Leé, aprendé, volvé a jugar</p>
-                        <h2 id="stories-title">El fútbol también se entiende fuera de la cancha.</h2>
-                    </div>
-                    <div class="home-heading-action">
-                        <p>Historia, protagonistas y actualidad para alimentar cada respuesta.</p>
-                        <a class="home-text-link" href="blog.html">Ver todos los artículos <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-                    </div>
-                </div>
-
-                <div class="home-stories-grid">
-                    <a class="home-story-card home-story-card--lead home-reveal" href="blog-detail-libertadores.html">
-                        <img src="assets/images/blog/libertadores.jpg" alt="" width="1024" height="576" loading="lazy" decoding="async">
-                        <div class="home-story-overlay">
-                            <span class="home-story-kicker">Historia</span>
-                            <h3>La Copa Libertadores y las noches que hicieron grande a Sudamérica</h3>
-                            <p>Finales, héroes y rivalidades del torneo más apasionante del continente.</p>
-                            <span class="home-story-link">Leer historia <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-                        </div>
-                    </a>
-
-                    <div class="home-stories-stack">
-                        <a class="home-story-card home-story-card--compact home-reveal" href="blog-detail-scaloneta.html">
-                            <img src="assets/images/blog/scaloni.jpg" alt="" width="1024" height="576" loading="lazy" decoding="async">
-                            <div class="home-story-overlay">
-                                <span class="home-story-kicker">Selección</span>
-                                <h3>La Scaloneta: el ciclo que fue campeón del mundo y llegó otra vez a la final</h3>
-                                <span class="home-story-link">Leer artículo <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-                            </div>
-                        </a>
-                        <a class="home-story-card home-story-card--compact home-reveal" href="blog-detail-transferencias-caras.html">
-                            <img src="assets/images/blog/Mercado%20Europeo.jpg" alt="" width="1024" height="576" loading="lazy" decoding="async">
-                            <div class="home-story-overlay">
-                                <span class="home-story-kicker home-story-kicker--current">Actualidad</span>
-                                <h3>El mercado europeo y los pases que mueven al fútbol</h3>
-                                <span class="home-story-link">Leer actualidad <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
-                            </div>
-                        </a>
-                    </div>
-
-                    <aside class="home-trivia-card home-reveal" aria-labelledby="home-trivia-title">
-                        <span class="home-trivia-icon" aria-hidden="true"><i class="fas fa-lightbulb"></i></span>
-                        <p class="home-story-kicker">Dato para cracks</p>
-                        <h3 id="home-trivia-title">¿Qué selección ganó el primer Mundial en 1930?</h3>
-                        <details>
-                            <summary>Ver respuesta</summary>
-                            <p><strong>Uruguay.</strong> Fue anfitrión y venció 4–2 a Argentina en la final de Montevideo.</p>
-                        </details>
-                        <a class="home-button home-button-primary" href="pasalache.html">Poneme a prueba</a>
-                    </aside>
-                </div>
-            </div>
-        </section>
-
-        <section class="home-stats-band" aria-labelledby="stats-title">
-            <h2 class="sr-only" id="stats-title">Crack Total en números</h2>
-            <div class="home-stats-grid home-shell">
-                <div class="home-stat">
-                    <span class="home-stat-value" data-count="5">0</span>
-                    <span class="home-stat-label">Juegos publicados</span>
-                </div>
-                <div class="home-stat">
-                    <span class="home-stat-value" data-count="2">0</span>
-                    <span class="home-stat-label">Desafíos diarios</span>
-                </div>
-                <div class="home-stat">
-                    <span class="home-stat-value" data-count="3">0</span>
-                    <span class="home-stat-label">Modalidades</span>
-                </div>
-                <div class="home-stat">
-                    <span class="home-stat-value" data-count="100" data-suffix="%">0</span>
-                    <span class="home-stat-label">Acceso libre</span>
-                </div>
-            </div>
-        </section>
-
-        <section class="home-section home-shell" aria-labelledby="cta-title">
-            <div class="home-cta home-reveal">
-                <div>
-                    <p class="home-eyebrow">La pelota ya está rodando</p>
-                    <h2 id="cta-title">Tu próximo desafío empieza ahora.</h2>
-                    <p>Jugá como invitado. Cuando quieras guardar tu puntuación o competir en el ranking, creá tu perfil en segundos.</p>
-                </div>
-                <a class="home-button home-button-primary" href="pasalache.html">
-                    Jugar Pasala Che
-                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
-                </a>
-            </div>
-        </section>
-    </main>
-
-    <footer class="home-footer">
-        <div class="home-shell">
-            <div class="home-footer-grid">
-                <div class="home-footer-brand">
-                    <a class="home-brand" href="/">
-                        <span class="home-brand-mark" aria-hidden="true"><i class="fas fa-futbol"></i></span>
-                        <span>Crack Total</span>
-                    </a>
-                    <p>Juegos y desafíos para quienes viven el fútbol dentro y fuera de la cancha.</p>
-                </div>
-                <div>
-                    <h2>Competí</h2>
-                    <ul class="home-footer-links">
-                        <li><a href="games.html">Juegos</a></li>
-                        <li><a href="#historias">Historias</a></li>
-                        <li><a href="ranking.html">Rankings</a></li>
-                        <li><a href="logros.html">Logros</a></li>
-                        <li><a href="profile.html">Perfil</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h2>Descubrí</h2>
-                    <ul class="home-footer-links">
-                        <li><a href="blog.html">Blog</a></li>
-                        <li><a href="about.html">Acerca de</a></li>
-                        <li><a href="contact.html">Contacto</a></li>
-                        <li><button class="home-share" type="button" onclick="shareSite()">Compartir</button></li>
-                    </ul>
-                </div>
-                <div>
-                    <h2>Legal</h2>
-                    <ul class="home-footer-links">
-                        <li><a href="privacy.html">Privacidad</a></li>
-                        <li><a href="cookies.html">Cookies</a></li>
-                        <li><a href="terminos.html">Términos</a></li>
-                        <li><a href="ads-policy.html">Publicidad</a></li>
-                        <li><a href="disclaimer.html">Disclaimer</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="home-footer-bottom">
-                <span>© <span data-current-year>2026</span> Crack Total. Todos los derechos reservados.</span>
-                <span>Hecho para quienes nunca dejan de hablar de fútbol.</span>
-            </div>
-        </div>
-    </footer>
-
-    <script src="assets/js/config/app-config.js?v=20260801d"></script>
+        <script src="assets/js/config/app-config.js?v=20260801d"></script>
     <script src="assets/js/services/http-client.js?v=20260801"></script>
     <script src="assets/js/services/cache.js?v=20260801"></script>
     <script src="assets/js/utils/errors.js?v=20260801"></script>
@@ -495,7 +258,8 @@
     <script src="assets/js/components/toast.js?v=20260801"></script>
     <script src="assets/js/components/modal.js?v=20260801"></script>
     <script src="assets/js/player-profile.js?v=20260801"></script>
-    <script src="assets/js/home.js?v=20260801" defer></script>
+    <script src="assets/js/top10-verified.js?v=20261020a"></script>
+    <script src="assets/js/home.js?v=20261019b" defer></script>
     <script src="assets/js/main.js?v=20260801" defer></script>
   <script src="assets/js/cookie-consent.js?v=20260804a"></script>
 </body>

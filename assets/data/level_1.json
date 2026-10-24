@@ -5,28 +5,68 @@
       "respuesta": "Flamengo",
       "dificultad": 1,
       "question": "¿Qué club ganó la Copa Libertadores 2025?",
-      "answer": "Flamengo"
+      "answer": "Flamengo",
+      "opciones": {
+        "A": "Palmeiras",
+        "B": "Flamengo",
+        "C": "Botafogo",
+        "D": "River Plate"
+      },
+      "respuesta_correcta": "B",
+      "audit_status": "verified_official",
+      "source_url": "https://www.conmebol.com/pt-br/noticias-pt-br/flamengo-faz-historia-e-conquista-o-quarto-titulo-da-conmebol-libertadores-2025/",
+      "verified_at": "2026-10-20"
     },
     {
       "pregunta": "¿Qué club ganó la Champions League 2024/25?",
       "respuesta": "Paris Saint-Germain",
       "dificultad": 1,
       "question": "¿Qué club ganó la Champions League 2024/25?",
-      "answer": "Paris Saint-Germain"
+      "answer": "Paris Saint-Germain",
+      "opciones": {
+        "A": "Inter de Milán",
+        "B": "Manchester City",
+        "C": "Paris Saint-Germain",
+        "D": "Real Madrid"
+      },
+      "respuesta_correcta": "C",
+      "audit_status": "verified_official",
+      "source_url": "https://www.uefa.com/uefachampionsleague/news/029d-1ec96c30aa3f-f6868c869cbd-1000--ousmane-dembele-wins-2025-men-s-ballon-d-or/",
+      "verified_at": "2026-10-20"
     },
     {
       "pregunta": "¿Qué selección ganó el Mundial 2026?",
       "respuesta": "España",
       "dificultad": 1,
       "question": "¿Qué selección ganó el Mundial 2026?",
-      "answer": "España"
+      "answer": "España",
+      "opciones": {
+        "A": "Argentina",
+        "B": "Francia",
+        "C": "Inglaterra",
+        "D": "España"
+      },
+      "respuesta_correcta": "D",
+      "audit_status": "verified_official",
+      "source_url": "https://inside.fifa.com/organisation/news/spain-crowned-world-cup-2026-champions-new-york-new-jersey",
+      "verified_at": "2026-10-20"
     },
     {
       "pregunta": "¿Quién ganó el Balón de Oro 2025?",
       "respuesta": "Ousmane Dembélé",
       "dificultad": 1,
       "question": "¿Quién ganó el Balón de Oro 2025?",
-      "answer": "Ousmane Dembélé"
+      "answer": "Ousmane Dembélé",
+      "opciones": {
+        "A": "Kylian Mbappé",
+        "B": "Ousmane Dembélé",
+        "C": "Lamine Yamal",
+        "D": "Jude Bellingham"
+      },
+      "respuesta_correcta": "B",
+      "audit_status": "verified_official",
+      "source_url": "https://www.uefa.com/uefachampionsleague/news/029d-1ec96c30aa3f-f6868c869cbd-1000--ousmane-dembele-wins-2025-men-s-ballon-d-or/",
+      "verified_at": "2026-10-20"
     },
     {
       "pregunta": "¿Cuántos jugadores hay en cancha por equipo en un partido de fútbol?",
@@ -79,14 +119,18 @@
       "respuesta_correcta": "C"
     },
     {
-      "pregunta": "¿Cuál es el torneo de selecciones más importante del mundo?",
+      "pregunta": "¿Cómo se llama el torneo masculino de selecciones que organiza la FIFA cada cuatro años?",
       "opciones": {
         "A": "Copa América",
         "B": "Eurocopa",
         "C": "Copa del Mundo",
         "D": "Copa Confederaciones"
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "audit_status": "verified_official",
+      "source_url": "https://inside.fifa.com/tournament-organisation",
+      "verified_at": "2026-10-21",
+      "audit_reason": "Sustituye opinión sobre importancia por identificación de competición"
     },
     {
       "pregunta": "¿Qué selección ganó el Mundial de Qatar 2022?",
@@ -159,14 +203,18 @@
       "respuesta_correcta": "B"
     },
     {
-      "pregunta": "¿Cuál es el torneo de clubes más prestigioso de Europa?",
+      "pregunta": "¿Qué competición europea masculina de clubes organiza la UEFA bajo el nombre Champions League?",
       "opciones": {
         "A": "Europa League",
         "B": "Champions League",
         "C": "Conference League",
         "D": "Copa del Rey"
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "audit_status": "verified_official",
+      "source_url": "https://www.uefa.com/uefachampionsleague/about/",
+      "verified_at": "2026-10-21",
+      "audit_reason": "Sustituye valoración subjetiva de prestigio por identificación oficial"
     },
     {
       "pregunta": "¿En qué país se originó el fútbol moderno?",
@@ -219,14 +267,18 @@
       "respuesta_correcta": "C"
     },
     {
-      "pregunta": "¿Cuál es la medida más grande permitida para una cancha de fútbol según FIFA?",
+      "pregunta": "¿Cuáles son la longitud y anchura máximas permitidas para un campo en partidos internacionales según la Regla 1 del IFAB?",
       "opciones": {
         "A": "100 x 64 metros",
         "B": "110 x 75 metros",
         "C": "120 x 80 metros",
         "D": "105 x 68 metros"
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "audit_status": "verified_official",
+      "source_url": "https://theifab.com/laws/latest/the-field-of-play/",
+      "verified_at": "2026-10-21",
+      "audit_reason": "110 × 75 m sólo corresponde al máximo de partidos internacionales; el general es 120 × 90 m"
     },
     {
       "pregunta": "¿Qué significa una tarjeta amarilla?",
@@ -259,14 +311,18 @@
       "respuesta_correcta": "D"
     },
     {
-      "pregunta": "¿Cuál es el clásico más famoso del fútbol argentino?",
+      "pregunta": "¿Qué dos clubes protagonizan el partido conocido como Superclásico del fútbol argentino?",
       "opciones": {
         "A": "Racing vs Independiente",
         "B": "San Lorenzo vs Huracán",
         "C": "Boca vs River",
         "D": "Estudiantes vs Gimnasia"
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "audit_status": "verified_official",
+      "source_url": "https://www.afa.com.ar/es/posts/domingo-de-superclasico-boca-derroto-1-0-a-river",
+      "verified_at": "2026-10-21",
+      "audit_reason": "Sustituye fama subjetiva por denominación oficial"
     },
     {
       "pregunta": "¿Qué selección es conocida como 'La Celeste'?",
@@ -1089,7 +1145,7 @@
       "respuesta_correcta": "A"
     },
     {
-      "pregunta": "¿Qué club brasileño es conocido mundialmente por sus colores amarillo y verde?",
+      "pregunta": "¿Qué club brasileño es conocido como el Peixe y utiliza tradicionalmente los colores blanco y negro?",
       "opciones": {
         "A": "Flamengo",
         "B": "Santos",
@@ -1117,6 +1173,55 @@
         "D": "España"
       },
       "respuesta_correcta": "B"
+    },
+    {
+      "pregunta": "¿Quién ganó el Balón de Oro al mejor jugador del Mundial masculino 2026?",
+      "opciones": {
+        "A": "Rodri",
+        "B": "Lamine Yamal",
+        "C": "Kylian Mbappé",
+        "D": "Lionel Messi"
+      },
+      "respuesta_correcta": "A",
+      "audit_status": "verified_official",
+      "source_url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/award-winners",
+      "verified_at": "2026-10-20"
+    },
+    {
+      "pregunta": "¿Qué selección terminó subcampeona del Mundial masculino de la FIFA 2026?",
+      "opciones": {
+        "A": "Francia",
+        "B": "Inglaterra",
+        "C": "Argentina",
+        "D": "Alemania"
+      },
+      "respuesta_correcta": "C",
+      "audit_status": "verified_official",
+      "source_url": "https://inside.fifa.com/organisation/news/spain-crowned-world-cup-2026-champions-new-york-new-jersey",
+      "verified_at": "2026-10-20"
+    },
+    {
+      "pregunta": "¿En qué ciudad se jugó la final de la Copa Libertadores 2025?",
+      "opciones": {
+        "A": "Río de Janeiro",
+        "B": "Lima",
+        "C": "Montevideo",
+        "D": "Santiago"
+      },
+      "respuesta_correcta": "B",
+      "audit_status": "verified_official",
+      "source_url": "https://gol.conmebol.com/libertadores/es/news/palmeiras-en-la-conmebol-libertadores-2026-resultados-plantel-y-calendario",
+      "verified_at": "2026-10-20"
+    },
+    {
+      "pregunta": "¿Con qué marcador le ganó el Paris Saint-Germain al Inter en la final de la Champions League 2024/25?",
+      "opciones": {
+        "A": "3-1",
+        "B": "2-0",
+        "C": "4-2",
+        "D": "5-0"
+      },
+      "respuesta_correcta": "D"
     }
   ]
 }

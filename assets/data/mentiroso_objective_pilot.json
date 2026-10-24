@@ -1,0 +1,1109 @@
+{
+  "version": "2026-10-21-objective-20min-2",
+  "verified_at": "2026-10-21",
+  "status": "verified_historical_closed_sets_editorial_release_pending",
+  "min_answers_per_challenge": 20,
+  "challenges": [
+    {
+      "id": "arg-liga-profesional-2024",
+      "category": "Fútbol Argentino",
+      "template": "Puedo nombrar X clubes que disputaron la Liga Profesional argentina durante 2024.",
+      "cutoff": "2024-12-22",
+      "competition": "arg",
+      "inclusion_criteria": "clubes que disputaron la Liga Profesional argentina durante 2024.",
+      "exclusion_criteria": "No incluir entidades ajenas a la lista oficial ni contar alias como entidades distintas.",
+      "difficulty": "media",
+      "source_urls": [
+        "https://www.ligaprofesional.ar/?p=48022"
+      ],
+      "verified_at": "2026-10-21",
+      "audit_status": "verified_official_collection",
+      "answers": [
+        {
+          "id": "barracas-central",
+          "label": "Barracas Central",
+          "aliases": [
+            "Barracas"
+          ]
+        },
+        {
+          "id": "velez-sarsfield",
+          "label": "Vélez Sarsfield",
+          "aliases": [
+            "Vélez"
+          ]
+        },
+        {
+          "id": "river-plate",
+          "label": "River Plate",
+          "aliases": [
+            "River"
+          ]
+        },
+        {
+          "id": "argentinos-juniors",
+          "label": "Argentinos Juniors",
+          "aliases": [
+            "Argentinos"
+          ]
+        },
+        {
+          "id": "instituto",
+          "label": "Instituto",
+          "aliases": [
+            "Instituto de Córdoba"
+          ]
+        },
+        {
+          "id": "deportivo-riestra",
+          "label": "Deportivo Riestra",
+          "aliases": [
+            "Riestra"
+          ]
+        },
+        {
+          "id": "atletico-tucuman",
+          "label": "Atlético Tucumán"
+        },
+        {
+          "id": "rosario-central",
+          "label": "Rosario Central"
+        },
+        {
+          "id": "banfield",
+          "label": "Banfield"
+        },
+        {
+          "id": "huracan",
+          "label": "Huracán"
+        },
+        {
+          "id": "talleres-de-cordoba",
+          "label": "Talleres de Córdoba",
+          "aliases": [
+            "Talleres"
+          ]
+        },
+        {
+          "id": "gimnasia-y-esgrima-la-plata",
+          "label": "Gimnasia y Esgrima La Plata",
+          "aliases": [
+            "Gimnasia La Plata",
+            "Gimnasia LP"
+          ]
+        },
+        {
+          "id": "independiente-rivadavia",
+          "label": "Independiente Rivadavia"
+        },
+        {
+          "id": "independiente-de-avellaneda",
+          "label": "Independiente de Avellaneda",
+          "aliases": [
+            "Independiente"
+          ]
+        },
+        {
+          "id": "tigre",
+          "label": "Tigre"
+        },
+        {
+          "id": "sarmiento-de-junin",
+          "label": "Sarmiento de Junín",
+          "aliases": [
+            "Sarmiento"
+          ]
+        },
+        {
+          "id": "platense",
+          "label": "Platense"
+        },
+        {
+          "id": "boca-juniors",
+          "label": "Boca Juniors",
+          "aliases": [
+            "Boca"
+          ]
+        },
+        {
+          "id": "godoy-cruz",
+          "label": "Godoy Cruz"
+        },
+        {
+          "id": "defensa-y-justicia",
+          "label": "Defensa y Justicia"
+        },
+        {
+          "id": "central-cordoba-de-santiago-del-estero",
+          "label": "Central Córdoba de Santiago del Estero",
+          "aliases": [
+            "Central Córdoba"
+          ]
+        },
+        {
+          "id": "newell-s-old-boys",
+          "label": "Newell's Old Boys",
+          "aliases": [
+            "Newells",
+            "Newell's"
+          ]
+        },
+        {
+          "id": "san-lorenzo-de-almagro",
+          "label": "San Lorenzo de Almagro",
+          "aliases": [
+            "San Lorenzo"
+          ]
+        },
+        {
+          "id": "lanus",
+          "label": "Lanús"
+        },
+        {
+          "id": "estudiantes-de-la-plata",
+          "label": "Estudiantes de La Plata",
+          "aliases": [
+            "Estudiantes",
+            "Estudiantes LP"
+          ]
+        },
+        {
+          "id": "belgrano-de-cordoba",
+          "label": "Belgrano de Córdoba",
+          "aliases": [
+            "Belgrano"
+          ]
+        },
+        {
+          "id": "racing-club",
+          "label": "Racing Club",
+          "aliases": [
+            "Racing"
+          ]
+        },
+        {
+          "id": "union-de-santa-fe",
+          "label": "Unión de Santa Fe",
+          "aliases": [
+            "Unión"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "libertadores-fase-grupos-2026",
+      "category": "Libertadores",
+      "template": "Puedo nombrar X clubes que integraron la fase de grupos de la CONMEBOL Libertadores 2026.",
+      "cutoff": "2026-05-28",
+      "competition": "libertadores",
+      "inclusion_criteria": "clubes que integraron la fase de grupos de la CONMEBOL Libertadores 2026.",
+      "exclusion_criteria": "No incluir entidades ajenas a la lista oficial ni contar alias como entidades distintas.",
+      "difficulty": "media",
+      "source_urls": [
+        "https://gol.conmebol.com/libertadores/es/news/sorteo-de-la-fase-de-grupos-de-la-conmebol-libertadores-2026-fecha-horario-clasificados"
+      ],
+      "verified_at": "2026-10-21",
+      "audit_status": "verified_official_collection",
+      "answers": [
+        {
+          "id": "boca-juniors",
+          "label": "Boca Juniors",
+          "aliases": [
+            "Boca"
+          ]
+        },
+        {
+          "id": "estudiantes-de-la-plata",
+          "label": "Estudiantes de La Plata",
+          "aliases": [
+            "Estudiantes"
+          ]
+        },
+        {
+          "id": "independiente-rivadavia",
+          "label": "Independiente Rivadavia"
+        },
+        {
+          "id": "lanus",
+          "label": "Lanús"
+        },
+        {
+          "id": "rosario-central",
+          "label": "Rosario Central"
+        },
+        {
+          "id": "platense",
+          "label": "Platense"
+        },
+        {
+          "id": "always-ready",
+          "label": "Always Ready"
+        },
+        {
+          "id": "bolivar",
+          "label": "Bolívar"
+        },
+        {
+          "id": "corinthians",
+          "label": "Corinthians"
+        },
+        {
+          "id": "cruzeiro",
+          "label": "Cruzeiro"
+        },
+        {
+          "id": "flamengo",
+          "label": "Flamengo"
+        },
+        {
+          "id": "fluminense",
+          "label": "Fluminense"
+        },
+        {
+          "id": "mirassol",
+          "label": "Mirassol"
+        },
+        {
+          "id": "palmeiras",
+          "label": "Palmeiras"
+        },
+        {
+          "id": "coquimbo-unido",
+          "label": "Coquimbo Unido"
+        },
+        {
+          "id": "universidad-catolica-de-chile",
+          "label": "Universidad Católica de Chile",
+          "aliases": [
+            "Universidad Católica"
+          ]
+        },
+        {
+          "id": "deportes-tolima",
+          "label": "Deportes Tolima",
+          "aliases": [
+            "Tolima"
+          ]
+        },
+        {
+          "id": "independiente-medellin",
+          "label": "Independiente Medellín",
+          "aliases": [
+            "DIM"
+          ]
+        },
+        {
+          "id": "junior-de-barranquilla",
+          "label": "Junior de Barranquilla",
+          "aliases": [
+            "Junior"
+          ]
+        },
+        {
+          "id": "independiente-santa-fe",
+          "label": "Independiente Santa Fe",
+          "aliases": [
+            "Santa Fe"
+          ]
+        },
+        {
+          "id": "barcelona-sc-de-guayaquil",
+          "label": "Barcelona SC de Guayaquil",
+          "aliases": [
+            "Barcelona SC",
+            "Barcelona de Guayaquil"
+          ]
+        },
+        {
+          "id": "independiente-del-valle",
+          "label": "Independiente del Valle"
+        },
+        {
+          "id": "liga-de-quito",
+          "label": "Liga de Quito",
+          "aliases": [
+            "LDU Quito",
+            "LDU"
+          ]
+        },
+        {
+          "id": "cerro-porteno",
+          "label": "Cerro Porteño"
+        },
+        {
+          "id": "libertad",
+          "label": "Libertad"
+        },
+        {
+          "id": "cusco-fc",
+          "label": "Cusco FC",
+          "aliases": [
+            "Cusco"
+          ]
+        },
+        {
+          "id": "sporting-cristal",
+          "label": "Sporting Cristal"
+        },
+        {
+          "id": "universitario-de-deportes",
+          "label": "Universitario de Deportes",
+          "aliases": [
+            "Universitario"
+          ]
+        },
+        {
+          "id": "nacional-de-montevideo",
+          "label": "Nacional de Montevideo",
+          "aliases": [
+            "Nacional"
+          ]
+        },
+        {
+          "id": "penarol",
+          "label": "Peñarol"
+        },
+        {
+          "id": "deportivo-la-guaira",
+          "label": "Deportivo La Guaira"
+        },
+        {
+          "id": "universidad-central-de-venezuela",
+          "label": "Universidad Central de Venezuela",
+          "aliases": [
+            "Universidad Central",
+            "UCV"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mundial-fase-grupos-qatar-2022",
+      "category": "Mundiales",
+      "template": "Puedo nombrar X selecciones que participaron en el Mundial masculino de Qatar 2022.",
+      "cutoff": "2022-12-18",
+      "competition": "mundial",
+      "inclusion_criteria": "selecciones que participaron en el Mundial masculino de Qatar 2022.",
+      "exclusion_criteria": "No incluir entidades ajenas a la lista oficial ni contar alias como entidades distintas.",
+      "difficulty": "media",
+      "source_urls": [
+        "https://inside.fifa.com/tournament-organisation/world-cup-2022-in-numbers/fifa-world-cup-qatar-2022-at-a-glance"
+      ],
+      "verified_at": "2026-10-21",
+      "audit_status": "verified_official_collection",
+      "answers": [
+        {
+          "id": "qatar",
+          "label": "Qatar",
+          "aliases": [
+            "Catar"
+          ]
+        },
+        {
+          "id": "ecuador",
+          "label": "Ecuador"
+        },
+        {
+          "id": "senegal",
+          "label": "Senegal"
+        },
+        {
+          "id": "paises-bajos",
+          "label": "Países Bajos",
+          "aliases": [
+            "Holanda",
+            "Netherlands"
+          ]
+        },
+        {
+          "id": "inglaterra",
+          "label": "Inglaterra",
+          "aliases": [
+            "England"
+          ]
+        },
+        {
+          "id": "iran",
+          "label": "Irán",
+          "aliases": [
+            "Iran"
+          ]
+        },
+        {
+          "id": "estados-unidos",
+          "label": "Estados Unidos",
+          "aliases": [
+            "USA",
+            "EEUU"
+          ]
+        },
+        {
+          "id": "gales",
+          "label": "Gales",
+          "aliases": [
+            "Wales"
+          ]
+        },
+        {
+          "id": "argentina",
+          "label": "Argentina"
+        },
+        {
+          "id": "arabia-saudita",
+          "label": "Arabia Saudita",
+          "aliases": [
+            "Arabia Saudí",
+            "Saudi Arabia"
+          ]
+        },
+        {
+          "id": "mexico",
+          "label": "México"
+        },
+        {
+          "id": "polonia",
+          "label": "Polonia"
+        },
+        {
+          "id": "francia",
+          "label": "Francia"
+        },
+        {
+          "id": "australia",
+          "label": "Australia"
+        },
+        {
+          "id": "dinamarca",
+          "label": "Dinamarca"
+        },
+        {
+          "id": "tunez",
+          "label": "Túnez"
+        },
+        {
+          "id": "espana",
+          "label": "España"
+        },
+        {
+          "id": "costa-rica",
+          "label": "Costa Rica"
+        },
+        {
+          "id": "alemania",
+          "label": "Alemania"
+        },
+        {
+          "id": "japon",
+          "label": "Japón"
+        },
+        {
+          "id": "belgica",
+          "label": "Bélgica"
+        },
+        {
+          "id": "canada",
+          "label": "Canadá"
+        },
+        {
+          "id": "marruecos",
+          "label": "Marruecos"
+        },
+        {
+          "id": "croacia",
+          "label": "Croacia"
+        },
+        {
+          "id": "brasil",
+          "label": "Brasil"
+        },
+        {
+          "id": "serbia",
+          "label": "Serbia"
+        },
+        {
+          "id": "suiza",
+          "label": "Suiza"
+        },
+        {
+          "id": "camerun",
+          "label": "Camerún"
+        },
+        {
+          "id": "portugal",
+          "label": "Portugal"
+        },
+        {
+          "id": "ghana",
+          "label": "Ghana"
+        },
+        {
+          "id": "uruguay",
+          "label": "Uruguay"
+        },
+        {
+          "id": "corea-del-sur",
+          "label": "Corea del Sur",
+          "aliases": [
+            "Corea del Sur",
+            "South Korea"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "champions-grupos-2023-24",
+      "category": "Champions League",
+      "template": "Puedo nombrar X clubes de la fase de grupos de la UEFA Champions League 2023/24.",
+      "cutoff": "2024-06-01",
+      "competition": "champions",
+      "inclusion_criteria": "clubes de la fase de grupos de la UEFA Champions League 2023/24.",
+      "exclusion_criteria": "No incluir entidades ajenas a la lista oficial ni contar alias como entidades distintas.",
+      "difficulty": "media",
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/0283-188394537406-c113ed18f2d0-1000--group-stage-line-up-complete/"
+      ],
+      "verified_at": "2026-10-21",
+      "audit_status": "verified_official_collection",
+      "answers": [
+        {
+          "id": "bayern-munich",
+          "label": "Bayern Múnich",
+          "aliases": [
+            "Bayern Munich",
+            "Bayern München",
+            "Bayern"
+          ]
+        },
+        {
+          "id": "manchester-united",
+          "label": "Manchester United",
+          "aliases": [
+            "Man United"
+          ]
+        },
+        {
+          "id": "fc-copenhague",
+          "label": "FC Copenhague",
+          "aliases": [
+            "Copenhague",
+            "Copenhagen"
+          ]
+        },
+        {
+          "id": "galatasaray",
+          "label": "Galatasaray"
+        },
+        {
+          "id": "sevilla-fc",
+          "label": "Sevilla FC",
+          "aliases": [
+            "Sevilla"
+          ]
+        },
+        {
+          "id": "arsenal",
+          "label": "Arsenal"
+        },
+        {
+          "id": "psv-eindhoven",
+          "label": "PSV Eindhoven",
+          "aliases": [
+            "PSV"
+          ]
+        },
+        {
+          "id": "lens",
+          "label": "Lens",
+          "aliases": [
+            "RC Lens"
+          ]
+        },
+        {
+          "id": "napoles",
+          "label": "Nápoles",
+          "aliases": [
+            "Napoli"
+          ]
+        },
+        {
+          "id": "real-madrid",
+          "label": "Real Madrid"
+        },
+        {
+          "id": "sporting-braga",
+          "label": "Sporting Braga",
+          "aliases": [
+            "Braga"
+          ]
+        },
+        {
+          "id": "union-berlin",
+          "label": "Unión Berlín",
+          "aliases": [
+            "Union Berlin"
+          ]
+        },
+        {
+          "id": "benfica",
+          "label": "Benfica"
+        },
+        {
+          "id": "inter-de-milan",
+          "label": "Inter de Milán",
+          "aliases": [
+            "Inter Milan",
+            "Internazionale",
+            "Inter"
+          ]
+        },
+        {
+          "id": "red-bull-salzburgo",
+          "label": "Red Bull Salzburgo",
+          "aliases": [
+            "Salzburgo",
+            "Salzburg"
+          ]
+        },
+        {
+          "id": "real-sociedad",
+          "label": "Real Sociedad"
+        },
+        {
+          "id": "feyenoord",
+          "label": "Feyenoord"
+        },
+        {
+          "id": "atletico-de-madrid",
+          "label": "Atlético de Madrid",
+          "aliases": [
+            "Atletico Madrid",
+            "Atlético Madrid"
+          ]
+        },
+        {
+          "id": "lazio",
+          "label": "Lazio"
+        },
+        {
+          "id": "celtic",
+          "label": "Celtic"
+        },
+        {
+          "id": "paris-saint-germain",
+          "label": "Paris Saint-Germain",
+          "aliases": [
+            "PSG",
+            "Paris"
+          ]
+        },
+        {
+          "id": "borussia-dortmund",
+          "label": "Borussia Dortmund",
+          "aliases": [
+            "Dortmund"
+          ]
+        },
+        {
+          "id": "ac-milan",
+          "label": "AC Milan",
+          "aliases": [
+            "Milan"
+          ]
+        },
+        {
+          "id": "newcastle-united",
+          "label": "Newcastle United",
+          "aliases": [
+            "Newcastle"
+          ]
+        },
+        {
+          "id": "manchester-city",
+          "label": "Manchester City",
+          "aliases": [
+            "Man City"
+          ]
+        },
+        {
+          "id": "rb-leipzig",
+          "label": "RB Leipzig",
+          "aliases": [
+            "Leipzig"
+          ]
+        },
+        {
+          "id": "estrella-roja-de-belgrado",
+          "label": "Estrella Roja de Belgrado",
+          "aliases": [
+            "Crvena zvezda",
+            "Red Star Belgrade"
+          ]
+        },
+        {
+          "id": "young-boys",
+          "label": "Young Boys",
+          "aliases": [
+            "BSC Young Boys"
+          ]
+        },
+        {
+          "id": "fc-barcelona",
+          "label": "FC Barcelona",
+          "aliases": [
+            "Barcelona"
+          ]
+        },
+        {
+          "id": "fc-porto",
+          "label": "FC Porto",
+          "aliases": [
+            "Porto"
+          ]
+        },
+        {
+          "id": "shakhtar-donetsk",
+          "label": "Shakhtar Donetsk"
+        },
+        {
+          "id": "royal-antwerp",
+          "label": "Royal Antwerp",
+          "aliases": [
+            "Antwerp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seleccion-argentina-qatar-2022",
+      "category": "Selección Argentina",
+      "template": "Puedo nombrar X integrantes del plantel definitivo de Argentina en el Mundial masculino Qatar 2022.",
+      "cutoff": "2022-12-18",
+      "competition": "seleccion",
+      "inclusion_criteria": "integrantes del plantel definitivo de Argentina en el Mundial masculino Qatar 2022.",
+      "exclusion_criteria": "No incluir entidades ajenas a la lista oficial ni contar alias como entidades distintas.",
+      "difficulty": "media",
+      "source_urls": [
+        "https://www.afa.com.ar/es/posts/origen-futbolistas"
+      ],
+      "verified_at": "2026-10-21",
+      "audit_status": "verified_official_collection",
+      "answers": [
+        {
+          "id": "franco-armani",
+          "label": "Franco Armani",
+          "aliases": [
+            "Armani"
+          ]
+        },
+        {
+          "id": "emiliano-martinez",
+          "label": "Emiliano Martínez",
+          "aliases": [
+            "Dibu Martínez",
+            "Emiliano Martinez"
+          ]
+        },
+        {
+          "id": "geronimo-rulli",
+          "label": "Gerónimo Rulli",
+          "aliases": [
+            "Rulli"
+          ]
+        },
+        {
+          "id": "marcos-acuna",
+          "label": "Marcos Acuña",
+          "aliases": [
+            "Acuña"
+          ]
+        },
+        {
+          "id": "juan-foyth",
+          "label": "Juan Foyth",
+          "aliases": [
+            "Foyth"
+          ]
+        },
+        {
+          "id": "lisandro-martinez",
+          "label": "Lisandro Martínez",
+          "aliases": [
+            "Lisandro Martinez"
+          ]
+        },
+        {
+          "id": "nahuel-molina",
+          "label": "Nahuel Molina",
+          "aliases": [
+            "Molina"
+          ]
+        },
+        {
+          "id": "gonzalo-montiel",
+          "label": "Gonzalo Montiel",
+          "aliases": [
+            "Montiel"
+          ]
+        },
+        {
+          "id": "nicolas-otamendi",
+          "label": "Nicolás Otamendi",
+          "aliases": [
+            "Otamendi"
+          ]
+        },
+        {
+          "id": "german-pezzella",
+          "label": "Germán Pezzella",
+          "aliases": [
+            "Pezzella"
+          ]
+        },
+        {
+          "id": "nicolas-tagliafico",
+          "label": "Nicolás Tagliafico",
+          "aliases": [
+            "Tagliafico"
+          ]
+        },
+        {
+          "id": "cristian-romero",
+          "label": "Cristian Romero",
+          "aliases": [
+            "Cuti Romero",
+            "Romero"
+          ]
+        },
+        {
+          "id": "rodrigo-de-paul",
+          "label": "Rodrigo De Paul",
+          "aliases": [
+            "De Paul"
+          ]
+        },
+        {
+          "id": "enzo-fernandez",
+          "label": "Enzo Fernández",
+          "aliases": [
+            "Enzo Fernandez"
+          ]
+        },
+        {
+          "id": "alejandro-gomez",
+          "label": "Alejandro Gómez",
+          "aliases": [
+            "Papu Gómez",
+            "Papu Gomez"
+          ]
+        },
+        {
+          "id": "alexis-mac-allister",
+          "label": "Alexis Mac Allister",
+          "aliases": [
+            "Mac Allister"
+          ]
+        },
+        {
+          "id": "exequiel-palacios",
+          "label": "Exequiel Palacios",
+          "aliases": [
+            "Palacios"
+          ]
+        },
+        {
+          "id": "leandro-paredes",
+          "label": "Leandro Paredes",
+          "aliases": [
+            "Paredes"
+          ]
+        },
+        {
+          "id": "guido-rodriguez",
+          "label": "Guido Rodríguez",
+          "aliases": [
+            "Guido Rodriguez"
+          ]
+        },
+        {
+          "id": "julian-alvarez",
+          "label": "Julián Álvarez",
+          "aliases": [
+            "Julian Alvarez"
+          ]
+        },
+        {
+          "id": "thiago-almada",
+          "label": "Thiago Almada",
+          "aliases": [
+            "Almada"
+          ]
+        },
+        {
+          "id": "angel-di-maria",
+          "label": "Ángel Di María",
+          "aliases": [
+            "Angel Di Maria",
+            "Di María"
+          ]
+        },
+        {
+          "id": "paulo-dybala",
+          "label": "Paulo Dybala",
+          "aliases": [
+            "Dybala"
+          ]
+        },
+        {
+          "id": "angel-correa",
+          "label": "Ángel Correa",
+          "aliases": [
+            "Angel Correa"
+          ]
+        },
+        {
+          "id": "lautaro-martinez",
+          "label": "Lautaro Martínez",
+          "aliases": [
+            "Lautaro Martinez"
+          ]
+        },
+        {
+          "id": "lionel-messi",
+          "label": "Lionel Messi",
+          "aliases": [
+            "Messi"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "premier-league-2023-24",
+      "category": "Fútbol General",
+      "template": "Puedo nombrar X clubes que disputaron la Premier League inglesa 2023/24.",
+      "cutoff": "2024-05-19",
+      "competition": "premier",
+      "inclusion_criteria": "clubes que disputaron la Premier League inglesa 2023/24.",
+      "exclusion_criteria": "No incluir entidades ajenas a la lista oficial ni contar alias como entidades distintas.",
+      "difficulty": "media",
+      "source_urls": [
+        "https://www.premierleague.com/es/news/4028389/premier-league-202324-club-by-club-review"
+      ],
+      "verified_at": "2026-10-21",
+      "audit_status": "verified_official_collection",
+      "answers": [
+        {
+          "id": "arsenal",
+          "label": "Arsenal"
+        },
+        {
+          "id": "aston-villa",
+          "label": "Aston Villa"
+        },
+        {
+          "id": "afc-bournemouth",
+          "label": "AFC Bournemouth",
+          "aliases": [
+            "Bournemouth"
+          ]
+        },
+        {
+          "id": "brentford",
+          "label": "Brentford"
+        },
+        {
+          "id": "brighton-hove-albion",
+          "label": "Brighton & Hove Albion",
+          "aliases": [
+            "Brighton"
+          ]
+        },
+        {
+          "id": "burnley",
+          "label": "Burnley"
+        },
+        {
+          "id": "chelsea",
+          "label": "Chelsea"
+        },
+        {
+          "id": "crystal-palace",
+          "label": "Crystal Palace"
+        },
+        {
+          "id": "everton",
+          "label": "Everton"
+        },
+        {
+          "id": "fulham",
+          "label": "Fulham"
+        },
+        {
+          "id": "liverpool",
+          "label": "Liverpool"
+        },
+        {
+          "id": "luton-town",
+          "label": "Luton Town",
+          "aliases": [
+            "Luton"
+          ]
+        },
+        {
+          "id": "manchester-city",
+          "label": "Manchester City",
+          "aliases": [
+            "Man City"
+          ]
+        },
+        {
+          "id": "manchester-united",
+          "label": "Manchester United",
+          "aliases": [
+            "Man United"
+          ]
+        },
+        {
+          "id": "newcastle-united",
+          "label": "Newcastle United",
+          "aliases": [
+            "Newcastle"
+          ]
+        },
+        {
+          "id": "nottingham-forest",
+          "label": "Nottingham Forest",
+          "aliases": [
+            "Forest"
+          ]
+        },
+        {
+          "id": "sheffield-united",
+          "label": "Sheffield United"
+        },
+        {
+          "id": "tottenham-hotspur",
+          "label": "Tottenham Hotspur",
+          "aliases": [
+            "Tottenham",
+            "Spurs"
+          ]
+        },
+        {
+          "id": "west-ham-united",
+          "label": "West Ham United",
+          "aliases": [
+            "West Ham"
+          ]
+        },
+        {
+          "id": "wolverhampton-wanderers",
+          "label": "Wolverhampton Wanderers",
+          "aliases": [
+            "Wolves",
+            "Wolverhampton"
+          ]
+        }
+      ]
+    }
+  ]
+}

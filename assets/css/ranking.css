@@ -42,7 +42,7 @@
 .ranking-page-body {
     background: var(--ranking-bg);
     color: var(--ranking-text);
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Manrope', sans-serif;
     line-height: 1.5;
     min-height: 100vh;
     margin: 0;
@@ -90,7 +90,7 @@
 /* === TÍTULOS === */
 .ranking-title,
 .history-title {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Space Grotesk', 'Manrope', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 1rem;

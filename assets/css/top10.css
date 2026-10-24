@@ -1,35 +1,215 @@
-.top10-body { background: radial-gradient(100% 100% at 50% 0%, #0f1220, #12172a); }
-.top10-header { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; padding:8px 8px; }
-.top10-header .title-text { font-family:'Oswald',sans-serif; font-size:1.5rem; text-transform:uppercase; letter-spacing:.5px }
-.top10-header .subtitle { color:rgba(255,255,255,.75) }
-.top10-card { position:relative; background: linear-gradient(180deg, rgba(20,22,35,.92), rgba(12,14,24,.95)); border:1px solid rgba(121,242,166,.28); border-radius:18px; padding:12px; box-shadow: 0 16px 40px rgba(0,0,0,.5); max-width:560px; margin: 0 auto; backdrop-filter: blur(6px); }
-.top10-header-area { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; }
-.top10-header-area .topic { font-weight:900; font-size:1.05rem; letter-spacing:.3px }
-.top10-header-area .meta { display:flex; gap:6px; flex-wrap:wrap; align-items:center }
-.chip { background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); padding:6px 10px; border-radius:999px; font-size:.9rem; color:#eaeaea }
-.grid { display:grid; gap:10px; }
-.answers { list-style:decimal inside; display:grid; grid-template-columns: 1fr; gap:8px; margin:0; padding:0; }
-.answers li { background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)); border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:8px 10px; display:flex; align-items:center; justify-content:space-between; min-height:40px; gap:8px; transition: transform .12s ease, background .2s ease }
-.answers li:hover { transform: translateY(-1px); background: rgba(255,255,255,.08) }
-.answers li .hint { opacity:.85; font-size:.9rem; background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); padding:2px 6px; border-radius:8px; display:flex; align-items:center; gap:6px }
-.answers li .hint .flag-emoji { font-size: 1rem; line-height: 1; }
-.answers li .hint .flag { width:20px; height:14px; border-radius:3px; overflow:hidden; box-shadow: 0 0 0 1px rgba(255,255,255,.3) inset; object-fit:cover; background:#1a2233 }
-.answers li .label { margin-left: auto; font-weight: 800; letter-spacing: .5px; opacity:.8; }
-.answers li.solved { background: rgba(34,197,94,.2); border-color: rgba(34,197,94,.45); color:#eaffef; }
-.answers li.revealed { background: rgba(59,130,246,.18); border-color: rgba(59,130,246,.45); }
-.input-area { display:flex; gap:8px; flex-wrap:wrap; }
-.top10-input { flex:1; min-width:180px; padding:16px 16px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.05)); color:#fff; outline:none; font-size:1.08rem; box-shadow: inset 0 1px 2px rgba(0,0,0,.25) }
-.top10-input:focus-visible { outline: 2px solid var(--ct-accent, #79f2a6); outline-offset: 2px; }
-.top10-input:focus { border-color:#79f2a6; box-shadow: 0 0 0 3px rgba(121,242,166,.2); }
-.primary-button, .secondary-button { border:0; border-radius:12px; padding:10px 14px; font-weight:700; cursor:pointer }
-.primary-button { background: linear-gradient(135deg, #79f2a6, #31e5b2); color:#04120a }
-.secondary-button { background: linear-gradient(135deg, #374151, #2d3748); color:#e6e6e6 }
-.messages { min-height:24px; color:#eaeaea; opacity:.85 }
-.guesses { display:flex; gap:6px; flex-wrap:wrap }
-.guesses .guess { background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); padding:4px 8px; border-radius:999px; font-size:.85rem }
-.daily-overlay { position:absolute; inset:0; background: rgba(15,23,42,.8); backdrop-filter: blur(12px); border-radius:16px; z-index:10; display:flex; align-items:center; justify-content:center; text-align:center; }
-.daily-overlay .overlay-content { display:flex; flex-direction:column; gap:10px; }
-.modal-content.result-modal { border:1px solid rgba(121,242,166,.28); border-radius:16px }
-.giveup { background: linear-gradient(135deg, #ef4444, #dc2626); color:#fff; border:0; border-radius:12px; padding:10px 14px; font-weight:700; cursor:pointer }
-.timer-chip { font-size:1.1rem; padding:10px 14px; background: rgba(239,68,68,.18); border-color: rgba(239,68,68,.45); color:#ffdede; letter-spacing:.3px; box-shadow: 0 0 0 2px rgba(239,68,68,.08) inset }
-@media (max-width:768px){ .top10-card{ margin:0 10px } }
+/* Crack Total 4.3 / Top 10 — editorial competition interface. Single source of styles. */
+body.top10-body{background:#101b1b;color:#f2f5ec;font-family:Manrope,Arial,sans-serif;overflow-x:clip}
+body.top10-body *{box-sizing:border-box}
+body.top10-body [hidden]{display:none!important}
+body.top10-body .top10-header,body.top10-body .top10-content{width:min(1180px,calc(100% - 48px));max-width:none;margin-inline:auto}
+body.top10-body .top10-header{padding:30px 0 20px}
+body.top10-body .top10-header-line{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #edf8e532;padding-bottom:13px;color:#bccbbd;font-size:13px;letter-spacing:.09em;font-weight:800}
+body.top10-body .top10-header-line a{color:#baff47;text-decoration:none}
+body.top10-body .top10-hero-copy{display:grid;grid-template-columns:minmax(0,1fr) minmax(235px,.53fr);align-items:center;gap:6px 35px;padding:32px 0 26px}
+body.top10-body .top10-hero-copy>span{display:block;grid-column:1;grid-row:1;font:800 .74rem/1.45 "Manrope",sans-serif;letter-spacing:.13em;color:#d89b70}
+body.top10-body .title-text{grid-column:1;grid-row:2;font-family:"Space Grotesk",Impact,sans-serif;font-weight:700;font-size:clamp(48px,5.5vw,80px);letter-spacing:-.02em;line-height:.95;margin:0;color:#f4f6ec}
+body.top10-body .title-text em{font-style:normal;color:#b5eb53}
+body.top10-body .top10-header .subtitle{grid-column:2;grid-row:1 / span 2;max-width:390px;font-size:clamp(14px,1.3vw,17px);line-height:1.5;color:#b9c9bf;margin:0}
+body.top10-body .top10-content{padding:0 0 90px}
+body.top10-body .top10-intro{background:#dce5d9;color:#0f2117;border-top:6px solid #b5eb53;position:relative;overflow:hidden;min-height:350px;padding:27px 40px 32px}
+body.top10-body .top10-intro-label{display:flex;justify-content:space-between;gap:12px;font-size:13px;font-weight:900;letter-spacing:.1em;border-bottom:1px solid #23402138;padding-bottom:18px}
+body.top10-body .top10-intro-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(200px,.7fr);gap:35px;align-items:center;min-height:288px}
+body.top10-body .top10-intro-main{padding:28px 0 8px;max-width:730px;z-index:1}
+body.top10-body .top10-intro-kicker{font-size:14px;font-weight:900;letter-spacing:.11em;color:#42642b;margin:0 0 12px}
+body.top10-body .top10-intro-main h2{font:700 clamp(38px,4.7vw,64px)/1.1 "Space Grotesk",sans-serif;letter-spacing:-.015em;text-transform:uppercase;margin:0 0 18px;color:#102218}
+body.top10-body .top10-intro-main h2 em{color:#527d28;font-style:normal}
+body.top10-body #startOverlayDetail{max-width:650px;font-size:clamp(15px,1.7vw,20px);line-height:1.55;color:#304333;margin:0 0 19px}
+body.top10-body .top10-intro-controls{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}
+body.top10-body .top10-intro-controls span{font-size:13px;letter-spacing:.04em;font-weight:900;background:#10291b;color:#eaf6e2;padding:9px 12px;border-radius:3px}
+body.top10-body .primary-button{border:0;border-radius:3px;min-height:50px;padding:13px 21px;background:#b5eb53;color:#102018;font-weight:900;font-size:13px;cursor:pointer;transition:background .16s ease,transform .16s ease;text-decoration:none}
+body.top10-body .primary-button:hover{background:#d3ff83;transform:translateY(-1px)}
+body.top10-body .primary-button:disabled{opacity:.52;cursor:default}
+body.top10-body .top10-intro-cta{background:#11241a;color:#f4faef;display:flex;justify-content:space-between;gap:65px;align-items:center;width:min(360px,100%);font-size:14px}
+body.top10-body .top10-intro-cta:hover{background:#294c25}
+body.top10-body .top10-intro-note{font-size:14px;color:#516151;margin:11px 0 0}
+body.top10-body .top10-intro-illustration{align-self:stretch;position:relative;display:flex;align-items:center;justify-content:center;border-left:1px solid #17331f3c}
+body.top10-body .top10-intro-illustration strong{font:700 clamp(64px,7.5vw,106px)/1.04 "Space Grotesk",sans-serif;letter-spacing:-.07em;color:#102718;transform:rotate(-8deg);white-space:nowrap}
+body.top10-body .top10-intro-illustration strong span{color:#5f9b2f}
+body.top10-body .top10-intro-numbers{position:absolute;inset:8px;display:flex;justify-content:space-between;flex-direction:column;align-items:end;color:#4e6949;opacity:.35;font:700 27px "Space Grotesk",sans-serif}
+body.top10-body .top10-card{padding:0;background:#f4f2e9;color:#15221a;box-shadow:none;border:0;overflow:visible}
+body.top10-body .top10-header-area{background:#10211b;color:#f7faef;padding:24px 28px;display:flex;justify-content:space-between;gap:24px;align-items:center}
+body.top10-body .top10-topic-block{min-width:0;max-width:740px}
+body.top10-body .top10-eyebrow{font-size:13px;color:#b5eb53;font-weight:900;letter-spacing:.1em;margin:0 0 9px}
+body.top10-body .top10-header-area .topic{font:700 clamp(23px,2.7vw,36px)/1.25 "Space Grotesk",sans-serif;letter-spacing:.005em;color:#f4f8eb;margin:0 0 12px;text-transform:uppercase}
+body.top10-body .top10-topic-info{display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-size:14px;line-height:1.5;color:#bfcac0}
+body.top10-body .top10-topic-info a{color:#ccfa72;text-underline-offset:3px}
+body.top10-body .top10-header-area .meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0}
+body.top10-body .top10-header-area .chip{min-height:43px;display:flex;align-items:center;justify-content:center;border-radius:3px;background:#243d31;color:#eaf2e6;padding:9px 12px;font-size:14px;font-weight:900;white-space:nowrap}
+body.top10-body .top10-header-area .timer-chip{background:#b5eb53;color:#0f2418;font:700 30px "Space Grotesk",sans-serif;font-variant-numeric:tabular-nums;min-width:95px}
+body.top10-body .top10-header-area .timer-chip.is-urgent{background:#f3b36d;color:#2b180d}
+body.top10-body .top10-progressbar{height:6px;background:#d2dccf}
+body.top10-body #progressFill{height:100%;background:#83b528;transition:width .2s ease}
+body.top10-body .top10-game-layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(300px,.8fr);gap:0}
+body.top10-body .top10-ranking-panel{min-width:0;background:#f0f4eb;padding:22px 25px 28px}
+body.top10-body .top10-ranking-caption{display:grid;grid-template-columns:57px minmax(0,1fr) 83px;gap:14px;align-items:center;padding:0 14px 11px;font-size:13px;letter-spacing:.09em;font-weight:900;color:#506353}
+body.top10-body .top10-ranking-caption span:last-child{text-align:right}
+body.top10-body .answers{padding:0;margin:0;list-style:none;display:flex;flex-direction:column;gap:0;border-top:2px solid #193f2866}
+body.top10-body .answers li{min-height:59px;display:grid;grid-template-columns:57px minmax(0,1fr) 83px;gap:14px;align-items:center;padding:8px 14px;border-bottom:1px solid #aabdad76;background:transparent;transition:background .22s ease;position:relative}
+body.top10-body .answers li .pos{font:700 29px/1 "Space Grotesk",sans-serif;color:#687b6b;font-variant-numeric:tabular-nums}
+body.top10-body .answers li .label{color:#384a3c;font-size:clamp(15px,1.45vw,18px);font-weight:750;line-height:1.28;overflow-wrap:anywhere;white-space:normal;min-width:0;letter-spacing:0}
+body.top10-body .answers li .top10-row-metric{color:#566a58;font-size:clamp(13px,1.2vw,17px);font-weight:900;text-align:right;white-space:nowrap}
+body.top10-body .answers li:nth-child(-n+3):not(.solved) .pos{color:#9c6b48}
+body.top10-body .answers li.solved{background:#d0ef9e}
+body.top10-body .answers li.solved .pos{color:#17301a}
+body.top10-body .answers li.solved .label,body.top10-body .answers li.solved .top10-row-metric{color:#152917}
+body.top10-body .answers li.revealed{background:#e0e8df}
+body.top10-body .answers li.revealed .label{color:#334c3a}
+body.top10-body .top10-play-panel{background:#19382e;color:#f7fbf4;min-width:0;padding:29px 25px;display:flex;flex-direction:column;gap:30px}
+body.top10-body .top10-play-kicker{font-size:13px;letter-spacing:.12em;font-weight:900;color:#b5eb53;margin:0 0 12px}
+body.top10-body .top10-play-panel h2{font:700 clamp(30px,3.5vw,49px)/1.1 "Space Grotesk",sans-serif;letter-spacing:-.015em;margin:0 0 12px;color:#f2f8f1}
+body.top10-body .top10-play-panel h2 em{font-style:normal;color:#b5eb53}
+body.top10-body .top10-play-panel>div>p:last-child{font-size:14px;line-height:1.6;color:#cbdbcd;max-width:350px}
+body.top10-body .top10-play-controls label{font-size:14px;line-height:1.4;color:#e1f2de;font-weight:850;letter-spacing:0;display:block;margin-bottom:10px}
+body.top10-body .input-area{display:flex;flex-direction:column;gap:10px}
+body.top10-body .top10-input{width:100%;min-width:0;min-height:56px;border:2px solid #b7c9b4;border-radius:3px;background:#f8fbf6;color:#101f17;font-size:17px;font-weight:600;padding:12px 15px;outline:none;flex:none}
+body.top10-body .top10-input:focus-visible{border-color:#b5eb53;box-shadow:0 0 0 3px #b5eb5361}
+body.top10-body .top10-play-controls .primary-button{width:100%;font-size:14px}
+body.top10-body .messages{font-size:14px;font-weight:800;line-height:1.45;min-height:24px;color:#f5f9ef;margin:15px 0 5px}
+body.top10-body .messages[data-result="correct"]{color:#bbff71}
+body.top10-body .messages[data-result="incorrect"]{color:#ffd1b1}
+body.top10-body .guesses{display:flex;flex-wrap:wrap;gap:6px;max-height:112px;overflow:auto}
+body.top10-body .guess{display:inline-flex;padding:6px 9px;border-radius:3px;border:1px solid #a8c0a144;color:#eef8ee;font-size:14px;overflow-wrap:anywhere}
+body.top10-body .giveup{appearance:none;align-self:start;background:transparent;color:#f3bbb5;border:0;border-bottom:1px solid #bd847e;padding:8px 0;font-size:14px;font-weight:900;cursor:pointer;margin-top:auto}
+body.top10-body .giveup:focus-visible,body.top10-body .primary-button:focus-visible,body.top10-body .top10-header a:focus-visible{outline:3px solid #b5eb53;outline-offset:3px}
+body.top10-body .daily-overlay{position:static;display:flex;align-items:center;justify-content:center;padding:20px;background:#e2edcf;color:#1b3220;text-align:center}
+body.top10-body .daily-overlay .overlay-content{width:100%;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+body.top10-body .daily-overlay h3{font:700 25px "Space Grotesk",sans-serif;color:#142a1b;margin:0}
+body.top10-body .daily-overlay .overlay-message{font-size:13px;color:#3f5544;margin:0}
+body.top10-body .daily-overlay .countdown-timer{font:700 22px "Space Grotesk",sans-serif;color:#294521}
+body.top10-body .daily-overlay .primary-button{min-height:40px}
+body.top10-body .top10-history{background:transparent;border-top:1px solid #d2e5cd44;padding:29px 0;margin:33px 0 0}
+body.top10-body .top10-history-kicker{color:#b5eb53;font-size:13px;font-weight:900;letter-spacing:.13em}
+body.top10-body .top10-history h2{font:700 35px "Space Grotesk",sans-serif;color:#f3f9eb;margin:8px 0}
+body.top10-body .top10-history>p{font-size:13px;line-height:1.6;color:#bbcfc0}
+body.top10-body .top10-history-list{list-style:none;margin:18px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+body.top10-body .top10-history-item{display:flex;flex-direction:column;gap:8px;background:#1b2923;padding:15px 17px;min-width:0}
+body.top10-body .top10-history-item strong{font-size:13px;color:#f4f8ee;overflow-wrap:anywhere}
+body.top10-body .top10-history-item span{font-size:14px;color:#b5eb53}
+body.top10-body .top10-history-empty{font-size:13px;color:#d4e4d4;padding:16px 0}
+body.top10-body .rules-card{padding:16px 0 0}
+body.top10-body .rules-card .secondary-button{background:none;color:#d6e9d1;border:1px solid #d9f2ce69;font-size:13px;padding:11px 18px;border-radius:3px}
+body.top10-body #resultModal{z-index:3000;overflow-y:auto;padding:18px}
+body.top10-body #resultModal .result-modal{max-width:680px;width:min(680px,100%);max-height:calc(100dvh - 36px);overflow:auto;border:0;border-top:6px solid #b5eb53;border-radius:4px;padding:24px;background:#12271e;color:#f7f9ef}
+body.top10-body .result-modal-header{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:7px}
+body.top10-body .top10-result-kicker{font-size:13px;letter-spacing:.13em;font-weight:900;color:#b5eb53}
+body.top10-body .result-title{font:700 clamp(32px,4vw,49px)/1.12 "Space Grotesk",sans-serif;color:#f4faec;margin:0}
+body.top10-body .top10-result-close{position:absolute;top:0;right:0;background:transparent;border:1px solid #e4efdc88;padding:9px;color:#fff;font-size:18px;cursor:pointer}
+body.top10-body .result-message{font-size:15px;line-height:1.5;color:#d5e4d1}
+body.top10-body .top10-final-standings{max-height:35vh;overflow-y:auto;padding:12px;background:#e8eee1;color:#1b2b1a;margin-top:14px}
+body.top10-body .top10-final-standings>p{font-size:13px;color:#456436;font-weight:900;letter-spacing:.08em}
+body.top10-body .top10-final-standings ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+body.top10-body .top10-final-standings li{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:11px;align-items:center;padding:8px 10px;border-bottom:1px solid #adc1a5;font-size:13px}
+body.top10-body .top10-final-standings li.found{background:#cbee91}
+body.top10-body .top10-final-standings li strong{min-width:0;overflow-wrap:anywhere;text-align:left}
+body.top10-body .top10-final-standings a{display:inline-block;margin-top:13px;color:#395c24;font-weight:900;font-size:14px}
+body.top10-body .result-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+body.top10-body .result-buttons .modal-button{min-height:43px;font-weight:800;font-size:14px;border-radius:3px}
+@media(max-width:920px){
+ body.top10-body .top10-header,body.top10-body .top10-content{width:calc(100% - 32px)}
+ body.top10-body .top10-header-area{align-items:flex-start;flex-direction:column}
+ body.top10-body .top10-header-area .meta{justify-content:flex-start;width:100%}
+ body.top10-body .top10-game-layout{grid-template-columns:1fr}
+ body.top10-body .top10-play-panel{order:-1;gap:10px;padding:20px 22px}
+ body.top10-body .top10-play-panel>div:first-child{display:none}
+ body.top10-body .input-area{flex-direction:row}
+ body.top10-body .top10-input{flex:1 1 210px;width:auto}
+ body.top10-body .top10-play-controls .primary-button{width:auto;flex:0 0 auto;min-width:135px}
+ body.top10-body .top10-ranking-panel{padding:19px 20px}
+}
+@media(max-width:600px){
+ body.top10-body .top10-header{padding-top:19px;padding-bottom:13px}
+ body.top10-body .top10-header-line{font-size:12px}
+ body.top10-body .top10-hero-copy{padding:16px 0 8px;align-items:flex-start;flex-direction:column;gap:7px}
+ body.top10-body .title-text{font-size:52px}
+ body.top10-body .top10-header .subtitle{font-size:14px}
+ body.top10-body .top10-intro{padding:19px 18px 25px;min-height:0}
+ body.top10-body .top10-intro-label{font-size:12px}
+ body.top10-body .top10-intro-grid{grid-template-columns:1fr;min-height:0;gap:5px}
+ body.top10-body .top10-intro-main{padding-top:26px}
+ body.top10-body .top10-intro-main h2{font-size:clamp(36px,8vw,53px)}
+ body.top10-body #startOverlayDetail{font-size:15px}
+ body.top10-body .top10-intro-illustration{display:none}
+ body.top10-body .top10-intro-controls span{font-size:12px;padding:7px 10px}
+ body.top10-body .top10-header-area{padding:16px 15px 14px;gap:14px}
+ body.top10-body .top10-header-area .topic{font-size:clamp(24px,6.4vw,34px)}
+ body.top10-body .top10-topic-info{font-size:13px}
+ body.top10-body .top10-header-area .chip{min-height:36px;font-size:14px;padding:7px 9px}
+ body.top10-body .top10-header-area .timer-chip{font-size:25px;min-width:80px}
+ body.top10-body .top10-play-panel{padding:13px 15px 12px;gap:7px}
+ body.top10-body .top10-play-controls label{font-size:14px;margin:3px 0 8px}
+ body.top10-body .input-area{flex-direction:row;flex-wrap:nowrap;gap:6px}
+ body.top10-body .top10-input{width:auto;min-width:0;flex:1 1 0;font-size:16px;min-height:48px;padding:9px 10px}
+ body.top10-body .top10-play-controls .primary-button{min-width:0;min-height:48px;padding:9px 12px;font-size:14px}
+ body.top10-body .messages{font-size:14px;min-height:17px;margin:5px 0 0}
+ body.top10-body .guesses{max-height:41px}
+ body.top10-body .giveup{font-size:13px;margin-top:4px}
+ body.top10-body .top10-ranking-panel{padding:14px 12px}
+ body.top10-body .top10-ranking-caption,body.top10-body .answers li{grid-template-columns:39px minmax(0,1fr) 57px;gap:6px}
+ body.top10-body .top10-ranking-caption{padding:0 7px 8px;font-size:12px}
+ body.top10-body .answers li{padding:8px 8px;min-height:52px}
+ body.top10-body .answers li .pos{font-size:23px}
+ body.top10-body .answers li .label{font-size:clamp(14px,3.65vw,16px);line-height:1.35}
+ body.top10-body .answers li .top10-row-metric{font-size:14px}
+ body.top10-body .top10-history-list{grid-template-columns:1fr}
+ body.top10-body .daily-overlay .overlay-content{flex-direction:column;justify-content:center}
+ body.top10-body .top10-final-standings{max-height:30vh}
+}
+@media(prefers-reduced-motion:reduce){body.top10-body *,body.top10-body *:before,body.top10-body *:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* 5.2 — Top 10: consistent cards, accessible controls and balanced ranking. */
+body.top10-body .top10-intro,
+body.top10-body .top10-card{border-radius:18px;overflow:hidden;box-shadow:0 18px 58px rgba(0,0,0,.13)}
+body.top10-body .top10-header{scroll-margin-top:100px}
+body.top10-body .top10-header .title-text{letter-spacing:-.045em;line-height:1.04}
+body.top10-body .top10-ranking-panel{background:#f4f2e9}
+body.top10-body .top10-play-panel{background:#243b35}
+body.top10-body .top10-input{border:1px solid #87998a;border-radius:10px;font-family:"Manrope",sans-serif;font-size:16px;min-width:0}
+body.top10-body .top10-input:focus-visible,
+body.top10-body button:focus-visible{outline:3px solid #b5eb53;outline-offset:3px}
+body.top10-body .answers li{min-width:0}
+body.top10-body .answers li .label{overflow-wrap:anywhere;line-height:1.45}
+body.top10-body .top10-ranking-caption{letter-spacing:.025em}
+body.top10-body .top10-play-controls .primary-button{border-radius:10px;min-height:48px}
+body.top10-body .top10-history{border-radius:14px}
+@media(max-width:760px){
+ body.top10-body .top10-header,body.top10-body .top10-content{width:calc(100% - 24px)}
+ body.top10-body .top10-game-layout{grid-template-columns:minmax(0,1fr)}
+ body.top10-body .top10-ranking-panel{padding:18px 13px}
+ body.top10-body .top10-play-panel{padding:21px 16px}
+ body.top10-body .top10-intro-grid{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:380px){
+ body.top10-body .input-area{flex-wrap:wrap}
+ body.top10-body .top10-input{flex:1 1 100%;width:100%}
+ body.top10-body .top10-play-controls .primary-button{flex:1 1 100%}
+}
+
+
+@media(max-width:780px){
+  body.top10-body .top10-hero-copy{
+    grid-template-columns:minmax(0,1fr);gap:12px;
+    padding:25px 0 19px;
+  }
+  body.top10-body .top10-hero-copy>span,
+  body.top10-body .title-text,
+  body.top10-body .top10-header .subtitle{grid-column:1;grid-row:auto;}
+  body.top10-body .top10-header .subtitle{max-width:65ch;}
+}
+
+/* 6.0 — On narrow phones, the game question and answer action need a
+   dedicated full-width row each. A legacy shared grid squeezed the field. */
+@media(max-width:600px){
+ body.top10-body.ct-ds .top10-card .input-area{
+  display:grid;grid-template-columns:minmax(0,1fr);gap:9px;width:100%;
+ }
+ body.top10-body.ct-ds .top10-card .input-area .top10-input,
+ body.top10-body.ct-ds .top10-card .input-area .primary-button{
+  width:100%;min-width:0;max-width:100%;
+ }
+}

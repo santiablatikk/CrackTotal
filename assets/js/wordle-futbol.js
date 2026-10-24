@@ -8,7 +8,45 @@
     let board = [];
     let keyboardState = {}; // letter -> 'correct' | 'present' | 'absent'
     let stats = { played: 0, streak: 0, best: 0, lastDayKey: '' };
-    const startTime = Date.now();
+    let startTime = Date.now();
+    const GAME_KEY = 'wordle_game_state_v1';
+    let rowRatings = [];
+    let finished = false;
+    let wonToday = false;
+    let inputLocked = false;
+    let boardResizeObserver = null;
+    const todayKey = () => { const d = new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; };
+    function saveGame(){
+        try { localStorage.setItem(GAME_KEY, JSON.stringify({ day:todayKey(), target,
+            board, currentRow, currentCol, rowRatings, keyboardState, finished, won:wonToday, startedAt:startTime })); } catch {}
+    }
+    function restoreGame(){
+        let prior; try { prior = JSON.parse(localStorage.getItem(GAME_KEY) || 'null'); } catch { return false; }
+        if (!prior || prior.day !== todayKey() || prior.target !== target || !Array.isArray(prior.board) || prior.board.length !== BOARD_ROWS) return false;
+        if (!prior.board.every(r => Array.isArray(r) && r.length === target.length && r.every(v=>typeof v==='string' && v.length<=1))) return false;
+        board = prior.board;
+        if (Number.isFinite(prior.startedAt) && prior.startedAt>0 && prior.startedAt<=Date.now()) startTime=prior.startedAt;
+        rowRatings = Array.isArray(prior.rowRatings) ? prior.rowRatings : [];
+        currentRow = Math.max(0,Math.min(BOARD_ROWS,Number(prior.currentRow)||0));
+        currentCol = Math.max(0,Math.min(target.length,Number(prior.currentCol)||0));
+        finished = !!prior.finished; wonToday = !!prior.won;
+        keyboardState = prior.keyboardState || {};
+        board.forEach((row,r)=>row.forEach((letter,col)=>{
+            paintTile(r,col,letter,!!letter);
+            const tile = getTile(r,col);
+            const status = rowRatings[r]?.[col];
+            if (tile && ['correct','present','absent'].includes(status)) tile.classList.add(status);
+        }));
+        const restoredKeyboard = keyboardState;
+        keyboardState = {};
+        rowRatings.forEach((row,r)=>{ if (Array.isArray(row)) row.forEach((status,i)=>{
+            if (['correct','present','absent'].includes(status) && /^[a-zñ]$/.test(board[r]?.[i]||'')) updateKeyboard(board[r][i],status);
+        }); });
+        Object.entries(restoredKeyboard).forEach(([letter,status])=>{
+            if (/^[a-zñ]$/.test(letter) && ['correct','present','absent'].includes(status)) updateKeyboard(letter,status);
+        });
+        return true;
+    }
 
     function normalizeWord(str) {
         return str
@@ -32,14 +70,11 @@
             loadStats();
             updateStreakDisplay();
             setDailyInfo(idx);
-            // si ya jugó hoy, bloquear entrada y mostrar modal de estado
-            const todayKey = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
-            if (window.stats.lastDayKey === todayKey) {
-                // bloquear inputs
+            restoreGame();
+            // Mantener bloqueado el juego diario, sin inferir una victoria de la racha.
+            if (window.stats.lastDayKey === todayKey() || finished) {
                 disableInput();
-                // Mostrar modal informativo sin alterar stats
-                openResultModal(window.stats.streak > 0); // si racha >0, se asume victoria; simple feedback
-                // mostrar overlay sobre el tablero
+                if (finished) openResultModal(wonToday);
                 const ov = document.getElementById('dailyOverlay');
                 if (ov) ov.style.display = 'grid';
             }
@@ -58,6 +93,30 @@
         boardEl.style.gridTemplateRows = `repeat(${BOARD_ROWS}, var(--tile-size))`;
         boardEl.style.gridAutoRows = `var(--tile-size)`;
 
+        // One measured playfield controls both keyboard and board. Using the full
+        // card width previously left short words stranded at the card's left edge.
+        const playfield = boardEl.closest('.wordle-playfield') || boardEl.parentElement;
+        function sizeBoard() {
+            const css = getComputedStyle(playfield);
+            const innerWidth = Math.max(0, playfield.clientWidth -
+                (parseFloat(css.paddingLeft) || 0) - (parseFloat(css.paddingRight) || 0));
+            const available = Math.min(570, innerWidth);
+            const gap = Math.max(2, Math.min(8, Math.floor(available / Math.max(wordLength * 8, 1))));
+            const tile = Math.max(1, Math.min(58,
+                Math.floor((available - gap * (wordLength - 1)) / wordLength)));
+            const measuredWidth = tile * wordLength + gap * (wordLength - 1);
+            boardEl.style.setProperty('--tile-gap', gap + 'px');
+            boardEl.style.setProperty('--tile-size', tile + 'px');
+            boardEl.style.setProperty('--tile-font', Math.max(8, Math.round(tile * .45)) + 'px');
+            boardEl.style.width = measuredWidth + 'px';
+            boardEl.dataset.columns = String(wordLength);
+        }
+        if (boardResizeObserver) boardResizeObserver.disconnect();
+        sizeBoard();
+        if (typeof ResizeObserver !== 'undefined') {
+            boardResizeObserver = new ResizeObserver(sizeBoard);
+            boardResizeObserver.observe(playfield);
+        }
         board = Array.from({ length: BOARD_ROWS }, () => Array(wordLength).fill(''));
 
         for (let r = 0; r < BOARD_ROWS; r++) {
@@ -102,17 +161,21 @@
 
     function createKey(ch) {
         const btn = document.createElement('button');
+        btn.type = 'button';
         btn.className = 'key';
         let label = ch;
         if (ch === '⌫') { btn.classList.add('wide'); label = 'Borrar'; }
         if (ch === '↵') { btn.classList.add('wide'); label = 'Enter'; }
         btn.textContent = label;
         btn.setAttribute('data-key', ch);
+        if (ch === '⌫') btn.setAttribute('aria-label', 'Borrar letra');
+        if (ch === '↵') btn.setAttribute('aria-label', 'Enviar intento');
         btn.addEventListener('click', onVirtualKey);
         return btn;
     }
 
     function onVirtualKey(e) {
+        if (inputLocked || finished) return;
         const val = e.currentTarget.getAttribute('data-key');
         if (val === '⌫') { handleBackspace(); return; }
         if (val === '↵') { handleEnter(); return; }
@@ -121,6 +184,9 @@
 
     function bindInput() {
         document.addEventListener('keydown', (e) => {
+            if (inputLocked || finished || e.altKey || e.ctrlKey || e.metaKey ||
+                e.target?.closest?.('button, a, input, textarea, select, [contenteditable="true"]') ||
+                document.querySelector('.modal-overlay.active')) return;
             if (e.key === 'Backspace') { e.preventDefault(); handleBackspace(); return; }
             if (e.key === 'Enter') { e.preventDefault(); handleEnter(); return; }
             const letter = normalizeKey(e.key);
@@ -129,12 +195,13 @@
     }
 
     function disableInput() {
-        document.addEventListener('keydown', blockAll, { capture: true, once: true });
+        // El bloqueo debe persistir también para el teclado físico, no solo el virtual.
+        // Nunca interceptar teclas de navegación ni bloquear toda la página.
+        inputLocked = true;
         const keys = document.querySelectorAll('.key');
         keys.forEach(k => k.setAttribute('disabled','disabled'));
-        setMessage('Juego diario completado. Vuelve mañana.');
+        setMessage('Juego diario completado. Volvé mañana.');
     }
-    function blockAll(e){ e.stopPropagation(); e.preventDefault(); }
 
     function setDailyInfo(idx) {
         const numEl = document.getElementById('gameNumber');
@@ -183,7 +250,7 @@
     }
 
     function handleLetter(letter) {
-        if (currentRow >= BOARD_ROWS) return;
+        if (inputLocked || finished || currentRow >= BOARD_ROWS) return;
         const wordLength = board[0].length;
         if (currentCol >= wordLength) return;
         board[currentRow][currentCol] = letter;
@@ -197,17 +264,20 @@
             tile.classList.add('pop');
         }
         currentCol++;
+        saveGame();
     }
 
     function handleBackspace() {
-        if (currentRow >= BOARD_ROWS) return;
+        if (inputLocked || finished || currentRow >= BOARD_ROWS) return;
         if (currentCol === 0) return;
         currentCol--;
         board[currentRow][currentCol] = '';
         paintTile(currentRow, currentCol, '', false);
+        saveGame();
     }
 
     function handleEnter() {
+        if (inputLocked || finished || currentRow >= BOARD_ROWS) return;
         const wordLength = board[0].length;
         if (currentCol < wordLength) {
             setMessage('Faltan letras');
@@ -231,6 +301,7 @@
         if (!tile) return;
         tile.textContent = letter.toUpperCase();
         tile.classList.toggle('filled', !!filled);
+        tile.setAttribute('aria-label', filled ? 'Letra ' + letter.toUpperCase() : 'Casilla vacía');
     }
 
     function getTile(r, c) {
@@ -263,6 +334,7 @@
             }
         }
 
+        rowRatings[currentRow] = result;
         // paint
         for (let i = 0; i < guessArr.length; i++) {
             const tile = getTile(currentRow, i);
@@ -271,15 +343,19 @@
                 tile.classList.remove('revealing');
                 tile.classList.remove('filled');
                 tile.classList.add(result[i]);
+                const statusNames = { correct: 'posición correcta', present: 'otra posición', absent: 'no está' };
+                tile.setAttribute('aria-label', guessArr[i].toUpperCase() + ': ' + statusNames[result[i]]);
                 updateKeyboard(guessArr[i], result[i]);
             }, 90 * i);
         }
 
         if (guess === target) {
             setMessage('¡Golazo! Adivinaste.');
+            const attemptsUsed = currentRow + 1;
             currentRow = BOARD_ROWS; // lock
+            finished = true; wonToday = true; saveGame();
             tryConfetti();
-            registerResult(true);
+            registerResult(true,attemptsUsed,Math.max(1,Math.floor((Date.now()-startTime)/1000)));
             openResultModal(true);
             return;
         }
@@ -287,10 +363,12 @@
         currentRow++;
         currentCol = 0;
         if (currentRow >= BOARD_ROWS) {
+            finished = true; wonToday = false; saveGame();
             setMessage(`La palabra era: ${target.toUpperCase()}`);
-            registerResult(false);
+            registerResult(false,BOARD_ROWS,Math.max(1,Math.floor((Date.now()-startTime)/1000)));
             openResultModal(false);
         } else {
+            saveGame();
             setMessage('Seguí intentando');
         }
     }
@@ -312,6 +390,7 @@
     document.addEventListener('DOMContentLoaded', pickDailyWord);
 
     function tryConfetti() {
+        if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
         const canvas = document.createElement('canvas');
         canvas.className = 'confetti-canvas';
         document.body.appendChild(canvas);
@@ -330,6 +409,7 @@
             });
             if (frame > 180) {
                 clearInterval(id);
+                window.removeEventListener('resize',resize);
                 canvas.remove();
             }
         }, 16);
@@ -369,7 +449,7 @@
         if (!el) return;
         el.textContent = `Racha: ${window.stats.streak} | Mejor: ${window.stats.best}`;
     };
-    window.registerResult = function(win){
+    window.registerResult = function(win,attemptsUsed,durationSec){
         const today = DAY_KEY();
         if (window.stats.lastDayKey === today) return; // evitar doble conteo
         window.stats.played += 1;
@@ -390,7 +470,7 @@
         window.stats.lastDayKey = today;
         window.saveStats();
         window.updateStreakDisplay();
-        publishResult(win);
+        publishResult(win,attemptsUsed,durationSec);
     };
 
     // Los intentos usados definen el puntaje: adivinar en la primera vale más que en la última.
@@ -399,9 +479,8 @@
         return Math.max(10, 100 - (attemptsUsed - 1) * 15);
     }
 
-    async function publishResult(win) {
-        const attemptsUsed = win ? Math.min(currentRow + 1, BOARD_ROWS) : BOARD_ROWS;
-        const elapsed = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
+    async function publishResult(win,attemptsUsed,durationSec) {
+        const elapsed = Math.max(1, Number(durationSec)||1);
         const score = scoreFor(win, attemptsUsed);
 
         if (window.CrackTotalProgressBridge) {
@@ -477,8 +556,14 @@
             }
         });
     };
+    function todayKeyForShare(){ return DAY_KEY(); }
     function shareResult(){
-        const text = `Wordle Futbolero - Racha ${window.stats.streak} (Mejor ${window.stats.best}) en cracktotal.com`;
+        let visual = '';
+        try { const game = JSON.parse(localStorage.getItem('wordle_game_state_v1') || 'null');
+            if (game?.day && Array.isArray(game.rowRatings)) visual = game.rowRatings.filter(Array.isArray).map(row=>
+                row.map(status=>({correct:'🟩',present:'🟨',absent:'⬛'})[status] || '⬜').join('')).join('\n');
+        } catch {}
+        const text = `Wordle Futbolero · ${todayKeyForShare()}\n${visual}\nRacha: ${window.stats.streak} · Crack Total`;
         if (navigator.share) {
             navigator.share({ title: 'Wordle Futbolero', text, url: location.href }).catch(()=>{});
         } else {

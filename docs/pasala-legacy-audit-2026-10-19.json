@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-19",
+  "purpose": "Auditoría incremental de preguntas heredadas de assets/data/pasalache_2025.json. No implica validación del resto del banco.",
+  "records": [
+    {
+      "letter": "S",
+      "status": "corrected",
+      "previousQuestion": "¿Nombre completo del estadio del Real Madrid remodelado y reinaugurado en 2023?",
+      "question": "¿Cómo se llama el estadio del Real Madrid sometido a una gran remodelación durante la década de 2020?",
+      "answer": "Santiago Bernabéu",
+      "reason": "La referencia a una reinauguración en 2023 es imprecisa: el club documentó obras aún en ejecución durante el ejercicio 2023/24.",
+      "sources": [
+        "https://www.realmadrid.com/es-ES/noticias/club/actualidad/ejercicio-economico-2023-24-23-07-2024",
+        "https://www.realmadrid.com/es-ES/noticias/club/actualidad/el-real-madrid-cierra-el-ejercicio-2022-23-con-un-resultado-positivo-de-12-millones-de-euros"
+      ],
+      "verifiedAt": "2026-10-19"
+    },
+    {
+      "letter": "A",
+      "status": "verified_unchanged",
+      "question": "¿Qué país fue campeón de la Copa América 2024?",
+      "answer": "Argentina",
+      "context": "Final CONMEBOL Copa América USA 2024, Argentina 1–0 Colombia.",
+      "sources": [
+        "https://cdn.conmebol.com/wp-content/uploads/2025/01/GET-CONMEBOL-Copa-America-USA-2024-ESP-2.pdf"
+      ],
+      "verifiedAt": "2026-10-19"
+    },
+    {
+      "letter": "B",
+      "status": "verified_unchanged",
+      "question": "¿Club alemán campeón invicto de la Bundesliga 2023/24?",
+      "answer": "Bayer Leverkusen",
+      "context": "Campeonato alemán 2023/24 sin derrotas tras 34 partidos.",
+      "sources": [
+        "https://www.bundesliga.com/en/bundesliga/news/bayer-leverkusen-record-unbeaten-run-xabi-alonso-26289",
+        "https://www.bundesliga.com/en/bundesliga/news/bayern-leverkusen-augsburg-preview-live-blog-report-xabi-alonso-wirtz-unbeaten-27365"
+      ],
+      "verifiedAt": "2026-10-19"
+    }
+  ]
+}

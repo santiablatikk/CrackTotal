@@ -1,16 +1,12 @@
 // --- WebSocket URL (¡Configura esto!) ---
 // Firebase Integration - Usa window.firebaseService
-const WEBSOCKET_URL = (() => {
-    // Siempre usar el servidor de producción para evitar problemas de configuración local
-    return 'wss://cracktotal-servidor.onrender.com';
-    
-    // Código anterior comentado:
-    // if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    //     const port = 8081; // Puerto del servidor unificado
-    //     return `ws://${window.location.hostname}:${port}`;
-    // }
-    // return 'wss://cracktotal-servidor.onrender.com';
-})();
+const MENTIROSO_PREVIEW = /(?:^|\.)netlify\.(?:app|com)$/i.test(location.hostname);
+const MENTIROSO_STAGING = new URLSearchParams(location.search).get('server');
+const MENTIROSO_STAGING_WS = MENTIROSO_STAGING && /^wss:\/\/[a-z0-9.-]+(?::\d+)?(?:\/[^?#]*)?$/i.test(MENTIROSO_STAGING) ? MENTIROSO_STAGING : null;
+const MENTIROSO_PREVIEW_WS = location.hostname === 'deploy-preview-1--zingy-haupia-53b742.netlify.app'
+    ? 'wss://cracktotal-arena-staging.onrender.com' : null;
+const WEBSOCKET_URL = MENTIROSO_PREVIEW ? (MENTIROSO_STAGING_WS || MENTIROSO_PREVIEW_WS) : 'wss://cracktotal-servidor.onrender.com';
+const MENTIROSO_EXPECTED_BANK_VERSION = '2026-10-21-objective-20min-2';
 
 // Agregar después de la declaración de WEBSOCKET_URL, antes de DOMContentLoaded
 
@@ -74,7 +70,29 @@ window.addEventListener('message', function(event) {
     }
 });
 
+const MENTIROSO_SESSION_KEY = 'ct-mentiroso-room-session-v1';
+const savedMentirosoSession = () => {
+    try { return JSON.parse(sessionStorage.getItem(MENTIROSO_SESSION_KEY) || 'null'); }
+    catch { return null; }
+};
+const persistMentirosoSession = payload => {
+    if (!payload || !payload.roomId || !payload.reconnectToken) return;
+    try {
+        sessionStorage.setItem(MENTIROSO_SESSION_KEY, JSON.stringify({
+            roomId: payload.roomId, reconnectToken: payload.reconnectToken, gameType: 'mentiroso'
+        }));
+    } catch {}
+};
+const clearMentirosoSession = () => {
+    try { sessionStorage.removeItem(MENTIROSO_SESSION_KEY); } catch {}
+};
 document.addEventListener('DOMContentLoaded', function() {
+    // Prevent the browser from restoring a mid-page scroll that hides the game
+    // headline behind the shared sticky navbar on fresh lobby navigation.
+    if (!location.hash && !savedMentirosoSession()) {
+        try { history.scrollRestoration = 'manual'; } catch {}
+        requestAnimationFrame(() => window.scrollTo(0, 0));
+    }
     // --- Game State Variables (Mentiroso) ---
     let gameState = {
         players: {
@@ -101,6 +119,10 @@ document.addEventListener('DOMContentLoaded', function() {
         gameStartTime: null,
         resultPublished: false,
         websocket: null,
+        reconnectAttempts: 0,
+        reconnectTimer: null,
+        arenaCompatible: false,
+        arenaHandshakeTimer: null,
         pendingRoomsRequest: null, // Para almacenar solicitud pendiente de salas
         isRoomCreator: false, // Para saber si este jugador creó la sala
         playNotificationSound: null // Para la función de sonido de notificación
@@ -149,6 +171,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const listingInstructionTextEl = document.getElementById('listingInstructionText');
     const bidToListCountEl = document.getElementById('bidToListCount');
     const answerListAreaEl = document.getElementById('answerListArea');
+    const answerCounterEl = document.getElementById('answerCounter');
+    if (answerListAreaEl && answerCounterEl) {
+        answerListAreaEl.addEventListener('input', () => {
+            const submitted = answerListAreaEl.value.split(/\r?\n/).filter(line => line.trim()).length;
+            answerCounterEl.textContent = 'Respuestas ingresadas: ' + submitted +
+                ' · Objetivo: ' + (gameState.currentBid || 0) + ' (aún sin verificar)';
+        });
+    }
     const submitAnswersButtonEl = document.getElementById('submitAnswersButton');
 
     const validationPhaseEl = document.getElementById('validationPhase');
@@ -170,6 +200,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Lobby Elements (Reused IDs from QSM where applicable)
     const lobbySectionEl = document.getElementById('lobbySection');
     const lobbyMessageAreaEl = document.getElementById('lobbyMessageArea');
+    const retryArenaButtonEl = document.getElementById('retryArenaButton');
+    if (retryArenaButtonEl) {
+        retryArenaButtonEl.addEventListener('click', () => {
+            retryArenaButtonEl.hidden = true;
+            showLobbyMessage('Volviendo a conectar con Arena…', 'info');
+            if (gameState.arenaHandshakeTimer) clearTimeout(gameState.arenaHandshakeTimer);
+            if (gameState.websocket &&
+                [WebSocket.OPEN, WebSocket.CONNECTING].includes(gameState.websocket.readyState)) {
+                gameState.websocket.close();
+            }
+            setTimeout(initializeWebSocket, 300);
+        });
+    }
     const createPlayerNameInput = document.getElementById('createPlayerName');
     const createRoomPasswordInput = document.getElementById('createRoomPassword');
     const createRoomButton = document.getElementById('createRoomButton');
@@ -343,6 +386,10 @@ document.addEventListener('DOMContentLoaded', function() {
         lobbyMessageAreaEl.className = 'lobby-message';
         void lobbyMessageAreaEl.offsetWidth;
         lobbyMessageAreaEl.classList.add(type, 'show');
+        if (retryArenaButtonEl) {
+            retryArenaButtonEl.hidden = !(MENTIROSO_PREVIEW && type === 'error' &&
+                !gameState.gameActive && !gameState.arenaCompatible);
+        }
         if (type !== 'error') {
             setTimeout(() => {
                 if (lobbyMessageAreaEl.textContent === message) clearLobbyMessage();
@@ -481,7 +528,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateGameStatusDisplay() {
         // Calcular número global de pregunta (de 18) y categoría actual (de 6)
-        const categoryRound = gameState.categoryRound || 1; // Pregunta dentro de la categoría (1-3)
+        const categoryRound = gameState.categoryRound || 1;
+        const roundsPerCategory = gameState.objectiveValidation ? 1 : 3;
+        const totalRounds = Number(gameState.maxRounds) || 18;
         const globalCategoryIndex = gameState.globalCategoryIndex || 0; // Índice de categoría (0-5)
         const categoryNumber = globalCategoryIndex + 1; // Número de categoría para mostrar (1-6)
         
@@ -499,8 +548,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <i class="fas fa-trophy"></i> 
                 <span class="round-info">
                     <span class="category-counter">Categoría ${categoryNumber}/6: ${gameState.currentCategory}</span>
-                    <span class="question-counter">Pregunta ${categoryRound}/3</span>
-                    <span class="global-counter">Progreso: ${gameState.currentRound}/18</span>
+                    <span class="question-counter">Pregunta ${categoryRound}/${roundsPerCategory}</span>
+                    <span class="global-counter">Progreso: ${gameState.currentRound}/${totalRounds}</span>
                 </span>
             `;
         }
@@ -608,7 +657,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             : (gameState.players.player2?.id === gameState.currentTurn 
                                 ? gameState.players.player2.name 
                                 : 'otro jugador');
-                        playerTurnBidTextEl.innerHTML = `<i class="fas fa-hourglass-half"></i> Esperando que ${currentTurnPlayerName} realice su jugada...`;
+                        playerTurnBidTextEl.textContent = `Esperando que ${currentTurnPlayerName} realice su jugada...`;
                         playerTurnBidTextEl.classList.remove('your-turn');
                     }
                 }
@@ -697,9 +746,23 @@ document.addEventListener('DOMContentLoaded', function() {
         updateChallengeArea();
     }
     
+    function updateValidationProgress(canValidate) {
+        const progress = document.getElementById('validationProgress');
+        if (!progress) return;
+        const total = Array.isArray(gameState.answersListed) ? gameState.answersListed.length : 0;
+        if (!canValidate) {
+            progress.textContent = total + ' respuestas enviadas · esperando al rival';
+            return;
+        }
+        const marked = Array.from({length:total}, (_,i) => gameState.clientSideValidations?.[i])
+            .filter(value => typeof value === 'boolean').length;
+        progress.textContent = marked + ' de ' + total + ' respuestas revisadas';
+    }
+
     function populateValidationList(answers, canValidate) {
         if (!answersToValidateListEl) return;
         answersToValidateListEl.innerHTML = ''; // Clear previous
+        if (!Array.isArray(gameState.clientSideValidations)) gameState.clientSideValidations = [];
         answers.forEach((answer, index) => {
             const li = document.createElement('li');
             const answerTextSpan = document.createElement('span');
@@ -712,16 +775,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 const correctButton = document.createElement('button');
                 correctButton.innerHTML = '<i class="fas fa-check"></i>';
+                correctButton.type = 'button';
                 correctButton.classList.add('validate-correct');
                 correctButton.dataset.index = index;
+                correctButton.setAttribute('aria-label', 'Marcar respuesta '+(index + 1)+' como válida: '+answer);
+                correctButton.setAttribute('aria-pressed', 'false');
                 correctButton.addEventListener('click', handleSingleValidation);
 
                 const incorrectButton = document.createElement('button');
                 incorrectButton.innerHTML = '<i class="fas fa-times"></i>';
+                incorrectButton.type = 'button';
                 incorrectButton.classList.add('validate-incorrect');
                 incorrectButton.dataset.index = index;
+                incorrectButton.setAttribute('aria-label', 'Marcar respuesta '+(index + 1)+' como inválida: '+answer);
+                incorrectButton.setAttribute('aria-pressed', 'false');
                 incorrectButton.addEventListener('click', handleSingleValidation);
                 
+                const previousVote = gameState.clientSideValidations[index];
+                if (typeof previousVote === 'boolean') {
+                    correctButton.classList.toggle('selected', previousVote);
+                    incorrectButton.classList.toggle('selected', !previousVote);
+                    correctButton.setAttribute('aria-pressed', String(previousVote));
+                    incorrectButton.setAttribute('aria-pressed', String(!previousVote));
+                }
                 buttonsDiv.appendChild(correctButton);
                 buttonsDiv.appendChild(incorrectButton);
                 li.appendChild(buttonsDiv);
@@ -735,6 +811,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             answersToValidateListEl.appendChild(li);
         });
+        updateValidationProgress(canValidate);
     }
     
     function handleSingleValidation(event) {
@@ -748,8 +825,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // UI update for the button pair
         const parentLi = button.closest('li');
-        parentLi.querySelectorAll('.validation-buttons button').forEach(btn => btn.classList.remove('selected'));
+        parentLi.querySelectorAll('.validation-buttons button').forEach(btn => {
+            btn.classList.remove('selected');
+            btn.setAttribute('aria-pressed','false');
+        });
         button.classList.add('selected');
+        button.setAttribute('aria-pressed','true');
+        updateValidationProgress(true);
         
         console.log(`Validated item ${index} as ${isCorrect ? 'correct' : 'incorrect'}`);
     }
@@ -761,7 +843,10 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("feedbackAreaEl no está disponible");
             return;
         }
-        feedbackAreaEl.innerHTML = `<span class="feedback-message ${type}">${message}</span>`;
+        const notice = document.createElement('span');
+        notice.className = 'feedback-message ' + (['info','success','error','warning'].includes(type) ? type : 'info');
+        notice.textContent = String(message);
+        feedbackAreaEl.replaceChildren(notice);
         console.log(`Feedback (${type}): ${message}`);
     }
     
@@ -770,7 +855,10 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("feedbackAreaEl no está disponible");
             return;
         }
-        feedbackAreaEl.innerHTML = `<span class="feedback-message error">Error: ${message}</span>`;
+        const notice = document.createElement('span');
+        notice.className = 'feedback-message error';
+        notice.textContent = 'Error: ' + String(message);
+        feedbackAreaEl.replaceChildren(notice);
         console.error("Mentiroso Game Error:", message);
     }
 
@@ -784,6 +872,10 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
+        if (gameState.objectiveValidation && gameState.maxBid && bidAmount > gameState.maxBid) {
+            showFeedback('La apuesta no puede superar las ' + gameState.maxBid + ' respuestas verificadas.', 'error');
+            return;
+        }
         if (bidAmount <= gameState.currentBid) {
             showFeedback(`Tu apuesta debe ser mayor que la apuesta actual (${gameState.currentBid}).`, "error");
             return;
@@ -888,6 +980,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- WebSocket Communication (Largely Reused) ---
     function initializeWebSocket() {
         const wsUrl = WEBSOCKET_URL;
+        if (!wsUrl) {
+            showLobbyMessage('Este preview es estático. Para probar Mentiroso, usá ?server=wss://TU-SERVIDOR-STAGING.', 'error');
+            disableLobbyButtons();
+            if (availableRoomsListEl) {
+                availableRoomsListEl.replaceChildren();
+                const item = document.createElement('li');
+                item.className = 'no-rooms-message';
+                item.textContent = 'No se pueden consultar salas: falta conectar el servidor de pruebas.';
+                availableRoomsListEl.appendChild(item);
+            }
+            return;
+        }
         console.log(`Intentando conectar WebSocket (Mentiroso): ${wsUrl}`);
         
         if (gameState.websocket && gameState.websocket.readyState !== WebSocket.CLOSED) {
@@ -920,7 +1024,19 @@ document.addEventListener('DOMContentLoaded', function() {
             clearTimeout(connectionTimeout);
             console.log('WebSocket Conectado! (Mentiroso)');
             showLobbyMessage("Conectado al servidor. Elige una opción.", "success");
-            enableLobbyButtons();
+            gameState.reconnectAttempts = 0;
+            if (MENTIROSO_PREVIEW) {
+                gameState.arenaCompatible = false;
+                disableLobbyButtons();
+                showLobbyMessage('Comprobando compatibilidad del servidor 5.2…', 'info');
+                if (gameState.arenaHandshakeTimer) clearTimeout(gameState.arenaHandshakeTimer);
+                gameState.arenaHandshakeTimer = setTimeout(() => {
+                    if (!gameState.arenaCompatible && gameState.websocket?.readyState === WebSocket.OPEN) {
+                        showLobbyMessage('Las salas online todavía no están disponibles. El servidor necesita actualizarse. Podés reintentar la conexión.', 'error');
+                        disableLobbyButtons();
+                    }
+                }, 4000);
+            } else enableLobbyButtons();
         };
         
         gameState.websocket.onmessage = (event) => {
@@ -942,27 +1058,32 @@ document.addEventListener('DOMContentLoaded', function() {
             if(gameState.gameActive) updateGamePhaseUI('waiting');
         };
         
-        gameState.websocket.onclose = (event) => {
+        gameState.websocket.onclose = event => {
             clearTimeout(connectionTimeout);
-            console.log('WebSocket Desconectado (Mentiroso):', event.reason, `Código: ${event.code}`);
-            const wasConnected = !!gameState.websocket;
+            if (gameState.arenaHandshakeTimer) clearTimeout(gameState.arenaHandshakeTimer);
             gameState.websocket = null;
-            
-            if (gameState.gameActive) {
-                showError("Conexión perdida con el servidor. Juego terminado.");
+            disableLobbyButtons();
+            if (MENTIROSO_PREVIEW && savedMentirosoSession()) {
+                showWaitingMessage('Conexión perdida. Recuperando la partida…');
+                if (gameState.reconnectAttempts < 10) {
+                    const delay = Math.min(6000, 600 * Math.pow(1.5, gameState.reconnectAttempts++));
+                    if (gameState.reconnectTimer) clearTimeout(gameState.reconnectTimer);
+                    gameState.reconnectTimer = setTimeout(initializeWebSocket, delay);
+                } else {
+                    showError('No se pudo recuperar la sesión. Volvé a ingresar a la sala.');
+                }
+            } else if (gameState.gameActive) {
+                showError('Se perdió la conexión con el servidor.');
                 gameState.gameActive = false;
-                showEndGameModalWithError("Conexión Perdida");
-            } else if (wasConnected) {
-                showLobbyMessage("Desconectado del servidor. Por favor refresca para reconectar.", "error");
-                disableLobbyButtons();
-            } else if (!event.wasClean) {
-                showLobbyMessage("No se pudo conectar al servidor. Asegúrate que esté corriendo y refresca.", "error");
-                disableLobbyButtons();
+                showEndGameModalWithError('Conexión perdida');
+            } else {
+                showLobbyMessage('Desconectado del servidor. Refrescá para reconectar.', 'error');
             }
         };
     }
 
     function sendToServer(type, payload) {
+        if (type === 'leaveRoom') clearMentirosoSession();
         if (gameState.websocket && gameState.websocket.readyState === WebSocket.OPEN) {
             const message = JSON.stringify({ type, payload });
             console.log('⭐ Enviando mensaje al servidor:', type, payload);
@@ -993,6 +1114,24 @@ document.addEventListener('DOMContentLoaded', function() {
             hideWaitingMessage(); // General hide, specific messages might reshow
 
             switch (message.type) {
+                case 'arena:hello':
+                    if (MENTIROSO_PREVIEW) {
+                        gameState.arenaCompatible =
+                            message.payload?.protocol === 'cracktotal-arena-5.2' &&
+                            message.payload?.features?.mentirosoObjective === true &&
+                            message.payload?.contentVersions?.mentiroso === MENTIROSO_EXPECTED_BANK_VERSION;
+                        if (gameState.arenaHandshakeTimer) clearTimeout(gameState.arenaHandshakeTimer);
+                        if (gameState.arenaCompatible) {
+                            enableLobbyButtons();
+                            showLobbyMessage('Arena 5.2 conectada. Corrección automática activa.', 'success');
+                            const saved = savedMentirosoSession();
+                            if (saved) sendToServer('resumeRoom', saved);
+                        } else {
+                            showLobbyMessage('El servidor todavía no tiene la versión correcta de Arena y su banco de respuestas. Reintentá cuando se actualice.', 'error');
+                            disableLobbyButtons();
+                        }
+                    }
+                    break;
                 case 'yourInfo':
                     gameState.myPlayerId = message.payload.playerId;
                     console.log(`⭐ Mi ID asignado: ${gameState.myPlayerId}`);
@@ -1001,6 +1140,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 case 'roomCreated':
                 case 'joinSuccess': // Server might send full player list or just confirmation
                     gameState.roomId = message.payload.roomId;
+                    persistMentirosoSession(message.payload);
                     
                     // Marcar si somos el creador de la sala
                     if (message.type === 'roomCreated') {
@@ -1067,6 +1207,75 @@ document.addEventListener('DOMContentLoaded', function() {
                     showWaitingMessage(`Sala ${gameState.roomId} ${message.type === 'roomCreated' ? 'creada' : 'unida'}. Esperando oponente...`);
                     break;
                 
+                case 'roomResumed': {
+                    if (message.payload.gameType !== 'mentiroso') break;
+                    const p = message.payload;
+                    persistMentirosoSession(p);
+                    gameState.myPlayerId = p.playerId;
+                    gameState.roomId = p.roomId;
+                    gameState.gameActive = !!p.gameActive;
+                    const participants = [p.players?.player1, p.players?.player2].filter(Boolean);
+                    const own = participants.find(x => x.id === p.playerId);
+                    const rival = participants.find(x => x.id !== p.playerId);
+                    gameState.players.player1 = own || { id: p.playerId, name: 'Jugador', score: 0 };
+                    gameState.players.player2 = rival || null;
+                    gameState.currentTurn = p.currentTurn;
+                    if (p.mentiroso) {
+                        const round = p.mentiroso;
+                        gameState.currentRound = round.currentRound;
+                        gameState.maxRounds = round.maxRounds;
+                        gameState.currentCategory = round.currentCategory;
+                        gameState.categoryRound = round.categoryRound;
+                        gameState.globalCategoryIndex = round.globalCategoryIndex;
+                        gameState.challengeTextTemplate = round.challengeTemplate;
+                        gameState.currentBid = round.currentBid;
+                        gameState.lastBidder = round.lastBidder;
+                        gameState.playerWhoCalledMentiroso = round.callerId;
+                        gameState.playerToListAnswers = round.playerToListAnswers;
+                        gameState.objectiveValidation = round.objectiveValidation;
+                        gameState.maxBid = round.maxBid;
+                        if (bidInputEl && round.maxBid) bidInputEl.max = String(round.maxBid);
+                        const hint = document.getElementById('bidUniverseHint');
+                        if (hint && round.maxBid) hint.textContent =
+                            'Hasta ' + round.maxBid + ' respuestas distintas verificadas.';
+                        gameState.gamePhase = round.phase;
+                    }
+                    showGameScreen();
+                    updatePlayerUI();
+                    updateGameStatusDisplay();
+                    updateChallengeArea();
+                    updateGamePhaseUI(gameState.gamePhase === 'lobby' ? 'waiting' : gameState.gamePhase);
+                    if (p.paused) showWaitingMessage('Esperando que el rival vuelva a conectarse…');
+                    else hideWaitingMessage();
+                    break;
+                }
+                case 'rematchState':
+                    if (MENTIROSO_PREVIEW && playAgainButtonMentirosoEl) {
+                        const accepted = (message.payload.requested || []).includes(gameState.myPlayerId);
+                        playAgainButtonMentirosoEl.disabled = accepted;
+                        playAgainButtonMentirosoEl.textContent = accepted
+                            ? 'Esperando revancha del rival…' : 'Aceptar revancha';
+                    }
+                    break;
+                case 'resumeError':
+                    clearMentirosoSession();
+                    gameState.gameActive = false;
+                    gameState.roomId = null;
+                    showLobbyMessage(message.payload.error || 'La sesión anterior venció. Creá otra sala.', 'error');
+                    break;
+                case 'opponentDisconnected':
+                    showWaitingMessage('El rival perdió conexión. Esperando reconexión…');
+                    if (bidInputEl) bidInputEl.disabled = true;
+                    if (submitBidButtonEl) submitBidButtonEl.disabled = true;
+                    if (callMentirosoButtonEl) callMentirosoButtonEl.disabled = true;
+                    if (answerListAreaEl) answerListAreaEl.disabled = true;
+                    if (submitAnswersButtonEl) submitAnswersButtonEl.disabled = true;
+                    break;
+                case 'opponentReconnected':
+                    hideWaitingMessage();
+                    if (gameState.gameActive) updateGamePhaseUI(gameState.gamePhase);
+                    break;
+
                 case 'playerJoined':
                     // Manejar cuando otro jugador se une a nuestra sala
                     console.log("⭐ Otro jugador se unió:", message.payload);
@@ -1133,11 +1342,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 case 'gameStart':
                 case 'mentirosoGameStart':
+                    hideEndGameModal();
+                    if (playAgainButtonMentirosoEl) {
+                        playAgainButtonMentirosoEl.disabled = false;
+                        playAgainButtonMentirosoEl.textContent = 'Revancha';
+                    }
+                    resetGameUI();
                     // El servidor inicia el juego
                     console.log("⭐ Inicio de juego Mentiroso:", message.payload);
                     gameState.gameActive = true;
                     gameState.gameStartTime = Date.now();
                     gameState.resultPublished = false;
+                    gameState.progressReported = false;
                     
                     // Normalizar players - puede venir como array o como objeto
                     let normalizedPlayersStart = [];
@@ -1190,6 +1406,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 case 'newQuestion':
                 case 'mentirosoNextRound': // Server signals start of game or new round
                     gameState.gameActive = true;
+                    gameState.objectiveValidation = message.payload.objectiveValidation === true;
+                    gameState.maxRounds = Number(message.payload.maxRounds) || 18;
+                    gameState.maxBid = Number.isInteger(message.payload.maxBid) ? message.payload.maxBid : null;
+                    if (bidInputEl) {
+                        if (gameState.maxBid) bidInputEl.max = String(gameState.maxBid);
+                        else bidInputEl.removeAttribute('max');
+                    }
+                    const bidHint = document.getElementById('bidUniverseHint');
+                    if (bidHint) bidHint.textContent = gameState.maxBid
+                        ? 'Hasta ' + gameState.maxBid + ' respuestas distintas verificadas en esta consigna.'
+                        : 'Apostá una cantidad mayor que la del rival.';
                     console.log("⭐ Nueva ronda/pregunta:", message.payload);
                     
                     // Verificación de seguridad para players
@@ -1336,7 +1563,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const isFirstRound = gameState.currentRound === 1;
                     const feedbackMessage = isNewCategory ? 
                         `¡Nueva categoría! Ahora jugando: ${gameState.currentCategory}` :
-                        `${isFirstRound ? '¡Comienza' : 'Continúa'} la ronda ${gameState.categoryRound}/3! Categoría: ${gameState.currentCategory}`;
+                        `${isFirstRound ? '¡Comienza' : 'Continúa'} la ronda ${gameState.categoryRound}/${gameState.objectiveValidation ? 1 : 3}! Categoría: ${gameState.currentCategory}`;
                     
                     showFeedback(feedbackMessage, 'info');
                     break;
@@ -1473,7 +1700,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     updatePlayerUI();
                     
                     // Determinar si es la última pregunta de la categoría
-                    const isLastQuestionInCategory = gameState.categoryRound === 3;
+                    const isLastQuestionInCategory = gameState.objectiveValidation || gameState.categoryRound === 3;
                     
                     // Determinar quién ganó el punto de forma más clara
                     let winnerName = "Nadie";
@@ -1495,18 +1722,49 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Crear un mensaje destacado con el resultado
                     const categoryNumber = gameState.globalCategoryIndex + 1;
-                    const resultMessage = `
-                        <div class="round-result ${isPlayerWinner ? 'winner' : 'loser'}">
-                            <div class="result-header">RESULTADO PREGUNTA ${gameState.categoryRound}/3 (${gameState.currentRound}/18)</div>
-                            <div class="result-winner">Punto para: <strong>${winnerName}</strong></div>
-                            <div class="result-detail">${message.payload.message}</div>
-                            ${isLastQuestionInCategory ? `<div class="category-complete">¡CATEGORÍA ${categoryNumber} COMPLETADA!</div>` : ''}
-                        </div>
-                    `;
-                    
-                    // Mostrar el mensaje de resultado
+                    const resultNode = document.createElement('div');
+                    resultNode.className = 'round-result ' + (isPlayerWinner ? 'winner' : 'loser');
+                    const makeLine = (cls, txt) => {
+                        const line = document.createElement('div');
+                        line.className = cls;
+                        line.textContent = String(txt);
+                        resultNode.appendChild(line);
+                        return line;
+                    };
+                    makeLine('result-header',
+                        'RESULTADO PREGUNTA ' + gameState.categoryRound + '/' +
+                        (gameState.objectiveValidation ? 1 : 3) + ' (' + gameState.currentRound +
+                        '/' + (gameState.maxRounds || 18) + ')');
+                    const winnerLine = makeLine('result-winner', 'Punto para: ');
+                    const winnerBold = document.createElement('strong');
+                    winnerBold.textContent = winnerName;
+                    winnerLine.appendChild(winnerBold);
+                    makeLine('result-detail', message.payload.message || '');
+                    if (isLastQuestionInCategory) {
+                        makeLine('category-complete', '¡CATEGORÍA ' + categoryNumber + ' COMPLETADA!');
+                    }
+
+                    // Construir el resultado con textContent: los nombres nunca se interpretan como HTML.
                     if (feedbackAreaEl) {
-                        feedbackAreaEl.innerHTML = resultMessage;
+                        feedbackAreaEl.replaceChildren(resultNode);
+                        if (gameState.objectiveValidation && Array.isArray(message.payload.validationDetails)) {
+                            const verified = document.createElement('section');
+                            verified.className = 'ct-objective-verdict';
+                            const heading = document.createElement('strong');
+                            heading.textContent = 'CORRECCIÓN AUTOMÁTICA DEL SERVIDOR';
+                            verified.appendChild(heading);
+                            const list = document.createElement('ul');
+                            message.payload.validationDetails.forEach(entry => {
+                                const item = document.createElement('li');
+                                item.textContent = (entry.accepted ? '✓ ' : '✗ ') +
+                                    String(entry.answer || '').slice(0, 120) +
+                                    (entry.reason === 'duplicate' ? ' (repetida)' : '');
+                                item.className = entry.accepted ? 'valid' : 'invalid';
+                                list.appendChild(item);
+                            });
+                            verified.appendChild(list);
+                            feedbackAreaEl.appendChild(verified);
+                        }
                     }
                     
                     // Actualizar a fase roundOver sin mostrar el waiting message aún
@@ -1527,6 +1785,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     break;
                 
                 case 'gameOver': // Generic or Mentiroso specific game over
+                    if (!MENTIROSO_PREVIEW) clearMentirosoSession();
                     gameState.gameActive = false;
                     // Ensure payload is for Mentiroso if distinguishing
                     if (message.payload.gameType === 'mentiroso' || !message.payload.gameType) { 
@@ -1560,7 +1819,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateTimerDisplay(
                         message.payload.timeRemaining, 
                         message.payload.phase || 'bidding', 
-                        message.payload.phase === 'listing' ? 60 : 15
+                        message.payload.duration || (message.payload.phase === 'listing' ? 60 : 15)
                     );
                     break;
                     
@@ -1726,9 +1985,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const matchData = {
                     playerName: playerName,
                     score: myFinalScore,
-                    correctAnswers: myFinalScore, // En Mentiroso, el score refleja los aciertos
-                    totalQuestions: (gameState.currentRound || 1) * 10, // Aproximadamente 10 preguntas por ronda
-                    accuracy: myFinalScore > 0 ? Math.round((myFinalScore / ((gameState.currentRound || 1) * 10)) * 100) : 0,
+                    // Mentiroso points are rounds WON, not correct quiz answers.
+                    // Do not fabricate ten questions per round or a quiz accuracy.
+                    correctAnswers: 0,
+                    totalQuestions: 0,
+                    accuracy: 0,
                     duration: Math.floor((Date.now() - (gameState.gameStartTime || Date.now())) / 1000)
                 };
 
@@ -1743,7 +2004,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- End Game (Mentiroso) ---
-    function endGame(payload) { 
+    function endGame(payload) {
+        if (gameState.resultPublished) return;
+        gameState.resultPublished = true;
         console.log("Game Over (Mentiroso). Payload:", payload);
         gameState.gameActive = false;
         updateGamePhaseUI('gameOver');
@@ -1794,15 +2057,31 @@ document.addEventListener('DOMContentLoaded', function() {
             modalHeader.className = 'result-modal-header'; // Reset
             if (headerClass) modalHeader.classList.add(headerClass);
         }
-        resultStatsEl.innerHTML = `
-            <div class="stat-item your-score ${payload.winnerId === gameState.myPlayerId && !payload.draw ? 'winner' : (payload.winnerId && !payload.draw ? 'loser' : '')}">
-                <span class="stat-label"><i class="fas fa-user-shield"></i> ${myName} (Tú)</span>
-                <span class="stat-value">${myFinalScore}</span>
-            </div>
-            <div class="stat-item opponent-score ${payload.winnerId === opponentId && !payload.draw ? 'winner' : (payload.winnerId && !payload.draw ? 'loser' : '')}">
-                <span class="stat-label"><i class="fas fa-user-ninja"></i> ${opponentName}</span>
-                <span class="stat-value">${opponentFinalScore}</span>
-            </div>`;
+        const makeResultStat = (className, icon, labelText, score) => {
+            const item = document.createElement('div');
+            item.className = className;
+            const label = document.createElement('span');
+            label.className = 'stat-label';
+            const glyph = document.createElement('i');
+            glyph.className = icon;
+            glyph.setAttribute('aria-hidden', 'true');
+            label.append(glyph, document.createTextNode(' ' + String(labelText)));
+            const value = document.createElement('span');
+            value.className = 'stat-value';
+            value.textContent = String(score);
+            item.append(label, value);
+            return item;
+        };
+        resultStatsEl.replaceChildren(
+            makeResultStat('stat-item your-score ' +
+                (payload.winnerId === gameState.myPlayerId && !payload.draw ? 'winner' :
+                    (payload.winnerId && !payload.draw ? 'loser' : '')),
+                'fas fa-user-shield', myName + ' (Tú)', myFinalScore),
+            makeResultStat('stat-item opponent-score ' +
+                (payload.winnerId === opponentId && !payload.draw ? 'winner' :
+                    (payload.winnerId && !payload.draw ? 'loser' : '')),
+                'fas fa-user-ninja', opponentName, opponentFinalScore)
+        );
         
         // Guardar estadísticas en Firebase
         saveMentirosoStats(payload);
@@ -1816,7 +2095,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 won: won,
                 result: payload.draw ? 'draw' : (won ? 'victory' : 'defeat'),
                 score: scoreNum,
-                correctAnswers: scoreNum,
+                correctAnswers: 0, // No quiz questions are scored in Mentiroso.
                 durationSec: Math.floor((Date.now() - (gameState.gameStartTime || Date.now())) / 1000)
             });
         }
@@ -1844,8 +2123,14 @@ document.addEventListener('DOMContentLoaded', function() {
         setupMentirosoEventListeners(); // Specific listeners for Mentiroso game actions
 
         if(playAgainButtonMentirosoEl) playAgainButtonMentirosoEl.addEventListener('click', () => {
+            if (MENTIROSO_PREVIEW && gameState.roomId && !gameState.gameActive) {
+                sendToServer('requestRematch', { gameType: 'mentiroso' });
+                playAgainButtonMentirosoEl.disabled = true;
+                playAgainButtonMentirosoEl.textContent = 'Esperando revancha del rival…';
+                return;
+            }
             hideEndGameModal();
-            showLobby(); // Go back to lobby
+            showLobby();
             gameState.gameActive = false;
             if (gameState.roomId) sendToServer('leaveRoom', { roomId: gameState.roomId });
             gameState.roomId = null;

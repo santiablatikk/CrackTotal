@@ -1,0 +1,269 @@
+/* Migrated from formerly inline Quién Sabe Más 4.3 styles. */
+/* Crack Total 4.3 · Quién Sabe Más · integrated game/lobby UI */
+:root{--qsm-purple:#b5eb53;--qsm-purple-2:#85c631;--qsm-accent:#b5eb53;--qsm-bg:#0d1518;--qsm-card:#15272a;--qsm-border:#c8e3c43a;--qsm-shadow:none}
+body.qsm-1v1-body{background:#0e1719;color:#f4f9f0;overflow-x:clip}
+body.qsm-1v1-body *{box-sizing:border-box}
+body.qsm-1v1-body .qsm-1v1-content{width:min(1110px,calc(100% - 34px));max-width:none;margin:0 auto;padding-top:30px;padding-bottom:75px}
+body.qsm-1v1-body .lobby-container-inner{width:100%;max-width:none;margin:0 auto}
+body.qsm-1v1-body .lobby-header-section{text-align:left;border-bottom:1px solid #e5f6dd30;padding:0 0 25px;margin:0 0 26px}
+body.qsm-1v1-body .lobby-title{font:700 clamp(37px,4.8vw,64px)/1.12 "Space Grotesk","Manrope",sans-serif;letter-spacing:-.02em;color:#f5f9f0;margin:0 0 12px;text-transform:uppercase}
+body.qsm-1v1-body .lobby-subtitle{font-size:clamp(15px,1.6vw,18px);line-height:1.55;color:#bed0c0;margin:0}
+body.qsm-1v1-body .lobby-message{margin-top:13px;font-size:14px;line-height:1.5}
+body.qsm-1v1-body .lobby-content-wrapper{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+body.qsm-1v1-body .lobby-panel{background:#e8eee5;color:#17251b;border-top:4px solid #b5eb53;border-radius:3px;overflow:hidden;min-width:0;box-shadow:none}
+body.qsm-1v1-body .join-panel{background:#233c32;color:#f6fbf0;border-top-color:#9fc6bf}
+body.qsm-1v1-body .panel-header{display:flex;align-items:center;gap:11px;padding:23px 25px 12px;background:none;border:0;color:inherit}
+body.qsm-1v1-body .panel-header h3{font:700 28px "Space Grotesk","Manrope",sans-serif;line-height:1.1;text-transform:uppercase;color:inherit;margin:0}
+body.qsm-1v1-body .panel-header i{font-size:22px;color:#537f2e}
+body.qsm-1v1-body .join-panel .panel-header i{color:#b5eb53}
+body.qsm-1v1-body .panel-content{padding:10px 25px 25px}
+body.qsm-1v1-body .form-group{margin:0 0 17px}
+body.qsm-1v1-body .form-group label{display:block;font-size:13px;font-weight:850;margin-bottom:7px;color:inherit}
+body.qsm-1v1-body .input-wrapper{position:relative}
+body.qsm-1v1-body .input-wrapper i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#607765}
+body.qsm-1v1-body .lobby-input{width:100%;min-height:48px;border-radius:3px;border:1px solid #839887;background:#fff;color:#14231b;padding:12px 12px 12px 40px;font-size:16px;outline:none}
+body.qsm-1v1-body .lobby-input:focus-visible{outline:3px solid #a3d844;outline-offset:2px}
+body.qsm-1v1-body .lobby-button{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:51px;border:0;border-radius:3px;padding:12px 16px;cursor:pointer;font-size:14px;font-weight:950;letter-spacing:.04em;transition:filter .15s ease,transform .15s ease}
+body.qsm-1v1-body .lobby-button:hover{filter:brightness(1.07);transform:translateY(-2px)}
+body.qsm-1v1-body .primary-button{background:#b5eb53;color:#142418}
+body.qsm-1v1-body .secondary-button{background:#eaf1e6;color:#173021}
+body.qsm-1v1-body .accent-button{background:#b5eb53;color:#142418}
+body.qsm-1v1-body .quick-join-section .section-divider{display:flex;justify-content:center;margin:14px 0}
+body.qsm-1v1-body .section-divider span{font-size:14px;color:#d4e5d4}
+body.qsm-1v1-body .available-rooms-section{margin-top:19px;background:#172a27;border:1px solid #c7edbf3b;border-radius:3px;overflow:hidden}
+body.qsm-1v1-body .available-rooms-section .section-header{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid #e2f4dc30}
+body.qsm-1v1-body .available-rooms-section .section-header h3{font:700 23px "Space Grotesk","Manrope",sans-serif;margin:0;color:#f7f9f1}
+body.qsm-1v1-body .refresh-button{background:#b5eb53;color:#102516;border:0;border-radius:3px;min-height:40px;min-width:44px;cursor:pointer}
+body.qsm-1v1-body .rooms-list{list-style:none;margin:0;padding:18px}
+body.qsm-1v1-body .no-rooms-message{font-size:14px;line-height:1.5;color:#d1e2d5;padding:8px}
+body.qsm-1v1-body .game-card{background:#132620;border-top:4px solid #b5eb53;border-radius:3px;padding:28px;box-shadow:none;border-left:0;border-right:0;border-bottom:0}
+body.qsm-1v1-body .players-info-header{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:20px}
+body.qsm-1v1-body .player-box{display:flex;align-items:center;gap:13px;padding:13px 17px;background:#274637;border:1px solid #a7d3aa57;border-radius:3px;min-width:0;flex:1}
+body.qsm-1v1-body .player-box.active-turn{background:#b5eb53;border-color:#b5eb53;color:#132416}
+body.qsm-1v1-body .player-avatar{width:43px;height:43px;border-radius:3px;display:grid;place-items:center;background:#365749;color:#fff;font-size:19px;flex-shrink:0}
+body.qsm-1v1-body .player-box.active-turn .player-avatar{background:#244322}
+body.qsm-1v1-body .player-details{display:flex;flex-direction:column;gap:3px;min-width:0}
+body.qsm-1v1-body .player-name{font-size:clamp(12px,1.4vw,17px);font-weight:900;color:inherit;overflow-wrap:anywhere}
+body.qsm-1v1-body .score{font:700 28px "Space Grotesk","Manrope",sans-serif;color:inherit;background:none;border:0;padding:0}
+body.qsm-1v1-body .vs-separator{font:700 24px "Space Grotesk","Manrope",sans-serif;color:#b5eb53;margin:0;flex:0 0 auto}
+body.qsm-1v1-body .game-status{background:none;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center;padding:0;margin:0 0 16px;border:0;box-shadow:none}
+body.qsm-1v1-body .turn-indicator,body.qsm-1v1-body .question-counter{font-size:13px;line-height:1.4;font-weight:850;background:#274237;color:#edf7ed;padding:10px 13px;border-radius:3px;border:1px solid #bfebbb33;margin:0}
+body.qsm-1v1-body .turn-indicator i,body.qsm-1v1-body .question-counter i{color:#b5eb53}
+body.qsm-1v1-body .timer-container-qsm{margin:13px 0 22px}
+body.qsm-1v1-body .timer-bar-qsm{height:7px;background:#e8f2e32c;border-radius:2px;overflow:hidden}
+body.qsm-1v1-body #timerProgress{height:100%;background:#b5eb53;transition:width .25s linear}
+body.qsm-1v1-body .question-area{background:#e8eee5;padding:31px 25px;margin-bottom:16px;border-radius:3px}
+body.qsm-1v1-body .qsm-question{font:700 clamp(22px,2.8vw,38px)/1.36 "Space Grotesk","Manrope",sans-serif;letter-spacing:-.01em;color:#16241a;background:none;margin:0;padding:0;border:0;text-align:left;overflow-wrap:anywhere}
+body.qsm-1v1-body .options-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0}
+body.qsm-1v1-body .options-grid .option-btn{background:#254237;border:1px solid #d2edd04c;border-radius:3px;color:#f3faf1;padding:18px 19px;min-height:70px;text-align:left;font-size:clamp(15px,1.5vw,19px);font-weight:750;line-height:1.4;cursor:pointer;transition:background .15s ease,transform .15s ease}
+body.qsm-1v1-body .options-grid .option-btn:hover:not(:disabled){background:#365a44;transform:translateY(-2px)}
+body.qsm-1v1-body .options-grid .option-btn.correct{background:#b5eb53;color:#142518;border-color:#b5eb53}
+body.qsm-1v1-body .options-grid .option-btn.wrong{background:#a1433b;color:#fff;border-color:#c47b73}
+body.qsm-1v1-body .options-grid .option-btn:focus-visible{outline:3px solid #b5eb53;outline-offset:3px}
+body.qsm-1v1-body .feedback-message{font-size:15px;font-weight:800;line-height:1.5}
+body.qsm-1v1-body .modal-overlay .modal-content{background:#152a21;border-top:4px solid #b5eb53;color:#f4fbf2;border-radius:3px}
+body.qsm-1v1-body .modal-button.primary{background:#b5eb53;color:#13251a}
+@media(max-width:760px){body.qsm-1v1-body .qsm-1v1-content{width:calc(100% - 22px);padding-top:90px}
+body.qsm-1v1-body .lobby-content-wrapper,body.qsm-1v1-body .options-grid{grid-template-columns:1fr}
+body.qsm-1v1-body .lobby-header-section{text-align:left}
+body.qsm-1v1-body .lobby-title{font-size:52px}
+body.qsm-1v1-body .game-card{padding:16px}
+body.qsm-1v1-body .question-area{padding:20px 16px}
+body.qsm-1v1-body .qsm-question{font-size:clamp(24px,6vw,32px)}
+body.qsm-1v1-body .options-grid .option-btn{min-height:61px;padding:14px}
+body.qsm-1v1-body .player-box{padding:9px;gap:7px}
+body.qsm-1v1-body .player-avatar{width:33px;height:33px}
+body.qsm-1v1-body .vs-separator{font-size:20px}
+body.qsm-1v1-body .game-status{flex-direction:row}
+}
+@media(prefers-reduced-motion:reduce){body.qsm-1v1-body .lobby-button,body.qsm-1v1-body .option-btn,body.qsm-1v1-body #timerProgress{transition:none!important}body.qsm-1v1-body .lobby-button:hover,body.qsm-1v1-body .option-btn:hover{transform:none!important}}
+
+
+/* Crack Total 5.2 — QSM / shared Arena visual language. */
+html:has(body.qsm-1v1-body) {scroll-padding-top: 108px}
+body.qsm-1v1-body {
+  color:#f4f2e9;
+  background:#101b1b;
+  font-family:"Manrope",system-ui,sans-serif;
+}
+body.qsm-1v1-body .qsm-1v1-content {
+  width:min(1160px,calc(100% - 40px));
+  padding-block: clamp(30px,4vw,58px) clamp(44px,6vw,85px);
+  margin-inline:auto;
+}
+body.qsm-1v1-body .lobby-title {
+  color:#f4f2e9;
+  font:700 clamp(2.5rem,4.8vw,4.2rem)/1.1 "Space Grotesk","Manrope",sans-serif;
+  letter-spacing:-.04em;
+  overflow-wrap:anywhere;
+}
+body.qsm-1v1-body .lobby-subtitle {color:#cad9cf;line-height:1.65}
+body.qsm-1v1-body .lobby-content-wrapper{gap:clamp(14px,2vw,24px)}
+body.qsm-1v1-body .lobby-panel {
+  background:#182821; color:#f4f2e9;
+  border:1px solid rgba(181,235,83,.17);
+  border-top:3px solid #b5eb53; border-radius:14px;
+  box-shadow:0 12px 38px rgba(0,0,0,.14);
+}
+body.qsm-1v1-body .join-panel{background:#243b35;color:#f4f2e9}
+body.qsm-1v1-body .panel-header h3 {
+  color:#f4f2e9; font:700 clamp(1.3rem,2.5vw,1.9rem)/1.23 "Space Grotesk","Manrope",sans-serif;
+}
+body.qsm-1v1-body .form-group label {
+  color:#eaf2e8; font:650 .92rem/1.5 "Manrope",sans-serif;
+}
+body.qsm-1v1-body .lobby-input {
+  color:#f4f2e9; background:#121d1b; border:1px solid #687b71;
+  border-radius:9px; min-height:50px; font:500 1rem/1.4 "Manrope",sans-serif;
+}
+body.qsm-1v1-body .lobby-input::placeholder{color:#b7c5bc;opacity:1}
+body.qsm-1v1-body .lobby-input:focus-visible {outline:3px solid #b5eb53;outline-offset:2px}
+body.qsm-1v1-body .lobby-button {
+  min-height:52px;border-radius:10px; font:800 .96rem/1.3 "Manrope",sans-serif;
+}
+body.qsm-1v1-body .lobby-button:disabled {
+  color:#d2ddcf; background:#3c4d43; cursor:not-allowed;
+  border:1px dashed #718578; opacity:1; transform:none;
+}
+body.qsm-1v1-body .primary-button:not(:disabled),
+body.qsm-1v1-body .accent-button:not(:disabled) {background:#b5eb53;color:#142418}
+body.qsm-1v1-body .lobby-message.error {color:#ffccbc;background:#392125;border:1px solid #ad5965;padding:14px 18px;border-radius:10px}
+body.qsm-1v1-body .lobby-message.success {color:#dcf4c1;background:#1f3a26;border:1px solid #7da557;padding:14px 18px;border-radius:10px}
+body.qsm-1v1-body .game-card,
+body.qsm-1v1-body .question-area,
+body.qsm-1v1-body .options-grid .option-btn {border-radius:12px}
+body.qsm-1v1-body .qsm-question {
+  font:700 clamp(1.4rem,2.9vw,2.3rem)/1.4 "Space Grotesk","Manrope",sans-serif;
+  letter-spacing:-.016em;overflow-wrap:anywhere;
+}
+body.qsm-1v1-body .options-grid{gap:clamp(10px,1.3vw,16px)}
+body.qsm-1v1-body .options-grid .option-btn{min-height:72px;font:700 clamp(.95rem,1.45vw,1.12rem)/1.48 "Manrope",sans-serif}
+body.qsm-1v1-body .options-grid .option-btn:disabled{cursor:not-allowed;opacity:.75}
+body.qsm-1v1-body .options-grid .option-btn:focus-visible{outline:3px solid #b5eb53;outline-offset:3px}
+@media (max-width:760px){
+  body.qsm-1v1-body .qsm-1v1-content{width:calc(100% - 24px);padding-top:28px}
+  body.qsm-1v1-body .lobby-title{font-size:clamp(2.2rem,9vw,3.2rem)}
+  body.qsm-1v1-body .options-grid{grid-template-columns:minmax(0,1fr)}
+}
+@media (min-width:961px){body.game-body.qsm-1v1-body.ct-ds{padding-top:94px}}
+
+
+/* Arena 5.2 composition: question and choices form a single editorial stage.
+   New stage classes are intentionally scoped, not global override chains. */
+body.qsm-1v1-body .ct-quiz-stage {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.12fr);
+  align-items:stretch;
+  gap:clamp(12px,1.7vw,20px);
+  margin:0 0 18px;
+}
+body.qsm-1v1-body .ct-quiz-stage > * {min-width:0;}
+body.qsm-1v1-body .ct-quiz-stage .question-area {
+  display:flex;flex-direction:column;justify-content:space-between;gap:clamp(18px,3vw,34px);
+  margin:0;padding:clamp(25px,3vw,43px);min-height:clamp(285px,29vw,375px);
+  background:#f4f2e9;color:#14231b;border:1px solid #e5e2d6;
+  border-radius:18px;box-shadow:inset 0 5px 0 #d89b70;
+}
+body.qsm-1v1-body .ct-quiz-stage .qsm-question {
+  font:700 clamp(1.48rem,2.35vw,2.55rem)/1.32 "Space Grotesk","Manrope",sans-serif;
+  color:#16291e;letter-spacing:-.035em;text-transform:none;hyphens:auto;
+}
+body.qsm-1v1-body .ct-quiz-stage .answer-area {
+  display:flex;flex-direction:column;gap:16px;min-width:0;
+  padding:clamp(16px,2vw,25px);
+  background:#243b35;
+  border:1px solid rgba(244,242,233,.14);border-radius:18px;
+}
+body.qsm-1v1-body .ct-quiz-stage .options-grid {
+  flex:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-auto-rows:minmax(88px,auto);gap:clamp(10px,1.2vw,15px);
+}
+body.qsm-1v1-body .ct-quiz-stage .option-btn {
+  display:flex;align-items:center;justify-content:flex-start;
+  min-width:0;min-height:88px;padding:clamp(16px,1.6vw,24px);
+  font:700 clamp(.94rem,1.35vw,1.12rem)/1.48 "Manrope",sans-serif;
+  text-wrap:pretty;overflow-wrap:anywhere;
+  color:#f4f2e9;background:#315343;border:1px solid #587968;
+  border-radius:12px;box-shadow:0 4px 0 #101b1b47;
+  transition:transform 140ms ease,background-color 140ms ease,border-color 140ms ease;
+}
+body.qsm-1v1-body .ct-quiz-stage .option-btn:hover:not(:disabled) {
+  background:#40654f;border-color:#b5eb53;transform:translateY(-2px);
+}
+body.qsm-1v1-body .ct-quiz-stage .option-btn.correct {
+  background:#b5eb53;color:#102118;border-color:#a2d74b;
+}
+body.qsm-1v1-body .ct-quiz-stage .option-btn.wrong {
+  background:#963a35;color:#fff;border-color:#c7766c;
+}
+body.qsm-1v1-body .ct-stage-eyebrow {
+  display:inline-flex;align-items:center;gap:10px;
+  font:800 .73rem/1.4 "Manrope",sans-serif;
+  text-transform:uppercase;letter-spacing:.11em;
+  color:#d6ebd4;
+}
+body.qsm-1v1-body .question-area .ct-stage-eyebrow {color:#48604d;}
+body.qsm-1v1-body .ct-stage-footnote {
+  font:750 .69rem/1.5 "Manrope",sans-serif;
+  color:#627363;letter-spacing:.11em;
+}
+body.qsm-1v1-body .ct-live-indicator {
+  width:8px;height:8px;background:#47752b;border-radius:50%;flex:none;
+  box-shadow:0 0 0 4px rgba(181,235,83,.24);
+}
+@media (max-width:1020px) {
+  body.qsm-1v1-body .ct-quiz-stage {grid-template-columns:minmax(0,1fr);}
+  body.qsm-1v1-body .ct-quiz-stage .question-area {
+    min-height:0;gap:20px;padding:clamp(24px,4vw,32px);
+  }
+  body.qsm-1v1-body .ct-quiz-stage .options-grid {grid-auto-rows:minmax(76px,auto);}
+  body.qsm-1v1-body .ct-quiz-stage .option-btn{min-height:76px;}
+}
+@media (max-width:720px) {
+  body.qsm-1v1-body .ct-quiz-stage .answer-area{padding:14px;border-radius:13px;}
+  body.qsm-1v1-body .ct-quiz-stage .question-area{border-radius:13px;padding:22px;}
+  body.qsm-1v1-body .ct-quiz-stage .options-grid{grid-template-columns:minmax(0,1fr);}
+  body.qsm-1v1-body .ct-quiz-stage .option-btn{min-height:64px;padding:16px 18px;}
+  body.qsm-1v1-body .ct-stage-footnote{font-size:.6rem;}
+}
+@media(prefers-reduced-motion:reduce){
+  body.qsm-1v1-body .ct-quiz-stage .option-btn {transition:none;}
+}
+
+/* 6.0 — The live client renders .modern-option.option-btn.
+   Make long football answers readable without widening the match stage. */
+body.qsm-1v1-body .ct-quiz-stage .modern-option.option-btn{
+ display:flex;align-items:center;justify-content:flex-start;
+ gap:clamp(10px,1.2vw,15px);width:100%;min-width:0;
+ white-space:normal;text-align:left;line-height:1.45;
+ overflow-wrap:anywhere;word-break:normal;
+}
+body.qsm-1v1-body .ct-quiz-stage .modern-option .option-letter{
+ display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;
+ border:1px solid #739981;border-radius:7px;
+ color:#d7f0dc;background:#173327;
+ font:800 .91rem/1 "Space Grotesk","Manrope",sans-serif;
+}
+body.qsm-1v1-body .ct-quiz-stage .modern-option .option-text{
+ flex:1 1 0;min-width:0;overflow-wrap:anywhere;
+}
+body.qsm-1v1-body .ct-quiz-stage .modern-option.option-btn.selected:not(.correct):not(.incorrect){
+ border-color:#b5eb53;box-shadow:0 0 0 2px rgba(181,235,83,.18);
+}
+body.qsm-1v1-body .ct-quiz-stage .modern-option.option-btn.incorrect{
+ background:#963a35;color:#fff;border-color:#c7766c;
+}
+body.qsm-1v1-body .ct-quiz-stage .modern-option.option-btn.correct{
+ background:#b5eb53;color:#102118;border-color:#a2d74b;
+}
+body.qsm-1v1-body .ct-quiz-stage .modern-option:is(.correct,.incorrect) .option-letter{
+ color:inherit;background:rgba(0,0,0,.13);border-color:currentColor;
+}
+@media(max-width:720px){
+ body.qsm-1v1-body .ct-quiz-stage .modern-option .option-letter{
+  flex-basis:30px;width:30px;height:30px;
+ }
+ body.qsm-1v1-body .ct-quiz-stage .modern-option.option-btn{
+  min-height:64px;padding:13px 14px;
+ }
+}

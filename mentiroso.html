@@ -43,13 +43,12 @@
     <meta property="twitter:site" content="@cracktotal_">
 
     <link rel="stylesheet" href="assets/css/base.css?v=202505272312">
-    <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260801b">
+    <link rel="stylesheet" href="assets/css/design-system/index.css?v=20261020v5">
     <link rel="stylesheet" href="assets/css/layout.css?v=202505272312">
-    <link rel="stylesheet" href="assets/css/mentiroso.css?v=202505272312"> <!-- Changed from qsm.css -->
+     <!-- Changed from qsm.css -->
     <link rel="stylesheet" href="assets/css/modals.css?v=202505272312">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <meta name="description" content="Mentiroso - Desafía a tus amigos en este juego de fútbol de astucia y conocimiento.">
     <meta name="google-adsense-account" content="ca-pub-9579152019412427">
@@ -110,11 +109,11 @@
     <!-- Servicio de partidas/ranking -->
     <script src="assets/js/firebase-service.js?v=202505272312"></script>
     <script src="assets/js/logros.js?v=202505272312"></script>
-    <script src="assets/js/mentiroso.js?v=202505272312"></script>
+    <script src="assets/js/mentiroso.js?v=20261023-validation6"></script>
     <link rel="stylesheet" href="assets/css/home.css?v=20260804v">
     <link rel="stylesheet" href="assets/css/discover.css?v=20260804v">
-    <link rel="stylesheet" href="assets/css/game-shell.css?v=20260803n">
-    <link rel="stylesheet" href="assets/css/game-shell.css?v=20260803m">
+    <link rel="stylesheet" href="assets/css/game-shell.css?v=20261021-premium4">
+    <link rel="stylesheet" href="assets/css/mentiroso.css?v=20261023-validation6">
 </head>
 <body class="game-body mentiroso-body ct-ds">
     <!-- Skip Link para accesibilidad -->
@@ -156,13 +155,17 @@
         <!-- Lobby Section -->
         <section id="lobbySection" class="lobby-container active">
             <div class="container lobby-container-inner">
-                <h2 class="lobby-title">Lobby Mentiroso <i class="fas fa-user-secret"></i></h2>
-                <p class="lobby-subtitle">Crea o únete a una sala para jugar Mentiroso.</p>
-                <div id="lobbyMessageArea" class="lobby-message"></div>
+                <p class="ct-game-eyebrow"><span class="ct-game-index">06 / ARENA</span> THE BLUFFING FOOTBALL GAME</p>
+                <h2 class="lobby-title">MENTIROSO <i class="fas fa-user-secret" aria-hidden="true"></i></h2>
+                <p class="lobby-subtitle">Apostá cuántos nombres sabés, subí la apuesta o desafiá al rival. Elegí cómo entrar.</p>
+                <div id="lobbyMessageArea" class="lobby-message" role="status" aria-live="polite"></div>
+                <button id="retryArenaButton" class="secondary-button ct-arena-retry" type="button" hidden>
+                    <i class="fas fa-rotate-right" aria-hidden="true"></i> Reintentar conexión
+                </button>
                 <div class="lobby-grid">
                     <div class="lobby-column lobby-actions-column">
                         <div class="lobby-card create-room-card">
-                            <h3><i class="fas fa-plus-circle"></i> Crear Sala Nueva</h3>
+                            <h3><i class="fas fa-plus-circle"></i> CREAR SALA</h3>
                             <div class="form-group">
                                 <label for="createPlayerName">Tu Nombre:</label>
                                 <input type="text" id="createPlayerName" class="lobby-input" placeholder="Nombre de Jugador" value="Jugador 1">
@@ -201,7 +204,7 @@
                     </div>
                     <div class="lobby-column available-rooms-column">
                         <div id="availableRoomsSection" class="lobby-card available-rooms-card">
-                            <h3><i class="fas fa-list-ul"></i> Salas Disponibles (Mentiroso)</h3>
+                            <h3><i class="fas fa-list-ul"></i> SALAS DISPONIBLES</h3>
                             <ul id="availableRoomsList" class="rooms-list">
                                 <li class="no-rooms-message">Buscando salas... <i class="fas fa-spinner fa-spin"></i></li>
                             </ul>
@@ -251,20 +254,25 @@
                 </div>
 
                 <div class="game-card mentiroso-card">
-                    <div class="challenge-area">
-                        <h3 class="mentiroso-challenge-text" id="challengeText">Puedo nombrar X ...</h3>
-                        <p class="current-bid-text" id="currentBidText">Apuesta actual: Ninguna</p>
-                    </div>
+                    <div class="ct-bluff-stage">
+                        <div class="challenge-area">
+                            <span class="ct-stage-eyebrow">LA CONSIGNA / RONDA ACTUAL</span>
+                            <h3 class="mentiroso-challenge-text" id="challengeText">Puedo nombrar X ...</h3>
+                            <p class="current-bid-text" id="currentBidText">Apuesta actual: Ninguna</p>
+                            <span class="ct-stage-footnote">APOSTÁ LO QUE SABÉS. DEMOSTRÁ LO QUE APOSTÁS.</span>
+                        </div>
 
-                    <div class="interaction-area" id="interactionArea">
+                        <div class="interaction-area" id="interactionArea">
+                            <span class="ct-stage-eyebrow">TU JUGADA / DECISIÓN</span>
                         <!-- This area will change based on game phase -->
                         
                         <!-- Bidding Phase -->
                         <div id="biddingPhase" class="phase-active">
                             <p id="playerTurnBidText">Tu turno para apostar o decir "Mentiroso"</p>
                             <div class="form-group">
-                                <label for="bidInput">¿Cuántos puedes nombrar?</label>
-                                <input type="number" id="bidInput" class="modern-input" placeholder="Ej: 5" min="1">
+                                <label for="bidInput">¿Cuántos podés nombrar?</label>
+                                <input type="number" id="bidInput" class="modern-input" placeholder="Ej: 12" min="1" step="1" inputmode="numeric">
+                                <small id="bidUniverseHint" class="ct-count-hint" aria-live="polite"></small>
                             </div>
                             <div class="action-buttons-mentiroso">
                                 <button id="submitBidButton" class="primary-button mentiroso-action-btn">
@@ -278,9 +286,10 @@
 
                         <!-- Listing Answers Phase -->
                         <div id="listingPhase" style="display: none;">
-                            <p id="listingInstructionText">¡Te llamaron Mentiroso! Nombra los <span id="bidToListCount">X</span> ítems:</p>
+                            <p id="listingInstructionText">¡Te llamaron Mentiroso! Escribí los <span id="bidToListCount">X</span> nombres:</p>
                             <div class="form-group">
-                                <textarea id="answerListArea" class="modern-textarea" rows="6" placeholder="Escribe un ítem por línea..."></textarea>
+                                <textarea id="answerListArea" class="modern-textarea" rows="10" placeholder="Escribí una respuesta por línea..." aria-describedby="answerCounter"></textarea>
+                                <small id="answerCounter" class="ct-count-hint" aria-live="polite">Respuestas ingresadas: 0</small>
                             </div>
                             <button id="submitAnswersButton" class="primary-button mentiroso-action-btn">
                                 <i class="fas fa-list-ol"></i> Enviar Lista
@@ -289,7 +298,8 @@
 
                         <!-- Validation Phase -->
                         <div id="validationPhase" style="display: none;">
-                            <p id="validationInstructionText">Valida las respuestas de tu oponente:</p>
+                            <p id="validationInstructionText">Revisá las respuestas del rival:</p>
+                            <p class="ct-validation-progress" id="validationProgress" role="status" aria-live="polite">Esperando respuestas...</p>
                             <ul id="answersToValidateList" class="answers-to-validate">
                                 <!-- JS will populate this like:
                                 <li><span>Respuesta 1</span> <button class="validate-correct"><i class="fas fa-check"></i></button> <button class="validate-incorrect"><i class="fas fa-times"></i></button></li>
@@ -299,9 +309,10 @@
                                 <i class="fas fa-check-double"></i> Confirmar Validación
                             </button>
                         </div>
-                    </div>
+                    </div><!-- /interaction-area -->
+                    </div><!-- /ct-bluff-stage -->
 
-                    <div class="feedback-area" id="feedbackArea">
+                    <div class="feedback-area" id="feedbackArea" role="status" aria-live="polite">
                         <!-- Mensajes de feedback -->
                     </div>
                 </div>
@@ -402,127 +413,7 @@
             });
         });
     </script>
-    
-    <style>
-        :root {
-            --qsm-purple: #79f2a6;
-            --qsm-purple-2: #22c55e;
-            --qsm-accent: #30d158;
-            --qsm-card: rgba(20, 22, 35, 0.9);
-            --qsm-border: rgba(121, 242, 166, 0.25);
-            --qsm-shadow: 0 10px 25px rgba(0,0,0,.35);
-        }
-
-        /* Lobby y tarjetas */
-        .lobby-container-inner { max-width: 1100px; margin: 0 auto; }
-        .lobby-title { text-align:center; margin: 10px 0 6px; }
-        .lobby-subtitle { text-align:center; color: rgba(255,255,255,.75); margin-bottom: 14px; }
-        .lobby-grid { display:grid; grid-template-columns: 1.2fr .8fr; gap: 18px; }
-        .lobby-card { background: var(--qsm-card); border:1px solid var(--qsm-border); border-radius: 14px; box-shadow: var(--qsm-shadow); padding: 14px; }
-        .lobby-card h3 { display:flex; align-items:center; gap:8px; margin: 4px 0 12px; }
-
-        .lobby-input, .modern-input, .modern-textarea { width: 100%; padding: 12px 14px; border-radius: 10px; border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.06); color:#fff; outline:none; transition:.2s; }
-        .lobby-input:focus, .modern-input:focus, .modern-textarea:focus { border-color: var(--qsm-purple); box-shadow: 0 0 0 3px rgba(121,242,166,.2); }
-
-        .lobby-button { display:inline-flex; align-items:center; gap:8px; border:0; border-radius:12px; padding:12px 16px; cursor:pointer; transition:.2s; font-weight:700; letter-spacing:.3px; }
-        .primary-button { background: linear-gradient(135deg, #79f2a6, #22c55e); color:#04120a; }
-        .secondary-button { background: linear-gradient(135deg, #374151, #2d3748); color:#e6e6e6; }
-        .danger-button { background: linear-gradient(135deg, #ef4444, #dc2626); color:#fff; }
-        .lobby-button:hover { transform: translateY(-1px); filter: brightness(1.05); }
-
-        .rooms-list { list-style:none; margin:0; padding:0; }
-        .no-rooms-message { color: rgba(255,255,255,.7); padding: 10px; }
-
-        /* Header jugadores y estado */
-        .players-info-header { display:flex; align-items:center; justify-content:center; gap:10px; }
-        .game-status { background: rgba(30,32,45,.9); padding: 14px; border-radius: 12px; margin: 10px 0 14px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--qsm-border); box-shadow: var(--qsm-shadow); }
-        .player-box { background: rgba(16,17,26,.8); padding: 10px 12px; border-radius: 10px; transition:.2s; border:1px solid rgba(255,255,255,.1); box-shadow: 0 4px 8px rgba(0,0,0,.2); display:flex; align-items:center; gap:10px; }
-        .player-box .player-avatar { width: 40px; height: 40px; display:flex; align-items:center; justify-content:center; border-radius: 50%; background: rgba(121,242,166,.22); }
-        .vs-separator { color: rgba(255,255,255,.6); font-weight:800; margin:0 8px; background: rgba(255,255,255,.12); padding: 4px 10px; border-radius: 10px; }
-
-        /* Barra de categorías */
-        .categories-progress { background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); }
-        .category-pill { background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); opacity: .9; }
-        .category-pill.active { background: rgba(121,242,166,.25); border-color: var(--qsm-border); }
-        .category-pill.completed { background: rgba(34,197,94,.25); border-color: rgba(34,197,94,.45); }
-
-        /* Carta principal del juego */
-        .mentiroso-card { background: var(--qsm-card); border:1px solid var(--qsm-border); border-radius: 16px; box-shadow: var(--qsm-shadow); }
-        .mentiroso-challenge-text { background: radial-gradient(100% 100% at 50% 0%, rgba(121,242,166,.15), rgba(0,0,0,0)); border-left: 4px solid var(--qsm-purple); }
-
-        /* Botones de acción */
-        .mentiroso-action-btn { padding: 12px 16px; border-radius: 12px; border:0; cursor:pointer; }
-        .mentiroso-action-btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
-
-        /* Animaciones suaves */
-        @keyframes pop { 0% { transform: scale(.98); } 100% { transform: scale(1); } }
-        .lobby-card, .mentiroso-card { animation: pop .18s ease-out; }
-
-        .categories-progress {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0 15px;
-            flex-wrap: wrap;
-            gap: 5px;
-            padding: 5px;
-            background-color: rgba(0,0,0,0.1);
-            border-radius: 12px;
-        }
-        
-        .category-pill {
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            opacity: 0.6;
-            transition: all 0.3s ease;
-            text-align: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-        
-        .category-pill.active {
-            background-color: #e74c3c;
-            opacity: 1;
-            font-weight: bold;
-            transform: scale(1.05);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-        
-        .category-pill.completed {
-            background-color: #2ecc71;
-            opacity: 1;
-        }
-        
-        /* Mejorar la visualización de desafío */
-        .mentiroso-challenge-text {
-            font-size: 1.4rem;
-            text-align: center;
-            padding: 10px 15px;
-            background-color: rgba(44, 62, 80, 0.1);
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border-left: 4px solid #3498db;
-        }
-        
-        @media (max-width: 768px) {
-            .categories-progress {
-                justify-content: center;
-            }
-            
-            .category-pill {
-                font-size: 0.75rem;
-                padding: 5px 10px;
-                margin: 2px;
-            }
-            
-            .mentiroso-challenge-text {
-                font-size: 1.2rem;
-                padding: 8px 12px;
-            }
-        }
-    </style>
+    <!-- Mentiroso styles consolidated in assets/css/mentiroso.css -->
     <script src="assets/js/components/navbar.js?v=20260803m"></script>
     <script src="assets/js/components/footer.js?v=20260803m"></script>
     <script src="assets/js/components/shell.js?v=20260803m"></script>

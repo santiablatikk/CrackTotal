@@ -3,6 +3,11 @@ const http = require('http');
 const url = require('url');
 const fs = require('fs'); // Added for file system operations
 const path = require('path'); // Added for constructing file paths
+const { createPasalaDuelService } = require('./server/pasala-duel');
+const objectiveMentiroso = require('./server/multiplayer/objective-mentiroso');
+const { secureCode, safePlayerName } = require('./server/multiplayer/core');
+// Explicit staging-only feature flag: historical production backend stays unchanged.
+const OBJECTIVE_MENTIROSO = process.env.CT_STAGING === 'true' && process.env.CT_OBJECTIVE_MENTIROSO === 'true';
 
 // --- Constants ---
 const MAX_LEVELS = 6; // 6 niveles de dificultad
@@ -36,6 +41,8 @@ function getMimeType(filePath) {
 
 // Función para canonicalizar URLs - CRÍTICO PARA SEO
 function canonicalizeUrl(req, res) {
+    // Opt-in only for isolated staging backends; production keeps its canonical host policy.
+    if (process.env.CT_STAGING === 'true') return false;
     const host = req.headers.host || 'cracktotal.com';
     const protocol = req.headers['x-forwarded-proto'] || 'http';
     const url = req.url;
@@ -90,6 +97,22 @@ function canonicalizeUrl(req, res) {
 // --- Server Setup ---
 // Servidor HTTP que maneja tanto archivos estáticos como WebSocket upgrades
 const server = http.createServer((req, res) => {
+    // Staging-only health endpoint; never enabled on cracktotal.com.
+    if (process.env.CT_STAGING === 'true' && req.method === 'GET' &&
+        req.url.split('?')[0] === '/__ct_staging/health') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8',
+            'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
+        res.end(JSON.stringify({
+            ok: true, service: 'cracktotal-arena-staging', websocket: true,
+            arenaProtocol: 'cracktotal-arena-5.2',
+            features: { pasalaDuel: true, qsmResume: LEGACY_SESSION_RECOVERY,
+                mentirosoObjective: OBJECTIVE_MENTIROSO },
+            contentVersions: { mentiroso: objectiveMentiroso.catalog.version },
+            commit: process.env.RENDER_GIT_COMMIT || null,
+            branch: process.env.RENDER_GIT_BRANCH || null
+        }));
+        return;
+    }
     console.log(`${new Date().toISOString()} - ${req.method} ${req.url} - Host: ${req.headers.host}`);
     
     // CRÍTICO: Canonicalización de URLs antes de cualquier procesamiento
@@ -101,6 +124,42 @@ const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true);
     let pathname = parsedUrl.pathname;
     
+    // Public release identity used by CI to verify the live Render commit.
+    // RENDER_GIT_COMMIT and RENDER_GIT_BRANCH are Render-provided metadata,
+    // not credentials. This endpoint deliberately does not expose environment secrets.
+    if (pathname === '/__ct_release/health') {
+        if (req.method !== 'GET' && req.method !== 'HEAD') {
+            res.writeHead(405, { 'Allow': 'GET, HEAD', 'Cache-Control': 'no-store' });
+            res.end();
+            return;
+        }
+        const identity = JSON.stringify({
+            service: 'cracktotal',
+            version: '6.0.0',
+            environment: process.env.CT_STAGING === 'true' ? 'staging' : 'production',
+            commit: process.env.RENDER_GIT_COMMIT || null,
+            branch: process.env.RENDER_GIT_BRANCH || null
+        });
+        res.writeHead(200, {
+            'Content-Type': 'application/json; charset=utf-8',
+            'Cache-Control': 'no-store, no-cache, must-revalidate',
+            'X-Content-Type-Options': 'nosniff',
+            'Content-Length': Buffer.byteLength(identity)
+        });
+        res.end(req.method === 'HEAD' ? undefined : identity);
+        return;
+    }
+
+    // The retired career mode is not part of Crack Total. Redirect old bookmarks.
+    if (pathname === '/mi-carrera.html' || pathname === '/mi-carrera') {
+        res.writeHead(301, {
+            'Location': '/games.html',
+            'Cache-Control': 'public, max-age=3600'
+        });
+        res.end();
+        return;
+    }
+
     // Redirect /index.html to /
     if (pathname === '/index.html') {
         console.log(`📄 Redirecting index.html to root: ${pathname} -> /`);
@@ -196,7 +255,21 @@ const server = http.createServer((req, res) => {
 const PORT = process.env.PORT || (3001 + Math.floor(Math.random() * 999));
 
 // Attach WebSocket server to the HTTP server
-const wss = new WebSocket.Server({ server });
+// Limit untrusted browser origins and message size on staging only.
+// The production server's existing WebSocket configuration remains unchanged.
+const stagingWsOptions = process.env.CT_STAGING === 'true' ? {
+    maxPayload: 64 * 1024,
+    verifyClient(info, done) {
+        const configured = (process.env.CT_STAGING_ORIGINS ||
+            'https://deploy-preview-1--zingy-haupia-53b742.netlify.app')
+            .split(',').map(origin => origin.trim()).filter(Boolean);
+        const origin = info.origin || '';
+        const allowed = !origin || configured.includes(origin) ||
+            /^http:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?$/.test(origin);
+        done(allowed, allowed ? undefined : 403, allowed ? undefined : 'Staging origin not allowed');
+    }
+} : {};
+const wss = new WebSocket.Server({ server, ...stagingWsOptions });
 
 server.listen(PORT, () => {
     console.log(`🚀 Servidor HTTP y WebSocket iniciado en el puerto ${PORT}`);
@@ -216,6 +289,8 @@ console.log('🎯 Server script initialized. Waiting for connections...');
 let allQuestions = {}; // Store questions globally { level: [processedQuestion, ...] }
 
 function processRawQuestion(rawQ, level) {
+    // Explicitly quarantined historical questions must never reach live matches.
+    if (rawQ && ['retired', 'ambiguous', 'pending'].includes(rawQ.audit_status)) return null;
     // Ensure basic structure exists based on level
     if (!rawQ || typeof rawQ.pregunta !== 'string' || typeof rawQ.respuesta_correcta !== 'string') {
         console.warn(`[L${level} - ERROR FORMATO BASICO] Pregunta saltada. Falta 'pregunta' o 'respuesta_correcta' como string. Pregunta: ${rawQ ? rawQ.pregunta : 'DESCONOCIDA'}`);
@@ -348,6 +423,17 @@ function loadQuestions() {
 // --- Game State Management ---
 const clients = new Map(); // Map<WebSocket, {id: string, roomId: string | null}>
 const rooms = new Map(); // Map<string, Room>
+// Independent duel service: does not alter QSM or Mentiroso room semantics.
+const pasalaDuels = createPasalaDuelService();
+const LEGACY_SESSION_RECOVERY = process.env.CT_STAGING === 'true';
+const ROOM_GRACE_MS = 45000;
+const QSM_QUESTION_MS = process.env.CT_STAGING === 'true' && process.env.CT_QSM_TEST_QUESTION_MS
+    ? Math.max(600, Math.min(20000, Number(process.env.CT_QSM_TEST_QUESTION_MS) || 20000)) : 20000;
+const QSM_NEXT_QUESTION_DELAY_MS = process.env.CT_STAGING === 'true' && process.env.CT_QSM_TEST_NEXT_DELAY_MS
+    ? Math.max(20, Math.min(1500, Number(process.env.CT_QSM_TEST_NEXT_DELAY_MS) || 1500)) : 1500;
+const roomPlayers = room => [room?.players?.player1, room?.players?.player2].filter(Boolean);
+const bothConnected = room => roomPlayers(room).length === 2 &&
+    roomPlayers(room).every(p => p.ws && p.ws.readyState === WebSocket.OPEN);
 // interface Room {
 //     roomId: string;
 //     players: { player1: Player | null, player2: Player | null };
@@ -373,7 +459,7 @@ const rooms = new Map(); // Map<string, Room>
 
 // --- Helper Functions ---
 function generateUniqueId() {
-    return Math.random().toString(36).substring(2, 9);
+    return secureCode(8).toLowerCase();
 }
 
 function generateRoomId() {
@@ -461,6 +547,14 @@ wss.on('connection', (ws, req) => {
     clients.set(ws, { id: clientId, roomId: null });
     console.log(`Client connected: ${clientId} (Total: ${clients.size})`);
     safeSend(ws, { type: 'yourInfo', payload: { playerId: clientId } });
+    safeSend(ws, { type: 'arena:hello', payload: {
+        protocol: 'cracktotal-arena-5.2',
+        features: { pasalaDuel: true, qsmResume: LEGACY_SESSION_RECOVERY,
+            mentirosoObjective: OBJECTIVE_MENTIROSO },
+        contentVersions: { mentiroso: objectiveMentiroso.catalog.version },
+        commit: process.env.RENDER_GIT_COMMIT || null,
+        branch: process.env.RENDER_GIT_BRANCH || null
+    } });
     
     // REMOVED: Automatic room broadcast on connection
     // Client will request rooms specifically with gameType filter
@@ -488,6 +582,7 @@ wss.on('connection', (ws, req) => {
         const clientInfo = clients.get(ws);
         if (clientInfo) {
             // // console.log(`Client disconnected: ${clientInfo.id}`);
+            pasalaDuels.disconnect(ws);
             handleDisconnect(ws, clientInfo.id, clientInfo.roomId);
             clients.delete(ws);
             // // console.log(`Client removed. Total clients: ${clients.size}`); // Comentar luego
@@ -502,6 +597,7 @@ wss.on('connection', (ws, req) => {
         console.error(`WebSocket error for client ${clientId}:`, error);
         // Attempt graceful disconnect and cleanup if possible
         if (clientInfo) {
+            pasalaDuels.disconnect(ws);
             handleDisconnect(ws, clientInfo.id, clientInfo.roomId); // Try cleanup
             clients.delete(ws);
             // // console.log(`Client removed after error. Total clients: ${clients.size}`); // Comentar luego
@@ -520,7 +616,26 @@ function handleClientMessage(ws, message) {
 
     // // console.log(`Handling message type: ${message.type} from player ${clientInfo.id}`); // ELIMINAR ESTA LÍNEA
 
+    // Pasala Che duel messages have an isolated protocol and authoritative state.
+    if (pasalaDuels.handle(ws, message, clientInfo)) return;
+    if (pasalaDuels.hasPeer(ws)) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Salí del rosco antes de entrar a otra sala.' } });
+        return;
+    }
+
+    if (LEGACY_SESSION_RECOVERY && clientInfo.roomId &&
+        rooms.get(clientInfo.roomId)?.reconnectPaused &&
+        !['leaveRoom', 'getRooms', 'checkRoom', 'resumeRoom', 'ping', 'pong'].includes(message.type)) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Esperando que el rival vuelva a conectarse.' } });
+        return;
+    }
     switch (message.type) {
+        case 'resumeRoom':
+            handleResumeRoom(ws, clientInfo, message.payload);
+            break;
+        case 'requestRematch':
+            handleRequestRematch(ws, clientInfo, message.payload);
+            break;
         case 'createRoom':
             handleCreateRoom(ws, clientInfo, message.payload);
             break;
@@ -540,6 +655,9 @@ function handleClientMessage(ws, message) {
             handleCheckRoom(ws, clientInfo, message.payload);
             break;
         // --- Game Actions (Quien Sabe Mas) ---
+        case 'timeOut':
+             // Only the server may expire QSM questions; browser timers cannot award points.
+             break;
         case 'submitAnswer':
              handleSubmitAnswer(ws, clientInfo, message.payload);
              break;
@@ -570,20 +688,133 @@ function handleClientMessage(ws, message) {
 
 // --- Handler Implementations ---
 
-function handleCreateRoom(ws, clientInfo, payload) {
+
+// Recover a legacy QSM/Mentiroso room with the same secure bearer-session design as Pasala.
+// Keep this behind CT_STAGING until both clients pass reconnect E2E tests.
+function handleResumeRoom(ws, clientInfo, payload = {}) {
+    if (!LEGACY_SESSION_RECOVERY || clientInfo.roomId || pasalaDuels.hasPeer(ws)) {
+        return safeSend(ws, { type: 'resumeError', payload: { error: 'Reconexión no disponible.' } });
+    }
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+        return safeSend(ws, { type: 'resumeError', payload: { error: 'Sesión inválida.' } });
+    }
+    const roomId = String(payload.roomId || '').trim();
+    const token = String(payload.reconnectToken || '');
+    const room = rooms.get(roomId);
+    const player = room && roomPlayers(room).find(p => p.reconnectToken === token && token.length >= 32);
+    if (!room || !player || (payload.gameType && payload.gameType !== room.gameType)) {
+        return safeSend(ws, { type: 'resumeError', payload: { error: 'Sesión no encontrada o vencida.' } });
+    }
+    if (player.ws && player.ws.readyState === WebSocket.OPEN) {
+        return safeSend(ws, { type: 'resumeError', payload: { error: 'La sesión ya está conectada.' } });
+    }
+    if (player.graceTimer) clearTimeout(player.graceTimer);
+    player.graceTimer = null;
+    player.ws = ws;
+    clientInfo.id = player.id;
+    clientInfo.roomId = roomId;
+    player.reconnectToken = secureCode(24); // Rotate credentials on successful recovery.
+    const publicPlayers = {
+        player1: room.players.player1 && { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
+        player2: room.players.player2 && { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
+    };
+    const state = room.mentirosoState;
+    let resumedQsmClockMs = null;
+    const snapshot = {
+        roomId, gameType: room.gameType, playerId: player.id,
+        reconnectToken: player.reconnectToken, gameActive: !!room.gameActive,
+        paused: !!room.reconnectPaused, players: publicPlayers,
+        currentTurn: room.currentTurn,
+        question: room.gameType === 'quiensabemas' && room.currentQuestion
+            ? { level: room.currentQuestion.level, text: room.currentQuestion.text,
+                options: room.currentQuestion.options }
+            : null,
+        questionNumber: room.questionsAnsweredInLevel,
+        questionId: room.gameType === 'quiensabemas' ? room.questionToken : null,
+        totalQuestionsInLevel: room.questionsPerLevel,
+        mentiroso: state ? {
+            currentRound: state.currentRound, maxRounds: state.maxRounds,
+            currentCategory: state.currentCategory, categoryRound: state.categoryRound,
+            globalCategoryIndex: state.globalCategoryIndex, challengeTemplate: state.challengeTextTemplate,
+            currentBid: state.currentBid, lastBidder: state.lastBidder,
+            callerId: state.playerWhoCalledMentiroso, playerToListAnswers: state.playerToListAnswers,
+            phase: state.gamePhase, objectiveValidation: OBJECTIVE_MENTIROSO,
+            maxBid: OBJECTIVE_MENTIROSO && state.objectiveChallenge ? state.objectiveChallenge.answers.length : null
+        } : null
+    };
+    safeSend(ws, { type: 'roomResumed', payload: snapshot });
+    if (bothConnected(room)) {
+        room.reconnectPaused = false;
+        if (state?.gameActive) {
+            if (state.gamePhase === 'roundOver') {
+                const observedRound = state.currentRound;
+                setTimeout(() => {
+                    if (room.gameActive && !room.reconnectPaused && state.currentRound === observedRound) nextRoundMentiroso(roomId);
+                }, 500);
+            } else if (['bidding', 'listing'].includes(state.gamePhase)) {
+                startMentirosoQuestionTimer(roomId, Math.max(1, state.pausedTimeRemaining || 15), state.gamePhase);
+            }
+        } else if (room.gameType === 'quiensabemas' && room.pendingNextQuestion && room.gameActive) {
+            room.pendingNextQuestion = false;
+            setTimeout(() => sendNextQuestion(roomId), 100);
+        } else if (room.gameType === 'quiensabemas' && room.gameActive &&
+            room.currentQuestion && !room.questionResolved) {
+            resumedQsmClockMs = room.questionRemainingMs || QSM_QUESTION_MS;
+            armQsmQuestionClock(room, resumedQsmClockMs);
+        }
+        safeSend(ws, { type: 'opponentReconnected', payload: { roomId } });
+        roomPlayers(room).filter(p => p.ws !== ws).forEach(p =>
+            safeSend(p.ws, { type: 'opponentReconnected', payload: { roomId } }));
+        if (resumedQsmClockMs !== null) roomPlayers(room).forEach(p =>
+            safeSend(p.ws, { type: 'roomClockResumed', payload: { remainingMs: resumedQsmClockMs } }));
+    } else {
+        safeSend(ws, { type: 'opponentDisconnected', payload: { graceSeconds: ROOM_GRACE_MS / 1000 } });
+    }
+}
+
+function handleRequestRematch(ws, clientInfo, payload = {}) {
+    if (!LEGACY_SESSION_RECOVERY || !clientInfo.roomId) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'La revancha no está disponible en esta sala.' } });
+        return;
+    }
+    const room = rooms.get(clientInfo.roomId);
+    if (!room || room.gameActive || !bothConnected(room) ||
+        !roomPlayers(room).some(player => player.id === clientInfo.id) ||
+        (payload.gameType && payload.gameType !== room.gameType)) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'La revancha requiere a ambos jugadores al final de la partida.' } });
+        return;
+    }
+    if (!room.rematchRequests) room.rematchRequests = new Set();
+    room.rematchRequests.add(clientInfo.id);
+    broadcastToRoom(room.roomId, { type: 'rematchState', payload: {
+        requested: [...room.rematchRequests], waiting: room.rematchRequests.size < 2
+    } });
+    if (room.rematchRequests.size === 2) {
+        room.rematchRequests.clear();
+        startGame(room.roomId);
+    }
+}
+
+function handleCreateRoom(ws, clientInfo, payload = {}) {
     if (clientInfo.roomId) {
         safeSend(ws, { type: 'joinError', payload: { error: 'Ya estás en una sala.' } });
         return;
     }
     const roomId = generateRoomId();
-    const playerName = payload.playerName || `Jugador_${clientInfo.id.substring(0, 4)}`;
+    const playerName = safePlayerName(payload.playerName || `Jugador_${clientInfo.id.substring(0, 4)}`);
     const password = payload.password || ''; // Empty string if no password
     const gameType = payload.gameType || 'quiensabemas'; // Default to quiensabemas
+    if (!['quiensabemas', 'mentiroso'].includes(gameType)) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Juego online no reconocido.' } });
+        return;
+    }
 
     const player1 = {
         id: clientInfo.id,
         name: playerName,
         ws: ws,
+        reconnectToken: LEGACY_SESSION_RECOVERY ? secureCode(24) : null,
+        graceTimer: null,
         score: 0
     };
 
@@ -606,7 +837,7 @@ function handleCreateRoom(ws, clientInfo, payload) {
         // Mentiroso specific state
         mentirosoState: gameType === 'mentiroso' ? {
             currentRound: 1,
-            maxRounds: 18,
+            maxRounds: OBJECTIVE_MENTIROSO ? 6 : 18,
             categoryRound: 1,
             globalCategoryIndex: 0,
             currentCategory: null,
@@ -633,7 +864,10 @@ function handleCreateRoom(ws, clientInfo, payload) {
     clientInfo.roomId = roomId; // Update client's state
 
     console.log(`Room ${roomId} (${gameType}) created by ${playerName} (${clientInfo.id}). Password: ${password ? 'Yes' : 'No'}`);
-    safeSend(ws, { type: 'roomCreated', payload: { roomId: roomId } });
+    safeSend(ws, { type: 'roomCreated', payload: {
+        roomId: roomId, playerId: clientInfo.id,
+        reconnectToken: LEGACY_SESSION_RECOVERY ? player1.reconnectToken : undefined
+    } });
 
     // REMOVED: Automatic broadcast - clients will request rooms with gameType filter
 }
@@ -660,6 +894,10 @@ function handleJoinRoom(ws, clientInfo, payload) {
         return;
     }
 
+    if (payload.gameType && payload.gameType !== room.gameType) {
+        safeSend(ws, { type: 'joinError', payload: { error: 'La sala pertenece a otro juego.' } });
+        return;
+    }
     // Check password
     if (room.password && room.password !== password) {
         safeSend(ws, { type: 'joinError', payload: { error: 'Contraseña incorrecta.' } });
@@ -683,8 +921,10 @@ function handleJoinRoom(ws, clientInfo, payload) {
     // Add player 2
     const player2 = {
         id: clientInfo.id,
-        name: playerName || `Jugador_${clientInfo.id.substring(0, 4)}`,
+        name: safePlayerName(playerName || `Jugador_${clientInfo.id.substring(0, 4)}`),
         ws: ws,
+        reconnectToken: LEGACY_SESSION_RECOVERY ? secureCode(24) : null,
+        graceTimer: null,
         score: 0
     };
     room.players.player2 = player2;
@@ -699,7 +939,10 @@ function handleJoinRoom(ws, clientInfo, payload) {
     };
 
     // Send join success specifically to the joining player (player 2)
-    safeSend(ws, { type: 'joinSuccess', payload: { roomId: roomId, players: playersInfo } });
+    safeSend(ws, { type: 'joinSuccess', payload: {
+        roomId: roomId, players: playersInfo, playerId: clientInfo.id,
+        reconnectToken: LEGACY_SESSION_RECOVERY ? player2.reconnectToken : undefined
+    } });
 
     // Notify player 1 that player 2 joined
     safeSend(room.players.player1.ws, { type: 'playerJoined', payload: { players: playersInfo } });
@@ -745,7 +988,7 @@ function handleJoinRandomRoom(ws, clientInfo, payload) {
         // No room found, create a new public QSM room.
         const targetGameType = (payload && payload.gameType) || 'quiensabemas'; // Default to QSM if not specified
         console.log(`No random ${targetGameType} room found for ${clientInfo.id}. Creating new public quiensabemas room.`);
-            handleCreateRoom(ws, clientInfo, { playerName: payload ? payload.playerName : undefined, password: '' });
+            handleCreateRoom(ws, clientInfo, { playerName: payload ? payload.playerName : undefined, password: '', gameType: targetGameType });
     }
 }
 
@@ -834,7 +1077,15 @@ function startGame(roomId) {
 
     console.log(`Starting ${room.gameType} game in room ${roomId}...`);
 
-    // Initialize game state
+    // Initialize game state. A rematch only begins after BOTH users consent.
+    room.reconnectPaused = false;
+    room.pendingNextQuestion = false;
+    room.questionResolved = false;
+    room.questionRemainingMs = QSM_QUESTION_MS;
+    if (room.questionTimer) clearTimeout(room.questionTimer);
+    room.questionTimer = null;
+    room.questionDeadline = null;
+    if (room.rematchRequests) room.rematchRequests.clear();
     room.gameActive = true;
     room.players.player1.score = 0; // Reset scores
     room.players.player2.score = 0;
@@ -849,6 +1100,15 @@ function startGame(roomId) {
 
     if (room.gameType === 'mentiroso') {
         // Initialize Mentiroso specific state
+        if (room.mentirosoState.questionTimer) clearInterval(room.mentirosoState.questionTimer);
+        Object.assign(room.mentirosoState, {
+            currentRound: 1, categoryRound: 1, globalCategoryIndex: 0,
+            currentCategory: null, challengeTextTemplate: '', objectiveChallenge: null,
+            lastBidder: null, currentBid: 0, playerWhoCalledMentiroso: null,
+            playerToListAnswers: null, answersListed: [], validationResults: [],
+            gamePhase: 'lobby', questionTimer: null, phaseDeadline: null,
+            timeRemaining: 15, timerActive: false
+        });
         room.mentirosoState.gameActive = true;
         room.mentirosoState.scores = {};
         room.mentirosoState.scores[room.players.player1.id] = 0;
@@ -871,6 +1131,7 @@ function startGame(roomId) {
             room.usedQuestionIndices[l] = [];
         }
         room.currentQuestion = null;
+        room.questionToken = null;
         room.optionsSent = false;
         room.fiftyFiftyUsed = false;
 
@@ -886,7 +1147,27 @@ function startGame(roomId) {
     }
 }
 
+function armQsmQuestionClock(room, milliseconds = QSM_QUESTION_MS) {
+    if (room.questionTimer) clearTimeout(room.questionTimer);
+    if (!room.gameActive || room.reconnectPaused || room.questionResolved || !room.currentQuestion) return;
+    room.questionDeadline = Date.now() + milliseconds;
+    const currentQuestion = room.currentQuestion;
+    room.questionTimer = setTimeout(() => {
+        if (!room.gameActive || room.reconnectPaused || room.questionResolved ||
+            room.currentQuestion !== currentQuestion) return;
+        const currentPlayer = roomPlayers(room).find(player => player.id === room.currentTurn);
+        if (!currentPlayer) return;
+        // Count an unanswered turn as zero points, without trusting a client timeout event.
+        const intentionallyIncorrect = (currentQuestion.correctIndex + 1) % currentQuestion.options.length;
+        handleSubmitAnswer(currentPlayer.ws, { roomId: room.roomId, id: currentPlayer.id },
+            { selectedIndex: intentionallyIncorrect }, true);
+    }, milliseconds);
+}
 function sendNextQuestion(roomId) {
+    if (LEGACY_SESSION_RECOVERY && rooms.get(roomId)?.reconnectPaused) {
+        rooms.get(roomId).pendingNextQuestion = true;
+        return;
+    }
     // // console.log(`DEBUG: sendNextQuestion called for room ${roomId}`); // ELIMINAR ESTA LÍNEA
     const room = rooms.get(roomId);
     if (!room || !room.gameActive) {
@@ -947,6 +1228,8 @@ function sendNextQuestion(roomId) {
 
     const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
     room.currentQuestion = questionsForLevel[randomIndex];
+    room.questionResolved = false;
+    room.questionToken = LEGACY_SESSION_RECOVERY ? secureCode(12) : null;
      // // console.log(`DEBUG: Selected question index ${randomIndex} for Level ${room.currentLevel}. Text: ${room.currentQuestion.text}`); // ELIMINAR ESTA LÍNEA
 
     // Mark question as used for this room and level
@@ -983,6 +1266,7 @@ function sendNextQuestion(roomId) {
          type: 'newQuestion',
          payload: {
             question: questionPayload,
+            questionId: room.questionToken,
             questionNumber: room.questionsAnsweredInLevel,
             totalQuestionsInLevel: room.questionsPerLevel,
              currentTurn: room.currentTurn,
@@ -993,13 +1277,14 @@ function sendNextQuestion(roomId) {
     console.log(`Room ${roomId} - Sending Q${room.questionsAnsweredInLevel} L${room.currentLevel}, Turn: ${room.currentTurn}`); // Keep this summary log
      // // console.log(`DEBUG: Broadcasting newQuestion message for room ${roomId}...`); // Less verbose
     broadcastToRoom(roomId, message);
+    armQsmQuestionClock(room);
     // Also send individually to handle cases where broadcast might miss one? Redundant if broadcast works? Let's rely on broadcast for now.
     // safeSend(room.players.player1.ws, message);
     // safeSend(room.players.player2.ws, message);
      // // console.log(`DEBUG: newQuestion message sent for room ${roomId}.`); // Less verbose
 }
 
-function handleSubmitAnswer(ws, clientInfo, payload) {
+function handleSubmitAnswer(ws, clientInfo, payload, timedOut = false) {
     const roomId = clientInfo.roomId;
     const room = rooms.get(roomId);
 
@@ -1011,8 +1296,23 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'Not your turn.' } });
         return;
     }
+    if (room.questionResolved) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Esa pregunta ya fue respondida.' } });
+        return;
+    }
     if (!room.currentQuestion) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'No active question.' } });
+        return;
+    }
+    // Prevent a delayed/replayed answer for an earlier question from being
+    // scored against the next question, even if the same user has the turn.
+    if (LEGACY_SESSION_RECOVERY && !timedOut &&
+        (!payload || payload.questionId !== room.questionToken)) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Respuesta de una pregunta anterior. Esperá la próxima.' } });
+        return;
+    }
+    if (!timedOut && room.questionDeadline && Date.now() >= room.questionDeadline) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Se agotó el tiempo para responder.' } });
         return;
     }
     // Check players still exist
@@ -1059,6 +1359,12 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format (missing selectedIndex).' } });
             return; // Invalid submission
     }
+
+    // Atomic question lock before any score changes or delayed next-question callback.
+    room.questionResolved = true;
+    if (room.questionTimer) clearTimeout(room.questionTimer);
+    room.questionTimer = null;
+    room.questionDeadline = null;
 
     // --- Score Calculation & Result Payload --- 
     const currentPlayer = room.players.player1.id === clientInfo.id ? room.players.player1 : room.players.player2;
@@ -1109,7 +1415,8 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
         forPlayerId: clientInfo.id,
         // submittedAnswerText: answerMethod === 'text' ? submittedAnswerText : null, // REMOVED
         submittedAnswerText: null, // No text submission method anymore
-        selectedIndex: submittedAnswerIndex // Send submitted index (was always by index)
+        selectedIndex: timedOut ? -1 : submittedAnswerIndex,
+        timedOut: timedOut === true // No fabricated answer when the clock runs out.
     };
 
     // Send result to everyone in the room
@@ -1138,7 +1445,7 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
          } else {
               // // console.log(`DEBUG: Skipping sendNextQuestion for room ${roomId} as it no longer exists or game is inactive.`); // ELIMINAR ESTA LÍNEA
          }
-    }, 1500); // Adjust delay as needed (e.g., 1.5 seconds)
+    }, QSM_NEXT_QUESTION_DELAY_MS); // Fast only in explicit CT_STAGING integration tests.
 }
 
 function handleRequestOptions(ws, clientInfo) {
@@ -1219,7 +1526,7 @@ function handleRequestFiftyFifty(ws, clientInfo) {
 
 // --- End Game & Cleanup ---
 
-function endGame(roomId, reason = "Game finished") {
+function endGame(roomId, reason = "Game finished", forcedWinnerId = null) {
     const room = rooms.get(roomId);
     if (!room) return;
      // Check if game is already inactive to prevent double execution
@@ -1231,6 +1538,8 @@ function endGame(roomId, reason = "Game finished") {
 
     // // console.log(`Ending game in room ${roomId}. Reason: ${reason}`); // Comentar luego
     room.gameActive = false;
+    if (room.questionTimer) clearTimeout(room.questionTimer);
+    room.questionTimer = null;
 
     let winnerId = null;
     let draw = false;
@@ -1254,6 +1563,11 @@ function endGame(roomId, reason = "Game finished") {
          reason = reason || "Game ended unexpectedly.";
     }
 
+
+    if (forcedWinnerId && [p1?.id, p2?.id].includes(forcedWinnerId)) {
+        winnerId = forcedWinnerId;
+        draw = false;
+    }
 
     const finalScores = {};
     if (p1) finalScores[p1.id] = p1.score;
@@ -1279,6 +1593,52 @@ function endGame(roomId, reason = "Game finished") {
 }
 
 function handleDisconnect(ws, clientId, roomId) {
+    if (LEGACY_SESSION_RECOVERY && roomId) {
+        const room = rooms.get(roomId);
+        const player = roomPlayers(room).find(p => p.id === clientId && p.ws === ws);
+        if (room && player) {
+            player.ws = null;
+            if (room.gameActive) {
+                room.reconnectPaused = true;
+                if (room.gameType === 'quiensabemas') {
+                    room.questionRemainingMs = Math.max(500, (room.questionDeadline || Date.now()+QSM_QUESTION_MS) - Date.now());
+                    if (room.questionTimer) clearTimeout(room.questionTimer);
+                    room.questionTimer = null;
+                    room.questionDeadline = null;
+                }
+                if (room.mentirosoState) {
+                    const state = room.mentirosoState;
+                    state.pausedTimeRemaining = Math.max(1, state.timeRemaining || 15);
+                    stopMentirosoQuestionTimer(roomId, 'reconnect_pause');
+                }
+            }
+            roomPlayers(room).filter(p => p !== player).forEach(p =>
+                safeSend(p.ws, { type: 'opponentDisconnected', payload: { graceSeconds: ROOM_GRACE_MS / 1000 } }));
+            if (player.graceTimer) clearTimeout(player.graceTimer);
+            player.graceTimer = setTimeout(() => {
+                if (player.ws) return;
+                const expiredDuringGame = !!room.gameActive;
+                if (room.gameActive) {
+                    // Match termination is authoritative: the connected opponent wins by forfeit.
+                    const connectedOpponent = roomPlayers(room).find(p => p !== player &&
+                        p.ws && p.ws.readyState === WebSocket.OPEN);
+                    const forcedWinnerId = connectedOpponent?.id || null;
+                    if (room.gameType === 'mentiroso') {
+                        endGameMentiroso(roomId, 'El rival no volvió a conectarse.', forcedWinnerId);
+                    } else {
+                        endGame(roomId, 'El rival no volvió a conectarse.', forcedWinnerId);
+                    }
+                }
+                room.players.player1 = room.players.player1 === player ? null : room.players.player1;
+                room.players.player2 = room.players.player2 === player ? null : room.players.player2;
+                if (!roomPlayers(room).length) rooms.delete(roomId);
+                else if (!expiredDuringGame) roomPlayers(room).forEach(p => safeSend(p.ws, {
+                    type: 'opponentLeftLobby', payload: { message: 'El rival no volvió a conectarse.' }
+                }));
+            }, ROOM_GRACE_MS);
+            return;
+        }
+    }
     console.log(`Handling disconnect for ${clientId} in room ${roomId || 'lobby'}`);
     if (roomId) {
     const room = rooms.get(roomId);
@@ -1378,6 +1738,7 @@ function handleGetRooms(ws, clientInfo, payload) {
 
 function nextRoundMentiroso(roomId) {
     const room = rooms.get(roomId);
+    if (LEGACY_SESSION_RECOVERY && room?.reconnectPaused) return;
     if (!room || !room.mentirosoState || !room.mentirosoState.gameActive) {
         console.error(`nextRoundMentiroso: Room ${roomId} not found or game not active`);
         return;
@@ -1392,8 +1753,8 @@ function nextRoundMentiroso(roomId) {
     }
 
     // Update round info
-    state.categoryRound = ((state.currentRound - 1) % 3) + 1;
-    state.globalCategoryIndex = Math.floor((state.currentRound - 1) / 3);
+    state.categoryRound = OBJECTIVE_MENTIROSO ? 1 : ((state.currentRound - 1) % 3) + 1;
+    state.globalCategoryIndex = OBJECTIVE_MENTIROSO ? state.currentRound - 1 : Math.floor((state.currentRound - 1) / 3);
     state.currentCategory = CATEGORY_ORDER[state.globalCategoryIndex];
 
     // Select random challenge template
@@ -1409,7 +1770,7 @@ function nextRoundMentiroso(roomId) {
     };
     
     const mappedKey = categoryMapping[categoryKey] || categoryKey;
-    const categoryData = mentirosoCategories[mappedKey];
+    const categoryData = OBJECTIVE_MENTIROSO ? objectiveMentiroso.byCategory(state.currentCategory) : mentirosoCategories[mappedKey];
     if (!categoryData || categoryData.length === 0) {
         console.error(`No challenges found for category: ${state.currentCategory} (key: ${categoryKey})`);
         endGameMentiroso(roomId, "Error: No challenges available");
@@ -1418,6 +1779,11 @@ function nextRoundMentiroso(roomId) {
 
     const randomChallenge = categoryData[Math.floor(Math.random() * categoryData.length)];
     state.challengeTextTemplate = randomChallenge.template;
+    if (OBJECTIVE_MENTIROSO) {
+        state.objectiveChallenge = randomChallenge;
+        // Deterministic starting-player alternation in the pilot.
+        room.currentTurn = state.currentRound % 2 ? room.players.player1.id : room.players.player2.id;
+    }
 
     // Reset round state
     state.currentBid = 0;
@@ -1427,6 +1793,7 @@ function nextRoundMentiroso(roomId) {
     state.answersListed = [];
     state.validationResults = [];
     state.gamePhase = 'bidding';
+    if (OBJECTIVE_MENTIROSO) state.phaseDeadline = null;
 
     console.log(`Mentiroso Room ${roomId}: Starting round ${state.currentRound}/18 - Category: ${state.currentCategory} (${state.categoryRound}/3)`);
 
@@ -1437,6 +1804,9 @@ function nextRoundMentiroso(roomId) {
         globalCategoryIndex: state.globalCategoryIndex,
         category: state.currentCategory,
         challengeTemplate: state.challengeTextTemplate,
+        objectiveValidation: OBJECTIVE_MENTIROSO,
+        maxRounds: state.maxRounds,
+        maxBid: OBJECTIVE_MENTIROSO ? state.objectiveChallenge.answers.length : null,
         currentTurn: room.currentTurn,
         players: {
             player1: { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
@@ -1461,7 +1831,9 @@ function startMentirosoQuestionTimer(roomId, duration = 15, phase = 'bidding') {
     }
 
     const state = room.mentirosoState;
-    
+    if (LEGACY_SESSION_RECOVERY && room.reconnectPaused) return;
+    if (OBJECTIVE_MENTIROSO && state.gamePhase !== phase) return;
+
     // Limpiar timer anterior si existe
     if (state.questionTimer) {
         clearInterval(state.questionTimer);
@@ -1469,6 +1841,9 @@ function startMentirosoQuestionTimer(roomId, duration = 15, phase = 'bidding') {
     
     state.timeRemaining = duration;
     state.timerActive = true;
+    // Keep one monotonic deadline for every objective phase. Interval ticks
+    // only update the UI; elapsed time is never counted by the browser.
+    if (OBJECTIVE_MENTIROSO) state.phaseDeadline = Date.now() + duration * 1000;
     
     // Notificar a los clientes que el timer comenzó
     broadcastToRoom(roomId, {
@@ -1481,14 +1856,17 @@ function startMentirosoQuestionTimer(roomId, duration = 15, phase = 'bidding') {
     });
     
     state.questionTimer = setInterval(() => {
-        state.timeRemaining--;
-        
+        state.timeRemaining = OBJECTIVE_MENTIROSO
+            ? Math.max(0, Math.ceil((state.phaseDeadline - Date.now()) / 1000))
+            : state.timeRemaining - 1;
+
         // Notificar actualización del timer
         broadcastToRoom(roomId, {
             type: 'mentirosoTimerUpdate',
             payload: { 
                 timeRemaining: state.timeRemaining,
-                phase: phase
+                phase: phase,
+                duration: duration
             }
         });
         
@@ -1538,14 +1916,20 @@ function handleMentirosoTimeOut(roomId, phase) {
     }
     
     const state = room.mentirosoState;
+    if (OBJECTIVE_MENTIROSO && state.gamePhase !== phase) return;
+    if (OBJECTIVE_MENTIROSO && phase === 'listing') {
+        settleObjectiveMentirosoRound(roomId, []);
+        return;
+    }
     console.log(`Mentiroso Room ${roomId}: Timer expired for round ${state.currentRound} in phase ${phase}`);
     
     if (phase === 'bidding') {
+        if (OBJECTIVE_MENTIROSO) state.gamePhase = 'roundOver';
         // Si se agota el tiempo en la fase de apuesta
         // El jugador actual pierde automáticamente el punto
         
         let winnerId = null;
-        if (state.currentTurn === room.players.player1.id) {
+        if (room.currentTurn === room.players.player1.id) {
             winnerId = room.players.player2.id;
         } else {
             winnerId = room.players.player1.id;
@@ -1645,8 +2029,10 @@ function handleMentirosoSubmitBid(ws, clientInfo, payload) {
     }
 
     // Validate bid
-    const bid = parseInt(payload.bid);
-    if (isNaN(bid) || bid <= state.currentBid) {
+    const bid = payload && Number(payload.bid);
+    if (!Number.isSafeInteger(bid) || bid <= state.currentBid ||
+        (OBJECTIVE_MENTIROSO && (!state.objectiveChallenge || bid > state.objectiveChallenge.answers.length ||
+        state.gamePhase !== 'bidding' || (state.phaseDeadline && Date.now() > state.phaseDeadline)))) {
         safeSend(ws, { type: 'errorMessage', payload: { error: `La apuesta debe ser un número mayor que la apuesta actual (${state.currentBid}).` } });
         return;
     }
@@ -1703,6 +2089,11 @@ function handleMentirosoCallLiar(ws, clientInfo, payload) {
     const state = room.mentirosoState;
 
     // Verify it's the player's turn
+    if (OBJECTIVE_MENTIROSO && (state.gamePhase !== 'bidding' ||
+        (state.phaseDeadline && Date.now() > state.phaseDeadline))) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'La fase de apuestas ya terminó.' } });
+        return;
+    }
     if (room.currentTurn !== clientInfo.id) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'No es tu turno para llamar Mentiroso.' } });
         return;
@@ -1723,6 +2114,7 @@ function handleMentirosoCallLiar(ws, clientInfo, payload) {
     // Update game state
     state.playerWhoCalledMentiroso = clientInfo.id;
     state.playerToListAnswers = state.lastBidder;
+    if (OBJECTIVE_MENTIROSO) state.gamePhase = 'listing';
     room.currentTurn = state.lastBidder; // The accused player must list answers
 
     // Detener el timer cuando se llama Mentiroso
@@ -1741,10 +2133,46 @@ function handleMentirosoCallLiar(ws, clientInfo, payload) {
         }
     });
     
-    // Iniciar timer de 60 segundos para listar respuestas
+    // Objective bidding can exceed 20 answers: provide proportional server time.
+    const listingDuration = OBJECTIVE_MENTIROSO
+        ? Math.max(60, Math.min(240, 45 + 6 * state.currentBid)) : 60;
     setTimeout(() => {
-        startMentirosoQuestionTimer(roomId, 60, 'listing');
-    }, 1000); // Dar 1 segundo para que se actualice la UI
+        startMentirosoQuestionTimer(roomId, listingDuration, 'listing');
+    }, 1000);
+}
+
+function settleObjectiveMentirosoRound(roomId, answers = []) {
+    if (!OBJECTIVE_MENTIROSO) return;
+    const room = rooms.get(roomId);
+    const state = room && room.mentirosoState;
+    // Guard prevents scoring twice on timeout, duplicate submissions or pending callbacks.
+    if (!state || !state.gameActive || state.gamePhase !== 'listing') return;
+    stopMentirosoQuestionTimer(roomId, 'objective_answered');
+    state.gamePhase = 'roundOver';
+    const verdict = objectiveMentiroso.adjudicate(state.objectiveChallenge, answers, state.currentBid);
+    const winnerId = verdict.wasMentiroso ? state.playerWhoCalledMentiroso : state.playerToListAnswers;
+    const winner = room.players.player1.id === winnerId ? room.players.player1 : room.players.player2;
+    winner.score += 1;
+    state.scores[winnerId] = winner.score;
+    broadcastToRoom(roomId, {
+        type: 'mentirosoRoundResult',
+        payload: {
+        wasMentiroso: verdict.wasMentiroso,
+        validAnswersCount: verdict.validCount,
+        requiredCount: verdict.requiredCount,
+        winnerId, winnerName: winner.name, validationDetails: verdict.details,
+        message: verdict.wasMentiroso ? 'La apuesta no se completó.' : 'La apuesta fue demostrada.',
+        players: {
+            player1: { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
+            player2: { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
+        }
+        }
+    });
+    state.currentRound += 1;
+    const nextRound = state.currentRound;
+    setTimeout(() => {
+        if (room.mentirosoState.gameActive && room.mentirosoState.currentRound === nextRound) nextRoundMentiroso(roomId);
+    }, 1500);
 }
 
 function handleMentirosoSubmitAnswers(ws, clientInfo, payload) {
@@ -1770,16 +2198,31 @@ function handleMentirosoSubmitAnswers(ws, clientInfo, payload) {
 
     // Validate answers
     const answers = Array.isArray(payload.answers) ? payload.answers : [];
-    if (answers.length < 1) {
+    // A failed bet is part of the game. In objective mode a player may submit
+    // fewer names than promised (including none); the server awards the point
+    // to their opponent instead of trapping the player on an error screen.
+    if (!OBJECTIVE_MENTIROSO && answers.length < 1) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'Debes listar al menos una respuesta.' } });
         return;
     }
 
-    if (answers.length < state.currentBid) {
+    if (!OBJECTIVE_MENTIROSO && answers.length < state.currentBid) {
         safeSend(ws, { type: 'errorMessage', payload: { error: `Debes listar al menos ${state.currentBid} respuestas según tu apuesta.` } });
         return;
     }
 
+    if (OBJECTIVE_MENTIROSO) {
+        if (state.gamePhase !== 'listing' || !state.objectiveChallenge ||
+            (state.phaseDeadline && Date.now() > state.phaseDeadline) ||
+            answers.length > 100 || answers.some(answer => typeof answer !== 'string' || answer.length > 120)) {
+            safeSend(ws, { type: 'errorMessage', payload: { error: 'Fase o respuestas inválidas.' } });
+            return;
+        }
+        settleObjectiveMentirosoRound(roomId, answers);
+        return;
+    }
+
+    // Legacy manual validation: retained only outside the objective staging pilot.
     // Save answers and change turn to validator
     state.answersListed = answers;
     room.currentTurn = state.playerWhoCalledMentiroso;
@@ -1801,6 +2244,10 @@ function handleMentirosoSubmitAnswers(ws, clientInfo, payload) {
 }
 
 function handleMentirosoSubmitValidation(ws, clientInfo, payload) {
+    if (OBJECTIVE_MENTIROSO) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'La corrección del desafío es automática.' } });
+        return;
+    }
     const roomId = clientInfo.roomId;
     if (!roomId) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'No estás en una sala de juego.' } });
@@ -1873,7 +2320,7 @@ function handleMentirosoSubmitValidation(ws, clientInfo, payload) {
     }, 1000); // Reducido de 3000ms a 1000ms para transiciones más rápidas
 }
 
-function endGameMentiroso(roomId, reason = "Game completed") {
+function endGameMentiroso(roomId, reason = "Game completed", forcedWinnerId = null) {
     const room = rooms.get(roomId);
     if (!room || !room.mentirosoState) {
         console.error(`endGameMentiroso: Room ${roomId} not found`);
@@ -1902,6 +2349,13 @@ function endGameMentiroso(roomId, reason = "Game completed") {
     } else {
         draw = true;
     }
+
+    if (forcedWinnerId && [player1.id, player2.id].includes(forcedWinnerId)) {
+        winnerId = forcedWinnerId;
+        draw = false;
+    }
+    if (room.mentirosoState.questionTimer) clearInterval(room.mentirosoState.questionTimer);
+    room.mentirosoState.questionTimer = null;
 
     const finalScores = {};
     finalScores[player1.id] = player1.score;
