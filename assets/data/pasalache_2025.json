@@ -57,15 +57,6 @@
       {
         "pregunta": "¿Qué selección quedó subcampeona del Mundial masculino de la FIFA 2026?",
         "respuesta": "Argentina"
-      },
-      {
-        "pregunta": "¿Qué equipo londinense derrotó 1-0 al Barcelona en la final de la Champions femenina 2024/25?",
-        "respuesta": "Arsenal",
-        "audit_status": "verified_official",
-        "source_url": "https://www.uefa.com/womenschampionsleague/news/0299-1dd5c8a328c2-7b437755e07f-1000--women-s-champions-league-final-highlights-report-stina-black/",
-        "verified_at": "2026-10-24",
-        "cutoff": "2026-10-24",
-        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -79,10 +70,6 @@
       {
         "pregunta": "¿Apellido de la joven estrella inglesa del Real Madrid 2023/24?",
         "respuesta": "Bellingham"
-      },
-      {
-        "pregunta": "¿Club catalán campeón de Europa en fútbol femenino 2024?",
-        "respuesta": "Barcelona"
       },
       {
         "pregunta": "¿Trofeo individual entregado por France Football al mejor del año?",
@@ -127,15 +114,6 @@
           "Belgrano de Córdoba",
           "Club Atlético Belgrano"
         ]
-      },
-      {
-        "pregunta": "¿Apellido de la futbolista del Arsenal que anotó el gol de la final femenina de Champions 2024/25?",
-        "respuesta": "Blackstenius",
-        "audit_status": "verified_official",
-        "source_url": "https://www.uefa.com/womenschampionsleague/news/0299-1dd5c8a328c2-7b437755e07f-1000--women-s-champions-league-final-highlights-report-stina-black/",
-        "verified_at": "2026-10-24",
-        "cutoff": "2026-10-24",
-        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -201,15 +179,6 @@
         ]
       },
       {
-        "pregunta": "¿Apellido de Olga, autora del gol del título español en el Mundial femenino de 2023?",
-        "respuesta": "Carmona",
-        "audit_status": "verified_official",
-        "source_url": "https://www.fifa.com/es/articles/todas-las-finales-de-la-copa-mundial-femenina-de-la-fifa",
-        "verified_at": "2026-10-24",
-        "cutoff": "2026-10-24",
-        "content_batch": "ct-6.1-official-batch-01"
-      },
-      {
         "pregunta": "¿Nombre y apellido del futbolista inglés que igualó transitoriamente la final de la EURO 2024?",
         "respuesta": "Cole Palmer",
         "audit_status": "verified_official",
@@ -269,13 +238,6 @@
       {
         "pregunta": "CONTIENE D: ¿Apellido del mediocampista uruguayo estrella del Real Madrid, Federico …?",
         "respuesta": "Valverde"
-      },
-      {
-        "pregunta": "¿Qué club colombiano perdió por penales la final de la Libertadores Femenina CONMEBOL 2025?",
-        "respuesta": "Deportivo Cali",
-        "respuestasAlternativas": [
-          "Asociación Deportivo Cali"
-        ]
       },
       {
         "pregunta": "¿Apellido del atacante del PSG que marcó dos goles contra Inter en la final de Champions 2024/25?",
@@ -608,13 +570,6 @@
         ]
       },
       {
-        "pregunta": "¿Qué selección ganó la Eurocopa femenina de la UEFA 2025 tras vencer por penales a España?",
-        "respuesta": "Inglaterra",
-        "respuestasAlternativas": [
-          "England"
-        ]
-      },
-      {
         "pregunta": "¿Club italiano que perdió por 5-0 ante el PSG la final de Champions 2024/25?",
         "respuesta": "Inter",
         "audit_status": "verified_official",
@@ -812,15 +767,6 @@
         ]
       },
       {
-        "pregunta": "¿En qué ciudad portuguesa se jugó la final de la Champions femenina 2024/25?",
-        "respuesta": "Lisboa",
-        "audit_status": "verified_official",
-        "source_url": "https://www.uefa.com/womenschampionsleague/news/0299-1dd5c8a328c2-7b437755e07f-1000--women-s-champions-league-final-highlights-report-stina-black/",
-        "verified_at": "2026-10-24",
-        "cutoff": "2026-10-24",
-        "content_batch": "ct-6.1-official-batch-01"
-      },
-      {
         "pregunta": "¿Apellido del atacante de Atalanta que marcó los tres goles de la final de Europa League 2023/24?",
         "respuesta": "Lookman",
         "audit_status": "verified_official",
@@ -987,10 +933,6 @@
         "respuesta": "Özil"
       },
       {
-        "pregunta": "¿En qué ciudad se jugó la final de la UEFA Women's Champions League 2025/26?",
-        "respuesta": "Oslo"
-      },
-      {
         "pregunta": "¿Apellido del delantero español que marcó el gol decisivo de la final de la EURO 2024?",
         "respuesta": "Oyarzabal",
         "audit_status": "verified_official",
@@ -1093,13 +1035,6 @@
         "respuesta": "Paris Saint-Germain",
         "respuestasAlternativas": [
           "PSG"
-        ]
-      },
-      {
-        "pregunta": "¿Apellido de Ewa, máxima goleadora de la Women's Champions League 2025/26 con 11 tantos?",
-        "respuesta": "Pajor",
-        "respuestasAlternativas": [
-          "Ewa Pajor"
         ]
       }
     ]
@@ -1302,15 +1237,6 @@
         "verified_at": "2026-10-24",
         "cutoff": "2026-10-24",
         "content_batch": "ct-6.1-official-batch-01"
-      },
-      {
-        "pregunta": "¿Ciudad australiana donde España conquistó el Mundial femenino de 2023?",
-        "respuesta": "Sídney",
-        "audit_status": "verified_official",
-        "source_url": "https://www.fifa.com/es/articles/todas-las-finales-de-la-copa-mundial-femenina-de-la-fifa",
-        "verified_at": "2026-10-24",
-        "cutoff": "2026-10-24",
-        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -1406,14 +1332,6 @@
         "respuesta": "Unai",
         "respuestasAlternativas": [
           "Unai Simón"
-        ]
-      },
-      {
-        "pregunta": "¿Nombre del estadio de Oslo donde se disputó la final femenina de Champions UEFA 2025/26?",
-        "respuesta": "Ullevaal",
-        "respuestasAlternativas": [
-          "Ullevaal Stadion",
-          "Estadio Ullevaal"
         ]
       },
       {

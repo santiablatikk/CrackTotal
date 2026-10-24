@@ -625,16 +625,6 @@
       "respuesta_correcta": "C"
     },
     {
-      "pregunta": "¿En qué año se disputó el primer Mundial femenino?",
-      "opciones": {
-        "A": "1989",
-        "B": "1991",
-        "C": "1995",
-        "D": "1987"
-      },
-      "respuesta_correcta": "B"
-    },
-    {
       "pregunta": "¿Qué selección es conocida como 'Les Bleus'?",
       "opciones": {
         "A": "Italia",

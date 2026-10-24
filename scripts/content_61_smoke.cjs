@@ -19,7 +19,8 @@ for(const group of bank){
     }
   }
 }
-assert(added>=24,'The sourced content expansion must be preserved');
+assert.equal(added,19,'The 6.1 sourced expansion must contain 19 men's football questions');
+assert.equal(registry.total,2284,'Audited ledger must match male-only question banks');
 assert(registry.records.some(r=>r.file==='assets/data/preguntas_combinadas.json'&&r.status==='pending_factual_review'),'Legacy bank must not be auto-certified');
 assert(registry.records.some(r=>r.file==='assets/data/level_1.json'&&r.status==='pending_factual_review'),'QSM factual review still pending');
 

@@ -231,16 +231,6 @@
       "respuesta_correcta": "A"
     },
     {
-      "pregunta": "¿Qué selección ganó la primera Copa del Mundo femenina en 1991?",
-      "opciones": {
-        "A": "Brasil",
-        "B": "Estados Unidos",
-        "C": "Alemania",
-        "D": "Suecia"
-      },
-      "respuesta_correcta": "B"
-    },
-    {
       "pregunta": "¿En qué año River Plate fue relegado a la Primera B Nacional?",
       "opciones": {
         "A": "2010",

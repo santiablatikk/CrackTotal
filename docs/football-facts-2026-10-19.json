@@ -1,7 +1,7 @@
 {
   "cutoff": "2026-10-19",
   "policy": "Preguntas nuevas contrastadas en fuentes primarias; registro externo sin modificar el lector legado.",
-  "newQuestionCount": 29,
+  "newQuestionCount": 24,
   "questions": [
     {
       "game": "pasalache",
@@ -268,21 +268,6 @@
     },
     {
       "game": "pasalache",
-      "letter": "D",
-      "pregunta": "¿Qué club colombiano perdió por penales la final de la Libertadores Femenina CONMEBOL 2025?",
-      "respuesta": "Deportivo Cali",
-      "acceptedAlternatives": [
-        "Asociación Deportivo Cali"
-      ],
-      "sourceUrls": [
-        "https://www.conmebol.com/noticias/corinthians-conquista-su-sexta-conmebol-libertadores-femenina/"
-      ],
-      "verifiedAt": "2026-10-19",
-      "asOf": "Competición y temporada indicadas explícitamente en la pregunta.",
-      "topic": "Sudamérica - fútbol femenino"
-    },
-    {
-      "game": "pasalache",
       "letter": "I",
       "pregunta": "¿Qué club mendocino se consagró campeón de la Copa Argentina 2025?",
       "respuesta": "Independiente Rivadavia",
@@ -296,21 +281,6 @@
       "verifiedAt": "2026-10-19",
       "asOf": "Competición y temporada indicadas explícitamente en la pregunta.",
       "topic": "Argentina"
-    },
-    {
-      "game": "pasalache",
-      "letter": "I",
-      "pregunta": "¿Qué selección ganó la Eurocopa femenina de la UEFA 2025 tras vencer por penales a España?",
-      "respuesta": "Inglaterra",
-      "acceptedAlternatives": [
-        "England"
-      ],
-      "sourceUrls": [
-        "https://www.uefa.com/womenseuro/news/029b-1e56a4b43051-3ec6381b01f6-1000/"
-      ],
-      "verifiedAt": "2026-10-19",
-      "asOf": "Competición y temporada indicadas explícitamente en la pregunta.",
-      "topic": "Selecciones - fútbol femenino"
     },
     {
       "game": "pasalache",
@@ -329,34 +299,6 @@
     },
     {
       "game": "pasalache",
-      "letter": "O",
-      "pregunta": "¿En qué ciudad se jugó la final de la UEFA Women's Champions League 2025/26?",
-      "respuesta": "Oslo",
-      "acceptedAlternatives": [],
-      "sourceUrls": [
-        "https://www.uefa.com/womenschampionsleague/news/02a5-2089c561cca1-5b07bc5a56a2-1000--women-s-champions-league-winners-meet-barcelona/"
-      ],
-      "verifiedAt": "2026-10-19",
-      "asOf": "Competición y temporada indicadas explícitamente en la pregunta.",
-      "topic": "Europa - fútbol femenino"
-    },
-    {
-      "game": "pasalache",
-      "letter": "P",
-      "pregunta": "¿Apellido de Ewa, máxima goleadora de la Women's Champions League 2025/26 con 11 tantos?",
-      "respuesta": "Pajor",
-      "acceptedAlternatives": [
-        "Ewa Pajor"
-      ],
-      "sourceUrls": [
-        "https://www.uefa.com/womenschampionsleague/news/02a5-2089c561cca1-5b07bc5a56a2-1000--women-s-champions-league-winners-meet-barcelona/"
-      ],
-      "verifiedAt": "2026-10-19",
-      "asOf": "Competición y temporada indicadas explícitamente en la pregunta.",
-      "topic": "Europa - fútbol femenino"
-    },
-    {
-      "game": "pasalache",
       "letter": "S",
       "pregunta": "¿Apellido de Ismaïla, máximo goleador de la UEFA Conference League 2025/26 con nueve goles?",
       "respuesta": "Sarr",
@@ -369,22 +311,6 @@
       "verifiedAt": "2026-10-19",
       "asOf": "Competición y temporada indicadas explícitamente en la pregunta.",
       "topic": "Europa"
-    },
-    {
-      "game": "pasalache",
-      "letter": "U",
-      "pregunta": "¿Nombre del estadio de Oslo donde se disputó la final femenina de Champions UEFA 2025/26?",
-      "respuesta": "Ullevaal",
-      "acceptedAlternatives": [
-        "Ullevaal Stadion",
-        "Estadio Ullevaal"
-      ],
-      "sourceUrls": [
-        "https://www.uefa.com/womenschampionsleague/news/02a5-2089c561cca1-5b07bc5a56a2-1000--women-s-champions-league-winners-meet-barcelona/"
-      ],
-      "verifiedAt": "2026-10-19",
-      "asOf": "Competición y temporada indicadas explícitamente en la pregunta.",
-      "topic": "Europa - fútbol femenino"
     },
     {
       "game": "pasalache",

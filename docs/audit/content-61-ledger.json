@@ -3,20 +3,20 @@
   "warning": "Structural inventory; historical factual status not independently certified",
   "counts": {
     "assets/data/preguntas_combinadas.json": 1478,
-    "assets/data/pasalache_2025.json": 304,
-    "assets/data/level_1.json": 117,
-    "assets/data/level_2.json": 66,
+    "assets/data/pasalache_2025.json": 293,
+    "assets/data/level_1.json": 116,
+    "assets/data/level_2.json": 65,
     "assets/data/level_3.json": 61,
     "assets/data/level_4.json": 57,
     "assets/data/level_5.json": 37,
     "assets/data/level_6.json": 37,
-    "assets/data/top10_pool.json": 12,
+    "assets/data/top10_pool.json": 11,
     "assets/data/top10_pool_extended.json": 27,
     "assets/data/top10_verified_v2.json": 4,
     "assets/data/wordle_pool.json": 92,
     "assets/data/mentiroso_objective_pilot.json": 6
   },
-  "total": 2298,
+  "total": 2284,
   "cross_level_duplicates": [
     {
       "file": "assets/data/level_3.json",
@@ -11988,14 +11988,6 @@
     },
     {
       "file": "assets/data/pasalache_2025.json",
-      "index": "A/14",
-      "question": "¿Qué equipo londinense derrotó 1-0 al Barcelona en la final de la Champions femenina 2024/25?",
-      "answer": "Arsenal",
-      "status": "source_reviewed_2026_10_24",
-      "source": "https://www.uefa.com/womenschampionsleague/news/0299-1dd5c8a328c2-7b437755e07f-1000--women-s-champions-league-final-highlights-report-stina-black/"
-    },
-    {
-      "file": "assets/data/pasalache_2025.json",
       "index": "B/0",
       "question": "¿Club alemán campeón invicto de la Bundesliga 2023/24?",
       "answer": "Bayer Leverkusen",
@@ -12013,14 +12005,6 @@
     {
       "file": "assets/data/pasalache_2025.json",
       "index": "B/2",
-      "question": "¿Club catalán campeón de Europa en fútbol femenino 2024?",
-      "answer": "Barcelona",
-      "status": "pending_factual_review",
-      "source": null
-    },
-    {
-      "file": "assets/data/pasalache_2025.json",
-      "index": "B/3",
       "question": "¿Trofeo individual entregado por France Football al mejor del año?",
       "answer": "Balón de Oro",
       "status": "pending_factual_review",
@@ -12028,7 +12012,7 @@
     },
     {
       "file": "assets/data/pasalache_2025.json",
-      "index": "B/4",
+      "index": "B/3",
       "question": "¿Histórico club argentino de La Ribera?",
       "answer": "Boca Juniors",
       "status": "pending_factual_review",
@@ -12036,7 +12020,7 @@
     },
     {
       "file": "assets/data/pasalache_2025.json",
-      "index": "B/5",
+      "index": "B/4",
       "question": "¿Club alemán más ganador de la Bundesliga?",
       "answer": "Bayern Múnich",
       "status": "pending_factual_review",
@@ -12044,7 +12028,7 @@
     },
     {
       "file": "assets/data/pasalache_2025.json",
-      "index": "B/6",
+      "index": "B/5",
       "question": "¿Apellido del legendario defensor italiano del Milan, Franco …?",
       "answer": "Baresi",
       "status": "pending_factual_review",
@@ -12052,7 +12036,7 @@
     },
     {
       "file": "assets/data/pasalache_2025.json",
-      "index": "B/7",
+      "index": "B/6",
       "question": "¿Apellido del ex mediocampista inglés del Manchester United y Real Madrid, David …?",
       "answer": "Beckham",
       "status": "pending_factual_review",
@@ -12060,7 +12044,7 @@
     },
     {
       "file": "assets/data/pasalache_2025.json",
-      "index": "B/8",
+      "index": "B/7",
       "question": "¿Equipo de la Premier apodado 'The Seagulls'?",
       "answer": "Brighton",
       "status": "pending_factual_review",
@@ -12068,7 +12052,7 @@
     },
     {
       "file": "assets/data/pasalache_2025.json",
-      "index": "B/9",
+      "index": "B/8",
       "question": "¿Apellido del Balón de Oro 1993, Roberto …?",
       "answer": "Baggio",
       "status": "pending_factual_review",
@@ -12076,7 +12060,7 @@
     },
     {
       "file": "assets/data/pasalache_2025.json",
-      "index": "B/10",
+      "index": "B/9",
       "question": "CONTIENE B: ¿Apellido del delantero francés que ganó el Balón de Oro 2022?",
       "answer": "Benzema",
       "status": "pending_factual_review",
@@ -12084,7 +12068,7 @@
     },
     {
       "file": "assets/data/pasalache_2025.json",
-      "index": "B/11",
+      "index": "B/10",
       "question": "¿En qué ciudad húngara se disputó la final de la Champions League 2025/26?",
       "answer": "Budapest",
       "status": "pending_factual_review",
@@ -12092,19 +12076,11 @@
     },
     {
       "file": "assets/data/pasalache_2025.json",
-      "index": "B/12",
+      "index": "B/11",
       "question": "¿Qué club cordobés ganó el Torneo Apertura de Primera División de Argentina 2026?",
       "answer": "Belgrano",
       "status": "pending_factual_review",
       "source": null
-    },
-    {
-      "file": "assets/data/pasalache_2025.json",
-      "index": "B/13",
-      "question": "¿Apellido de la futbolista del Arsenal que anotó el gol de la final femenina de Champions 2024/25?",
-      "answer": "Blackstenius",
-      "status": "source_reviewed_2026_10_24",
-      "source": "https://www.uefa.com/womenschampionsleague/news/0299-1dd5c8a328c2-7b437755e07f-1000--women-s-champions-league-final-highlights-report-stina-black/"
     },
     {
       "file": "assets/data/pasalache_2025.json",
@@ -12213,14 +12189,6 @@
     {
       "file": "assets/data/pasalache_2025.json",
       "index": "C/13",
-      "question": "¿Apellido de Olga, autora del gol del título español en el Mundial femenino de 2023?",
-      "answer": "Carmona",
-      "status": "source_reviewed_2026_10_24",
-      "source": "https://www.fifa.com/es/articles/todas-las-finales-de-la-copa-mundial-femenina-de-la-fifa"
-    },
-    {
-      "file": "assets/data/pasalache_2025.json",
-      "index": "C/14",
       "question": "¿Nombre y apellido del futbolista inglés que igualó transitoriamente la final de la EURO 2024?",
       "answer": "Cole Palmer",
       "status": "source_reviewed_2026_10_24",
@@ -12317,14 +12285,6 @@
     {
       "file": "assets/data/pasalache_2025.json",
       "index": "D/11",
-      "question": "¿Qué club colombiano perdió por penales la final de la Libertadores Femenina CONMEBOL 2025?",
-      "answer": "Deportivo Cali",
-      "status": "pending_factual_review",
-      "source": null
-    },
-    {
-      "file": "assets/data/pasalache_2025.json",
-      "index": "D/12",
       "question": "¿Apellido del atacante del PSG que marcó dos goles contra Inter en la final de Champions 2024/25?",
       "answer": "Doué",
       "status": "source_reviewed_2026_10_24",
@@ -12781,14 +12741,6 @@
     {
       "file": "assets/data/pasalache_2025.json",
       "index": "I/9",
-      "question": "¿Qué selección ganó la Eurocopa femenina de la UEFA 2025 tras vencer por penales a España?",
-      "answer": "Inglaterra",
-      "status": "pending_factual_review",
-      "source": null
-    },
-    {
-      "file": "assets/data/pasalache_2025.json",
-      "index": "I/10",
       "question": "¿Club italiano que perdió por 5-0 ante el PSG la final de Champions 2024/25?",
       "answer": "Inter",
       "status": "source_reviewed_2026_10_24",
@@ -13045,14 +12997,6 @@
     {
       "file": "assets/data/pasalache_2025.json",
       "index": "L/10",
-      "question": "¿En qué ciudad portuguesa se jugó la final de la Champions femenina 2024/25?",
-      "answer": "Lisboa",
-      "status": "source_reviewed_2026_10_24",
-      "source": "https://www.uefa.com/womenschampionsleague/news/0299-1dd5c8a328c2-7b437755e07f-1000--women-s-champions-league-final-highlights-report-stina-black/"
-    },
-    {
-      "file": "assets/data/pasalache_2025.json",
-      "index": "L/11",
       "question": "¿Apellido del atacante de Atalanta que marcó los tres goles de la final de Europa League 2023/24?",
       "answer": "Lookman",
       "status": "source_reviewed_2026_10_24",
@@ -13301,14 +13245,6 @@
     {
       "file": "assets/data/pasalache_2025.json",
       "index": "O/12",
-      "question": "¿En qué ciudad se jugó la final de la UEFA Women's Champions League 2025/26?",
-      "answer": "Oslo",
-      "status": "pending_factual_review",
-      "source": null
-    },
-    {
-      "file": "assets/data/pasalache_2025.json",
-      "index": "O/13",
       "question": "¿Apellido del delantero español que marcó el gol decisivo de la final de la EURO 2024?",
       "answer": "Oyarzabal",
       "status": "source_reviewed_2026_10_24",
@@ -13316,7 +13252,7 @@
     },
     {
       "file": "assets/data/pasalache_2025.json",
-      "index": "O/14",
+      "index": "O/13",
       "question": "¿Nombre del estadio berlinés donde se jugó la final de la EURO 2024?",
       "answer": "Olympiastadion",
       "status": "source_reviewed_2026_10_24",
@@ -13471,14 +13407,6 @@
       "index": "P/18",
       "question": "¿Qué club ganó la Champions League 2025/26 tras superar a Arsenal por penales?",
       "answer": "Paris Saint-Germain",
-      "status": "pending_factual_review",
-      "source": null
-    },
-    {
-      "file": "assets/data/pasalache_2025.json",
-      "index": "P/19",
-      "question": "¿Apellido de Ewa, máxima goleadora de la Women's Champions League 2025/26 con 11 tantos?",
-      "answer": "Pajor",
       "status": "pending_factual_review",
       "source": null
     },
@@ -13812,14 +13740,6 @@
     },
     {
       "file": "assets/data/pasalache_2025.json",
-      "index": "S/17",
-      "question": "¿Ciudad australiana donde España conquistó el Mundial femenino de 2023?",
-      "answer": "Sídney",
-      "status": "source_reviewed_2026_10_24",
-      "source": "https://www.fifa.com/es/articles/todas-las-finales-de-la-copa-mundial-femenina-de-la-fifa"
-    },
-    {
-      "file": "assets/data/pasalache_2025.json",
       "index": "T/0",
       "question": "CONTIENE T: ¿Apellido del delantero español autor del gol de la final del Mundial 2026 (Ferran …)?",
       "answer": "Torres",
@@ -13981,14 +13901,6 @@
     {
       "file": "assets/data/pasalache_2025.json",
       "index": "U/9",
-      "question": "¿Nombre del estadio de Oslo donde se disputó la final femenina de Champions UEFA 2025/26?",
-      "answer": "Ullevaal",
-      "status": "pending_factual_review",
-      "source": null
-    },
-    {
-      "file": "assets/data/pasalache_2025.json",
-      "index": "U/10",
       "question": "¿Nombre y apellido del arquero titular español en la final de la EURO 2024?",
       "answer": "Unai Simón",
       "status": "source_reviewed_2026_10_24",
@@ -15237,22 +15149,6 @@
     {
       "file": "assets/data/level_1.json",
       "index": 58,
-      "question": "¿En qué año se disputó el primer Mundial femenino?",
-      "answer": {
-        "key": "B",
-        "choices": {
-          "A": "1989",
-          "B": "1991",
-          "C": "1995",
-          "D": "1987"
-        }
-      },
-      "status": "pending_factual_review",
-      "source": null
-    },
-    {
-      "file": "assets/data/level_1.json",
-      "index": 59,
       "question": "¿Qué selección es conocida como 'Les Bleus'?",
       "answer": {
         "key": "B",
@@ -15268,7 +15164,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 60,
+      "index": 59,
       "question": "¿Cuántas Champions League ha ganado el AC Milan?",
       "answer": {
         "key": "B",
@@ -15284,7 +15180,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 61,
+      "index": 60,
       "question": "¿En qué país se encuentra la sede de la UEFA?",
       "answer": {
         "key": "B",
@@ -15300,7 +15196,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 62,
+      "index": 61,
       "question": "¿Qué jugador tiene más goles en la historia de los Mundiales?",
       "answer": {
         "key": "B",
@@ -15316,7 +15212,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 63,
+      "index": 62,
       "question": "¿Cuál es el área del área chica en metros cuadrados?",
       "answer": {
         "key": "A",
@@ -15332,7 +15228,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 64,
+      "index": 63,
       "question": "¿En qué Mundial debutó como jugador Diego Maradona?",
       "answer": {
         "key": "B",
@@ -15348,7 +15244,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 65,
+      "index": 64,
       "question": "¿Cuántos minutos de descuento se pueden agregar como máximo?",
       "answer": {
         "key": "A",
@@ -15364,7 +15260,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 66,
+      "index": 65,
       "question": "¿Qué club tiene el apodo de 'Los Millonarios'?",
       "answer": {
         "key": "B",
@@ -15380,7 +15276,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 67,
+      "index": 66,
       "question": "¿En qué liga alemana juega el Bayern Munich?",
       "answer": {
         "key": "A",
@@ -15396,7 +15292,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 68,
+      "index": 67,
       "question": "¿Cómo se llama la competición europea más importante de clubes?",
       "answer": {
         "key": "A",
@@ -15412,7 +15308,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 69,
+      "index": 68,
       "question": "¿Cuántas sustituciones se pueden hacer por equipo en un partido?",
       "answer": {
         "key": "B",
@@ -15428,7 +15324,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 70,
+      "index": 69,
       "question": "¿Qué significan las siglas VAR?",
       "answer": {
         "key": "A",
@@ -15444,7 +15340,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 71,
+      "index": 70,
       "question": "¿En qué país se inventó el fútbol moderno?",
       "answer": {
         "key": "C",
@@ -15460,7 +15356,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 72,
+      "index": 71,
       "question": "¿Cuál es el apodo de la selección de Brasil?",
       "answer": {
         "key": "B",
@@ -15476,7 +15372,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 73,
+      "index": 72,
       "question": "¿Qué club argentino es conocido como 'La Máquina'?",
       "answer": {
         "key": "B",
@@ -15492,7 +15388,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 74,
+      "index": 73,
       "question": "¿Cuál es el estadio más grande del mundo?",
       "answer": {
         "key": "C",
@@ -15508,7 +15404,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 75,
+      "index": 74,
       "question": "¿Qué color de tarjeta significa expulsión?",
       "answer": {
         "key": "B",
@@ -15524,7 +15420,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 76,
+      "index": 75,
       "question": "¿Cuántas Champions League ganó el Real Madrid hasta 2023?",
       "answer": {
         "key": "C",
@@ -15540,7 +15436,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 77,
+      "index": 76,
       "question": "¿En qué ciudad española está el Camp Nou?",
       "answer": {
         "key": "B",
@@ -15556,7 +15452,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 78,
+      "index": 77,
       "question": "¿Cuál es el apodo de Lionel Messi?",
       "answer": {
         "key": "B",
@@ -15572,7 +15468,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 79,
+      "index": 78,
       "question": "¿Qué equipo italiano es conocido como 'La Juventus'?",
       "answer": {
         "key": "C",
@@ -15588,7 +15484,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 80,
+      "index": 79,
       "question": "¿Cuántos equipos participan en la Premier League inglesa?",
       "answer": {
         "key": "B",
@@ -15604,7 +15500,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 81,
+      "index": 80,
       "question": "¿Qué selección ganó el Mundial de Fútbol 2022?",
       "answer": {
         "key": "C",
@@ -15620,7 +15516,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 82,
+      "index": 81,
       "question": "¿Cómo se llama el estadio del Manchester United?",
       "answer": {
         "key": "A",
@@ -15636,7 +15532,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 83,
+      "index": 82,
       "question": "¿Qué país organizó el Mundial de Fútbol 2018?",
       "answer": {
         "key": "C",
@@ -15652,7 +15548,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 84,
+      "index": 83,
       "question": "¿Cuál es el máximo goleador histórico de la Champions League?",
       "answer": {
         "key": "B",
@@ -15668,7 +15564,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 85,
+      "index": 84,
       "question": "¿En qué año se jugó el primer Mundial de Fútbol?",
       "answer": {
         "key": "B",
@@ -15684,7 +15580,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 86,
+      "index": 85,
       "question": "¿Cuál es el color tradicional de la camiseta del FC Barcelona?",
       "answer": {
         "key": "B",
@@ -15700,7 +15596,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 87,
+      "index": 86,
       "question": "¿Qué significa ser 'offside' en el fútbol?",
       "answer": {
         "key": "A",
@@ -15716,7 +15612,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 88,
+      "index": 87,
       "question": "¿Cuántas veces puede tocar el balón un portero con las manos?",
       "answer": {
         "key": "A",
@@ -15732,7 +15628,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 89,
+      "index": 88,
       "question": "¿Qué equipo francés es conocido como PSG?",
       "answer": {
         "key": "A",
@@ -15748,7 +15644,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 90,
+      "index": 89,
       "question": "¿En qué continente está la Copa América?",
       "answer": {
         "key": "C",
@@ -15764,7 +15660,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 91,
+      "index": 90,
       "question": "¿Cuántos minutos dura cada tiempo de un partido?",
       "answer": {
         "key": "B",
@@ -15780,7 +15676,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 92,
+      "index": 91,
       "question": "¿Qué club alemán es conocido como Bayern?",
       "answer": {
         "key": "A",
@@ -15796,7 +15692,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 93,
+      "index": 92,
       "question": "¿Cuál es la competición de selecciones más importante de Europa?",
       "answer": {
         "key": "B",
@@ -15812,7 +15708,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 94,
+      "index": 93,
       "question": "¿Qué jugador brasileño es conocido como 'Ronaldinho'?",
       "answer": {
         "key": "B",
@@ -15828,7 +15724,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 95,
+      "index": 94,
       "question": "¿Cuántos Mundial de Fútbol ha ganado Brasil?",
       "answer": {
         "key": "B",
@@ -15844,7 +15740,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 96,
+      "index": 95,
       "question": "¿Cuál es el nombre del balón de fútbol oficial?",
       "answer": {
         "key": "D",
@@ -15860,7 +15756,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 97,
+      "index": 96,
       "question": "¿En qué país se encuentra la Liga Premier?",
       "answer": {
         "key": "B",
@@ -15876,7 +15772,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 98,
+      "index": 97,
       "question": "¿Cuántos árbitros hay en un partido de fútbol profesional?",
       "answer": {
         "key": "C",
@@ -15892,7 +15788,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 99,
+      "index": 98,
       "question": "¿Qué significa 'Hat-trick' en el fútbol?",
       "answer": {
         "key": "A",
@@ -15908,7 +15804,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 100,
+      "index": 99,
       "question": "¿En qué ciudad italiana juega la Juventus?",
       "answer": {
         "key": "C",
@@ -15924,7 +15820,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 101,
+      "index": 100,
       "question": "¿Cuántos metros mide el largo de un campo de fútbol estándar?",
       "answer": {
         "key": "B",
@@ -15940,7 +15836,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 102,
+      "index": 101,
       "question": "¿Qué club español es conocido como 'Los Colchoneros'?",
       "answer": {
         "key": "C",
@@ -15956,7 +15852,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 103,
+      "index": 102,
       "question": "¿Cuál es la liga de fútbol más importante de España?",
       "answer": {
         "key": "D",
@@ -15972,7 +15868,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 104,
+      "index": 103,
       "question": "¿Qué selección ganó la primera Copa del Mundo?",
       "answer": {
         "key": "C",
@@ -15988,7 +15884,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 105,
+      "index": 104,
       "question": "¿En qué año nació Lionel Messi?",
       "answer": {
         "key": "B",
@@ -16004,7 +15900,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 106,
+      "index": 105,
       "question": "¿Cuál es el club más exitoso de Inglaterra?",
       "answer": {
         "key": "A",
@@ -16020,7 +15916,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 107,
+      "index": 106,
       "question": "¿Qué significan las siglas FIFA?",
       "answer": {
         "key": "D",
@@ -16036,7 +15932,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 108,
+      "index": 107,
       "question": "¿Cada cuántos años se juega la Copa del Mundo?",
       "answer": {
         "key": "C",
@@ -16052,7 +15948,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 109,
+      "index": 108,
       "question": "¿Cuál es el estadio donde juega el Paris Saint-Germain?",
       "answer": {
         "key": "A",
@@ -16068,7 +15964,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 110,
+      "index": 109,
       "question": "¿Qué club brasileño es conocido como el Peixe y utiliza tradicionalmente los colores blanco y negro?",
       "answer": {
         "key": "B",
@@ -16084,7 +15980,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 111,
+      "index": 110,
       "question": "¿Cuántas tarjetas amarillas resultan en una roja?",
       "answer": {
         "key": "B",
@@ -16100,7 +15996,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 112,
+      "index": 111,
       "question": "¿En qué país se jugó el Mundial de Fútbol 2014?",
       "answer": {
         "key": "B",
@@ -16116,7 +16012,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 113,
+      "index": 112,
       "question": "¿Quién ganó el Balón de Oro al mejor jugador del Mundial masculino 2026?",
       "answer": {
         "key": "A",
@@ -16132,7 +16028,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 114,
+      "index": 113,
       "question": "¿Qué selección terminó subcampeona del Mundial masculino de la FIFA 2026?",
       "answer": {
         "key": "C",
@@ -16148,7 +16044,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 115,
+      "index": 114,
       "question": "¿En qué ciudad se jugó la final de la Copa Libertadores 2025?",
       "answer": {
         "key": "B",
@@ -16164,7 +16060,7 @@
     },
     {
       "file": "assets/data/level_1.json",
-      "index": 116,
+      "index": 115,
       "question": "¿Con qué marcador le ganó el Paris Saint-Germain al Inter en la final de la Champions League 2024/25?",
       "answer": {
         "key": "D",
@@ -16549,22 +16445,6 @@
     {
       "file": "assets/data/level_2.json",
       "index": 23,
-      "question": "¿Qué selección ganó la primera Copa del Mundo femenina en 1991?",
-      "answer": {
-        "key": "B",
-        "choices": {
-          "A": "Brasil",
-          "B": "Estados Unidos",
-          "C": "Alemania",
-          "D": "Suecia"
-        }
-      },
-      "status": "pending_factual_review",
-      "source": null
-    },
-    {
-      "file": "assets/data/level_2.json",
-      "index": 24,
       "question": "¿En qué año River Plate fue relegado a la Primera B Nacional?",
       "answer": {
         "key": "B",
@@ -16580,7 +16460,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 25,
+      "index": 24,
       "question": "¿Cuántas Champions League ganó AC Milan?",
       "answer": {
         "key": "B",
@@ -16596,7 +16476,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 26,
+      "index": 25,
       "question": "¿Qué jugador francés ganó el Balón de Oro en 2022?",
       "answer": {
         "key": "B",
@@ -16612,7 +16492,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 27,
+      "index": 26,
       "question": "¿En qué posición juega principalmente Virgil van Dijk?",
       "answer": {
         "key": "B",
@@ -16628,7 +16508,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 28,
+      "index": 27,
       "question": "¿Cuál es el apodo del Napoli?",
       "answer": {
         "key": "B",
@@ -16644,7 +16524,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 29,
+      "index": 28,
       "question": "¿Qué torneo continental se disputa en África?",
       "answer": {
         "key": "B",
@@ -16660,7 +16540,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 30,
+      "index": 29,
       "question": "¿En qué año ganó Francia su primer Mundial?",
       "answer": {
         "key": "B",
@@ -16676,7 +16556,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 31,
+      "index": 30,
       "question": "¿Cuál es el estadio del Liverpool?",
       "answer": {
         "key": "A",
@@ -16692,7 +16572,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 32,
+      "index": 31,
       "question": "¿Cuántos Balones de Oro ganó Cristiano Ronaldo?",
       "answer": {
         "key": "B",
@@ -16708,7 +16588,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 33,
+      "index": 32,
       "question": "¿En qué año se creó la FIFA?",
       "answer": {
         "key": "A",
@@ -16724,7 +16604,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 34,
+      "index": 33,
       "question": "¿Qué club ganó la primera Premier League en 1992-93?",
       "answer": {
         "key": "B",
@@ -16740,7 +16620,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 35,
+      "index": 34,
       "question": "¿Cuántas Eurocopas ha ganado España?",
       "answer": {
         "key": "B",
@@ -16756,7 +16636,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 36,
+      "index": 35,
       "question": "¿En qué estadio juega el Arsenal?",
       "answer": {
         "key": "A",
@@ -16772,7 +16652,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 37,
+      "index": 36,
       "question": "¿Qué entrenador ganó más Champions League?",
       "answer": {
         "key": "B",
@@ -16788,7 +16668,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 38,
+      "index": 37,
       "question": "¿Cuántos goles oficiales marcó Ronaldinho con el primer equipo del FC Barcelona entre 2003/04 y 2007/08?",
       "answer": {
         "key": "A",
@@ -16804,7 +16684,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 39,
+      "index": 38,
       "question": "¿En qué año se fundó el FC Barcelona?",
       "answer": {
         "key": "A",
@@ -16820,7 +16700,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 40,
+      "index": 39,
       "question": "¿Cuál es el apodo de Thierry Henry?",
       "answer": {
         "key": "A",
@@ -16836,7 +16716,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 41,
+      "index": 40,
       "question": "¿Qué país ganó la Copa del Mundo de 2006?",
       "answer": {
         "key": "B",
@@ -16852,7 +16732,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 42,
+      "index": 41,
       "question": "¿En qué año se fundó el Real Madrid?",
       "answer": {
         "key": "A",
@@ -16868,7 +16748,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 43,
+      "index": 42,
       "question": "¿Cuántas temporadas jugó Zinedine Zidane en el Real Madrid?",
       "answer": {
         "key": "B",
@@ -16884,7 +16764,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 44,
+      "index": 43,
       "question": "¿Qué selección ganó la Copa Confederaciones 2013?",
       "answer": {
         "key": "B",
@@ -16900,7 +16780,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 45,
+      "index": 44,
       "question": "¿En qué año Leicester City ganó la Premier League?",
       "answer": {
         "key": "A",
@@ -16916,7 +16796,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 46,
+      "index": 45,
       "question": "¿Cuántos goles marcó David Villa en Mundiales?",
       "answer": {
         "key": "B",
@@ -16932,7 +16812,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 47,
+      "index": 46,
       "question": "¿Qué club tiene el apodo de 'The Citizens'?",
       "answer": {
         "key": "B",
@@ -16948,7 +16828,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 48,
+      "index": 47,
       "question": "¿En qué año ganó Kaká el Balón de Oro?",
       "answer": {
         "key": "B",
@@ -16964,7 +16844,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 49,
+      "index": 48,
       "question": "¿Cuántas veces ganó Brasil la Copa América en el siglo XXI?",
       "answer": {
         "key": "A",
@@ -16980,7 +16860,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 50,
+      "index": 49,
       "question": "¿En qué equipo debutó profesionalmente Messi?",
       "answer": {
         "key": "B",
@@ -16996,7 +16876,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 51,
+      "index": 50,
       "question": "¿Cuál es el apodo de la Juventus?",
       "answer": {
         "key": "D",
@@ -17012,7 +16892,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 52,
+      "index": 51,
       "question": "¿Qué portero ganó la Bota de Oro en 2018?",
       "answer": {
         "key": "C",
@@ -17028,7 +16908,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 53,
+      "index": 52,
       "question": "¿En qué año se jugó el primer Clásico Español?",
       "answer": {
         "key": "C",
@@ -17044,7 +16924,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 54,
+      "index": 53,
       "question": "¿Cuántos goles marcó Ronaldo (R9) en Mundiales?",
       "answer": {
         "key": "B",
@@ -17060,7 +16940,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 55,
+      "index": 54,
       "question": "¿Qué equipo eliminó al Real Madrid en la Champions 2019?",
       "answer": {
         "key": "C",
@@ -17076,7 +16956,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 56,
+      "index": 55,
       "question": "¿En qué año se fundó la Premier League?",
       "answer": {
         "key": "B",
@@ -17092,7 +16972,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 57,
+      "index": 56,
       "question": "¿Cuántas veces ganó Boca la Copa Libertadores?",
       "answer": {
         "key": "B",
@@ -17108,7 +16988,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 58,
+      "index": 57,
       "question": "¿Qué selección ganó la primera Eurocopa en 1960?",
       "answer": {
         "key": "B",
@@ -17124,7 +17004,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 59,
+      "index": 58,
       "question": "¿En qué club jugó Francesco Totti toda su carrera?",
       "answer": {
         "key": "C",
@@ -17140,7 +17020,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 60,
+      "index": 59,
       "question": "¿Cuántos hat-tricks tiene Messi en Champions League?",
       "answer": {
         "key": "B",
@@ -17156,7 +17036,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 61,
+      "index": 60,
       "question": "¿Qué entrenador dirigió a España en el Mundial 2010?",
       "answer": {
         "key": "B",
@@ -17172,7 +17052,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 62,
+      "index": 61,
       "question": "¿En qué año se creó la Copa Libertadores?",
       "answer": {
         "key": "B",
@@ -17188,7 +17068,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 63,
+      "index": 62,
       "question": "¿Cuál fue el primer equipo en ganar 5 Champions consecutivas?",
       "answer": {
         "key": "C",
@@ -17204,7 +17084,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 64,
+      "index": 63,
       "question": "¿Qué posición ocupa históricamente Gianluigi Buffon?",
       "answer": {
         "key": "B",
@@ -17220,7 +17100,7 @@
     },
     {
       "file": "assets/data/level_2.json",
-      "index": 65,
+      "index": 64,
       "question": "¿En qué Mundial Maradona hizo el gol del siglo?",
       "answer": {
         "key": "B",
@@ -20480,25 +20360,6 @@
     {
       "file": "assets/data/top10_pool.json",
       "index": 9,
-      "question": "10 mejores goles de Champions femenina 2023/24 (UEFA)",
-      "answer": [
-        "Oshoala",
-        "Bonmatí",
-        "Cascarino",
-        "Kielland",
-        "Dumornay",
-        "Graham Hansen",
-        "Cuthbert",
-        "Schough",
-        "Alidou",
-        "Katoto"
-      ],
-      "status": "pending_factual_review",
-      "source": "https://www.uefa.com/womenschampionsleague/news/028d-1afcf84c08ab-d5e6b4da2e2c-1000--top-ten-goals-of-the-season/"
-    },
-    {
-      "file": "assets/data/top10_pool.json",
-      "index": 10,
       "question": "10 mejores goles de Conference League 2023/24 (UEFA)",
       "answer": [
         "El Kaabi",
@@ -20517,7 +20378,7 @@
     },
     {
       "file": "assets/data/top10_pool.json",
-      "index": 11,
+      "index": 10,
       "question": "10 mejores goles de Europa League 2022/23 (UEFA)",
       "answer": [
         "Gonçalves",
