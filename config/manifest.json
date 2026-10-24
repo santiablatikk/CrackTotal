@@ -1,147 +1,55 @@
 {
-  "name": "Crack Total - El Juego del Fútbol",
+  "name": "Crack Total — Juegos de fútbol",
   "short_name": "Crack Total",
-  "description": "Demuestra tu conocimiento de fútbol con juegos y trivias desafiantes. ¡El desafío definitivo para hinchas!",
+  "description": "Juegos de fútbol masculino, desafíos históricos y duelos con amigos. La colección editorial de Crack Total.",
+  "id": "/games.html",
+  "start_url": "/games.html",
+  "scope": "/",
   "lang": "es-AR",
-  "start_url": "/",
   "display": "standalone",
   "orientation": "any",
-  "theme_color": "#007bff",
-  "background_color": "#121212",
-  "categories": ["games", "sports", "entertainment", "social"],
+  "theme_color": "#101b1b",
+  "background_color": "#101b1b",
+  "categories": [
+    "games",
+    "sports",
+    "entertainment"
+  ],
   "icons": [
     {
-      "src": "/assets/images/portada.jpg",
-      "sizes": "512x512",
-      "type": "image/jpeg",
-      "purpose": "any maskable"
+      "src": "/assets/icons/ct7-app.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
     },
     {
       "src": "/portada.ico",
       "sizes": "48x48 32x32 16x16",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "/assets/images/portada.jpg",
-      "sizes": "192x192",
-      "type": "image/jpeg",
+      "type": "image/x-icon",
       "purpose": "any"
-    },
-    {
-      "src": "/assets/images/portada.jpg",
-      "sizes": "256x256",
-      "type": "image/jpeg",
-      "purpose": "maskable"
     }
   ],
-  "screenshots": [
-    {
-      "src": "/assets/images/portada.jpg",
-      "sizes": "1280x720",
-      "type": "image/jpeg",
-      "platform": "wide",
-      "label": "Página principal de Crack Total"
-    },
-    {
-      "src": "/assets/images/portada.jpg",
-      "sizes": "750x1334",
-      "type": "image/jpeg",
-      "platform": "narrow",
-      "label": "Vista móvil de Crack Total"
-    }
-  ],
-  "scope": "/",
-  "id": "cracktotal-app",
-  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
-  "edge_side_panel": {
-    "preferred_width": 400
-  },
   "shortcuts": [
     {
-      "name": "Jugar Ahora",
-      "short_name": "Jugar",
-      "description": "Ir directamente a los juegos",
-      "url": "/games.html",
-      "icons": [
-        {
-          "src": "/assets/images/portada.jpg",
-          "sizes": "192x192",
-          "type": "image/jpeg"
-        }
-      ]
+      "name": "¿Quién soy?",
+      "short_name": "¿Quién soy?",
+      "url": "/quien-soy.html"
     },
     {
-      "name": "Mi Perfil",
-      "short_name": "Perfil",
-      "description": "Ver mi perfil y estadísticas",
-      "url": "/profile.html",
-      "icons": [
-        {
-          "src": "/assets/images/portada.jpg",
-          "sizes": "192x192",
-          "type": "image/jpeg"
-        }
-      ]
+      "name": "Adiviná la carrera",
+      "short_name": "Carrera",
+      "url": "/adivina-carrera.html"
     },
     {
-      "name": "Rankings",
-      "short_name": "Rankings",
-      "description": "Ver tabla de posiciones",
-      "url": "/ranking.html",
-      "icons": [
-        {
-          "src": "/assets/images/portada.jpg",
-          "sizes": "192x192",
-          "type": "image/jpeg"
-        }
-      ]
-    }
-  ],
-  "protocol_handlers": [
+      "name": "Ordená la historia",
+      "short_name": "Historia",
+      "url": "/ordena-historia.html"
+    },
     {
-      "protocol": "web+cracktotal",
-      "url": "/?game=%s"
+      "name": "Conexiones Futboleras",
+      "short_name": "Conexiones",
+      "url": "/conexiones.html"
     }
   ],
-  "file_handlers": [
-    {
-      "action": "/",
-      "accept": {
-        "application/json": [".json"]
-      }
-    }
-  ],
-  "share_target": {
-    "action": "/share",
-    "method": "POST",
-    "enctype": "multipart/form-data",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
-    }
-  },
-  "launch_handler": {
-    "client_mode": "focus-existing"
-  },
-  "handle_links": "preferred",
-  "capture_links": "existing-client-navigate",
-  "related_applications": [],
-  "prefer_related_applications": false,
-  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
-  "version": "2.1.0",
-  "offline_enabled": true,
-  "features": [
-    "offline",
-    "push-notifications",
-    "background-sync",
-    "file-handling",
-    "share-target",
-    "shortcuts"
-  ],
-  "permissions": [
-    "notifications",
-    "background-sync"
-  ],
-  "gcm_sender_id": "103953800507"
-} 
+  "prefer_related_applications": false
+}

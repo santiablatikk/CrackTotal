@@ -25,12 +25,12 @@
       : 'Sin medallas locales todavía. Completá tres rondas en un día para ganar Explorador.';
     var list=$('ct7ProfileHistory');list.replaceChildren();
     if(!p.history.length){
-      var empty=document.createElement('li');empty.textContent='Todavía no jugaste estos tres modos.';list.appendChild(empty);return;
+      var empty=document.createElement('li');empty.textContent='Todavía no jugaste estos cuatro modos.';list.appendChild(empty);return;
     }
     p.history.slice(0,6).forEach(function(h){
       var li=document.createElement('li');
       var title=document.createElement('strong');
-      title.textContent=(h.mode==='timeline'?'Ordená la historia':h.mode==='career'?'Adiviná la carrera':'¿Quién soy?')+
+      title.textContent=(h.mode==='connections'?'Conexiones Futboleras':h.mode==='timeline'?'Ordená la historia':h.mode==='career'?'Adiviná la carrera':'¿Quién soy?')+
         ' · '+(h.mode==='timeline'?(h.won?'Orden perfecto':'Orden parcial'):h.won?'Acertaste':'Sin respuesta');
       var meta=document.createElement('small');
       meta.textContent=String(h.date||'').slice(0,10)+' · '+
