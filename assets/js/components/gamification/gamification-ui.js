@@ -328,7 +328,7 @@
             root.querySelector('h3').textContent = opts.title || 'Rankings';
             const tabs = root.querySelector('.ct-ranking-card__tabs');
             const list = root.querySelector('.ct-ranking-card__list');
-            const scopes = opts.scopes || ['global', 'weekly', 'monthly', 'friends'];
+            const scopes = opts.scopes || ['global', 'weekly', 'monthly'];
             const labels = { global: 'Global', weekly: 'Semanal', monthly: 'Mensual', friends: 'Amigos' };
             let active = opts.activeScope || scopes[0];
 
