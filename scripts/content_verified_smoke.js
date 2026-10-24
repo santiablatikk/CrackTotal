@@ -47,7 +47,7 @@ for (const fact of activeOriginalFacts) {
   assert.equal(new Set(acceptable).size, acceptable.length, 'Redundant alias: ' + fact.pregunta);
 }
 const official = top10.filter(x => x.source_url && x.verified_at);
-assert.equal(official.length, 6, 'Six in-scope UEFA men's Top 10 challenges must be available');
+assert.equal(official.length, 6, 'Six in-scope UEFA Top 10 challenges must be available');
 for (const topic of official) {
   assert.equal(topic.verified_at, verified.cutoff);
   assert.match(topic.source_url, /^https:\/\/www\.uefa\.com\//);
@@ -102,4 +102,4 @@ for (const fact of qsmFacts.questions) {
 
 console.log('Verified content smoke OK: ' + all.length + ' Pasala prompts (' +
   verified.questions.length + ' newly sourced), ' + qsmFacts.newQuestions + ' new QSM, ' + official.length +
-  ' UEFA men’s Top10s, ' + wordle.length + ' Wordle entries structurally checked');
+  ' UEFA Top10s, ' + wordle.length + ' Wordle entries structurally checked');
