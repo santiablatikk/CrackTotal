@@ -54,8 +54,8 @@ async function ct71ConexionesLiveProbe(){
    const button=[...$('cxTiles').children].find(b=>b.textContent===name);
    assert(button,'Missing clickable name '+name);
    button.click();
-   assert(button.getAttribute('aria-pressed')==='true'||$('cxCheck').textContent.includes('4/4'),
-    'Accessible tile selection failed');
+   assert(session().selection.includes(name),
+    'Actual tile click was not captured by the game state');
   }
   assert(!$('cxCheck').disabled,'Four selections must enable check');
   $('cxCheck').click();
