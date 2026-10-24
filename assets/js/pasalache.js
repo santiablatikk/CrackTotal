@@ -4,7 +4,7 @@
 // desde los scripts cargados anteriormente
 
 // --- Game variables (Declare totalTime globally/module scope) ---
-let totalTime = 240; // Default: Normal difficulty (240 seconds)
+let totalTime = 300; // Match the preselected Normal mode (300 seconds)
 let currentPlayerName = 'Jugador Anónimo'; // <-- Variable para guardar el nombre
 let logrosAlInicioDePartida = {}; // <<< NUEVA VARIABLE GLOBAL PARA LOGROS
 
@@ -687,7 +687,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 totalTime = 300; // Antes 240. Usuario indica 300s para MEDIO.
                 maxErrors = 3;   // Antes 3. Para ganar con hasta 3 errores, se pierde con 4.
         }
-        console.log(`Dificultad seleccionada: ${difficulty}, Tiempo: ${totalTime}s, Errores Máx (umbral de derrota): ${maxErrors}`);
+        console.log(`Dificultad seleccionada: ${difficulty}, Tiempo: ${totalTime}s, Errores permitidos (derrota al superarlos): ${maxErrors}`);
     }
     
     // Enhanced event listeners for difficulty buttons (legacy support)
@@ -1529,7 +1529,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (currentLetter === 'A' && correctAnswers === 0 && incorrectAnswers === 1 && passedAnswers === 0) { //Aproximado para primer error en A
                     errorEnLetraAEstaPartida = true;
                 }
-                if (incorrectAnswers === maxErrors -1) {
+                if (incorrectAnswers === maxErrors) {
                     estuvoAUnErrorDePerderEstaPartida = true;
                 }
                 letrasAcertadasSeguidasEstaPartida = 0; // Reset racha de aciertos
@@ -1582,7 +1582,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateScoreDisplays();
 
                 // --- Check for DEFEAT --- 
-                if (incorrectAnswers >= maxErrors) {
+                if (incorrectAnswers > maxErrors) {
                     saveProfileStats(profileStats); 
                     endGame('defeat');
                     return; // Stop execution
@@ -1593,7 +1593,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     saveProfileStats(profileStats);
                     // Si no quedan letras pendientes, el rosco está completo
                     // La victoria depende de si no se superó el máximo de errores
-                    if (incorrectAnswers < maxErrors) {
+                    if (incorrectAnswers <= maxErrors) {
                         endGame('victory');
                     } else {
                         endGame('defeat');
@@ -1608,7 +1608,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Si no quedan letras pendientes después de este error, el juego debe terminar
                 if (pendingLetters.length === 0) {
                     saveProfileStats(profileStats);
-                    if (incorrectAnswers < maxErrors) {
+                    if (incorrectAnswers <= maxErrors) {
                         endGame('victory');
                     } else {
                         endGame('defeat');
@@ -2016,7 +2016,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Check if game should end (no more letters to play)
         if (pendingLetters.length === 0) {
             saveProfileStats(profileStats);
-            if (incorrectAnswers < maxErrors) {
+            if (incorrectAnswers <= maxErrors) {
                 endGame('victory');
             } else {
                 endGame('defeat');

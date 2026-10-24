@@ -408,7 +408,23 @@ async function pasalaLiveProbe() {
   pass.click(); // A second pass must NOT revert A to unanswered.
   inspect('A','pending','rgb(255, 224, 131)');
   if($('pendingCount').textContent!=='24')throw Error('Second pass inflated unresolved count');
-  return {correct,incorrect,pending,revisitedA:true,counters:stats};
+  const submitWrong=async (letterName)=>{
+    await waitFor(()=>letter(letterName)?.classList.contains('active'),'active '+letterName);
+    input.value='zzzzzz_invalid_not_a_player_9999';
+    submit.click();
+    await waitFor(()=>letter(letterName)?.classList.contains('incorrect'),'incorrect '+letterName);
+    inspect(letterName,'incorrect','rgb(255, 104, 115)');
+  };
+  await submitWrong('D'); // 2 errors
+  await submitWrong('E'); // 3 errors, NORMAL must still continue
+  if(!letter('F')?.classList.contains('active')||$('incorrectCount')?.textContent!=='3')
+    throw Error('Normal ended before exceeding its advertised 3 allowed errors');
+  await submitWrong('F'); // 4 errors, now defeat
+  if($('incorrectCount')?.textContent!=='4')
+    throw Error('Defeat did not preserve the fourth incorrect result');
+  if(!letter('B').classList.contains('correct')||!letter('A').classList.contains('pending'))
+    throw Error('End state erased earlier letter outcomes');
+  return {correct,incorrect,pending,revisitedA:true,counters:stats,defeatAt:4};
 }
 
 async function main(){
@@ -541,7 +557,7 @@ async function main(){
           expression:'('+pasalaLiveProbe.toString()+')()',
           returnByValue:true,awaitPromise:true
         });
-        if(result.exceptionDetails||!result.result?.value?.revisitedA)
+        if(result.exceptionDetails||!result.result?.value?.revisitedA||result.result?.value?.defeatAt!==4)
           throw Error('PASALA LIVE failed at '+width+': '+JSON.stringify(result.exceptionDetails||result.result).slice(0,1000));
         console.log('PASALA LIVE '+width+'px: '+JSON.stringify(result.result.value.counters));
       }
