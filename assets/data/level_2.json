@@ -653,6 +653,94 @@
         "D": "Argentina 1978"
       },
       "respuesta_correcta": "B"
+    },
+    {
+      "pregunta": "¿Quién recibió la Bota de Bronce del Mundial masculino de 2026?",
+      "question": "¿Quién recibió la Bota de Bronce del Mundial masculino de 2026?",
+      "respuesta": "Jude Bellingham",
+      "answer": "Jude Bellingham",
+      "opciones": {
+        "A": "Lionel Messi",
+        "B": "Kylian Mbappé",
+        "C": "Harry Kane",
+        "D": "Jude Bellingham"
+      },
+      "respuesta_correcta": "D",
+      "dificultad": 2,
+      "audit_status": "verified_official",
+      "source_url": "https://www.fifa.com/mens/articles/award-winners",
+      "source_urls": [
+        "https://www.fifa.com/mens/articles/award-winners"
+      ],
+      "verified_at": "2026-10-24",
+      "as_of": "2026-10-24",
+      "content_batch": "62-verified-20261024"
+    },
+    {
+      "pregunta": "¿Cuál fue el resultado de la final de Champions League 2025/26 antes de los penales?",
+      "question": "¿Cuál fue el resultado de la final de Champions League 2025/26 antes de los penales?",
+      "respuesta": "1-1",
+      "answer": "1-1",
+      "opciones": {
+        "A": "1-1",
+        "B": "2-2",
+        "C": "0-0",
+        "D": "2-1"
+      },
+      "respuesta_correcta": "A",
+      "dificultad": 2,
+      "audit_status": "verified_official",
+      "source_url": "https://www.uefa.com/uefachampionsleague/news/029c-1e9a2f63fe2d-ebf9ad643892-1000--champions-league-2025-26-all-the-results/",
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/029c-1e9a2f63fe2d-ebf9ad643892-1000--champions-league-2025-26-all-the-results/"
+      ],
+      "verified_at": "2026-10-24",
+      "as_of": "2026-10-24",
+      "content_batch": "62-verified-20261024"
+    },
+    {
+      "pregunta": "¿Qué selección perdió la final del Mundial masculino de 2026 tras la prórroga?",
+      "question": "¿Qué selección perdió la final del Mundial masculino de 2026 tras la prórroga?",
+      "respuesta": "Argentina",
+      "answer": "Argentina",
+      "opciones": {
+        "A": "Francia",
+        "B": "Argentina",
+        "C": "Inglaterra",
+        "D": "Croacia"
+      },
+      "respuesta_correcta": "B",
+      "dificultad": 2,
+      "audit_status": "verified_official",
+      "source_url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/spain-argentina-final-report-highlights",
+      "source_urls": [
+        "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/spain-argentina-final-report-highlights"
+      ],
+      "verified_at": "2026-10-24",
+      "as_of": "2026-10-24",
+      "content_batch": "62-verified-20261024"
+    },
+    {
+      "pregunta": "¿Cuántos goles marcó Kylian Mbappé para ganar la Bota de Oro del Mundial 2026?",
+      "question": "¿Cuántos goles marcó Kylian Mbappé para ganar la Bota de Oro del Mundial 2026?",
+      "respuesta": "10",
+      "answer": "10",
+      "opciones": {
+        "A": "8",
+        "B": "9",
+        "C": "10",
+        "D": "11"
+      },
+      "respuesta_correcta": "C",
+      "dificultad": 2,
+      "audit_status": "verified_official",
+      "source_url": "https://www.fifa.com/mens/articles/award-winners",
+      "source_urls": [
+        "https://www.fifa.com/mens/articles/award-winners"
+      ],
+      "verified_at": "2026-10-24",
+      "as_of": "2026-10-24",
+      "content_batch": "62-verified-20261024"
     }
   ]
 }
