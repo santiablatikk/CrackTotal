@@ -21,7 +21,7 @@ for(const topic of pool){
  assert.equal(topic.answers.length,10);
  assert.deepEqual(topic.metric_values,official[topic.id],topic.id+' official points/order');
  assert.equal(topic.audit_status,'verified_official');
- assert.match(topic.source_url,/^https:\/\/(www\.)?(bundesliga|premierleague)\.com/);
+ assert.match(topic.source_url,/^https:\/\/(?:(?:www\.)?bundesliga\.com|report\.bundesliga\.de|(?:www\.)?premierleague\.com)\//);
  assert.match(topic.verified_at,/^2026-10-20$/);
  assert(topic.rank_rule.includes('Orden oficial'));
  for(let i=0;i<10;i++){
