@@ -8,15 +8,15 @@ assert.equal(manifest.scope,'/');assert.equal(manifest.display,'standalone');
 assert.equal(manifest.theme_color,'#101b1b');assert.equal(manifest.background_color,'#101b1b');
 assert(manifest.icons.some(x=>x.src==='/assets/icons/ct7-app.svg'&&x.sizes==='any'));
 assert(!/push-notifications|background-sync|share-target|file-handling/i.test(JSON.stringify(manifest)));
-for(const page of ['index.html','games.html','quien-soy.html','adivina-carrera.html','ordena-historia.html','profile.html']){
+for(const page of ['index.html','games.html','quien-soy.html','adivina-carrera.html','ordena-historia.html','conexiones.html','profile.html']){
  const html=read(page);
  for(const token of ['assets/js/ct7-pwa.js','config/manifest.json','assets/css/ct7-pwa.css'])
    assert(html.includes(token),page+' missing '+token);
 }
-const expected=['/quien-soy.html','/adivina-carrera.html','/ordena-historia.html',
-'/assets/js/ct7-games.js','/assets/js/ct7-timeline.js',
-'/assets/data/career-challenge-verified.json','/assets/data/timeline-verified.json',
-'/assets/css/ct7-games.css','/assets/css/ct7-timeline.css',
+const expected=['/quien-soy.html','/adivina-carrera.html','/ordena-historia.html','/conexiones.html',
+'/assets/js/ct7-games.js','/assets/js/ct7-timeline.js','/assets/js/ct71-conexiones.js',
+'/assets/data/career-challenge-verified.json','/assets/data/timeline-verified.json','/assets/data/conexiones-verified.json',
+'/assets/css/ct7-games.css','/assets/css/ct7-timeline.css','/assets/css/ct71-conexiones.css',
 '/assets/css/design-system/tokens.css','/assets/icons/ct7-app.svg','/portada.ico'];
 expected.forEach(p=>assert(fs.existsSync(path.join(root,p.slice(1))),'Missing '+p));
 const handlers={};let activated=false,claimed=false,online=true,fetchCalls=0;
@@ -69,5 +69,5 @@ async function emit(name,event){let result;handlers[name]({...event,waitUntil(ta
  assert.equal(fetchCalls,before);
  await emit('message',{data:{type:'CT7_ACTIVATE_UPDATE'}});
  assert(activated);
- console.log('CT7.1 PWA PASS: three playable offline modes, cache isolation, deliberate update');
+ console.log('CT7.1 PWA PASS: four playable offline modes, cache isolation, deliberate update');
 })().catch(e=>{console.error(e);process.exitCode=1});

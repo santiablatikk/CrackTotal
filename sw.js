@@ -1,21 +1,24 @@
 /* Crack Total 7.1 — intentionally narrow offline support.
  * No authenticated requests, leaderboards, match events or API responses are cached.
- * Offline play is limited to three editorial SOLO modes; competitive play needs network.
+ * Offline play is limited to four editorial SOLO modes; competitive play needs network.
  */
 'use strict';
-const VERSION='ct71-20261024-offline-1';
+const VERSION='ct71-20261024-offline-2';
 const PREFIX='ct7-offline-';
 const CACHE=PREFIX+VERSION;
 const LEGACY=/^crack-total(?:-static|-dynamic|-images|-api)?-v/i;
-const OFFLINE_PAGES=new Set(['/quien-soy.html','/adivina-carrera.html','/ordena-historia.html']);
+const OFFLINE_PAGES=new Set(['/quien-soy.html','/adivina-carrera.html','/ordena-historia.html','/conexiones.html']);
 const ASSETS=[
   ...OFFLINE_PAGES,
   '/assets/js/ct7-games.js',
   '/assets/js/ct7-timeline.js',
+  '/assets/js/ct71-conexiones.js',
   '/assets/data/career-challenge-verified.json',
   '/assets/data/timeline-verified.json',
+  '/assets/data/conexiones-verified.json',
   '/assets/css/ct7-games.css',
   '/assets/css/ct7-timeline.css',
+  '/assets/css/ct71-conexiones.css',
   '/assets/css/design-system/tokens.css',
   '/assets/icons/ct7-app.svg',
   '/portada.ico'
