@@ -1,0 +1,30 @@
+name: Crack Total 6.1 content checks
+on:
+  pull_request:
+    paths:
+      - 'assets/data/**'
+      - 'docs/audit/**'
+      - 'scripts/*content*'
+      - 'scripts/top10_42_smoke.js'
+      - 'package.json'
+      - '.github/workflows/content-61-qa.yml'
+  push:
+    branches:
+      - feature/crack-total-6-1-content-quality
+jobs:
+  content-and-gameplay-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Parse new content checks
+        run: |
+          node --check scripts/mens_only_content_smoke.cjs
+          node --check scripts/content_61_smoke.cjs
+          node --check scripts/top10_42_smoke.js
+      - name: Verify banks and existing gameplay tests
+        run: |
+          npm ci
+          npm test
