@@ -28,3 +28,8 @@ jobs:
         run: |
           npm ci
           npm test
+      - name: Real Pasala Che browser state regression (fast check)
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node scripts/qa_browser_52.cjs --root . --out "$RUNNER_TEMP/ct-pasala-live" --widths 360 --games pasalache.html --fixture pasala-live
+
