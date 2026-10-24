@@ -34,6 +34,54 @@ function serve(req,res) {
     });
   } catch {res.writeHead(400).end();}
 }
+async function ct7LiveProbe() {
+  const assert = (condition,message) => { if (!condition) throw Error(message); };
+  const mode = document.body.dataset.ct7Mode;
+  assert(['identity','career'].includes(mode),'Invalid CT7 game mode');
+  const $ = id => document.getElementById(id);
+  const response = await fetch('/assets/data/career-challenge-verified.json');
+  const bank = await response.json();
+  for(let retry=0;retry<24 && $('startButton').disabled;retry++)
+    await new Promise(resolve => setTimeout(resolve,100));
+  assert(!$('startButton').disabled,'Game bank did not initialize');
+  $('startButton').click();
+  assert(!$('playView').hidden,'Start action did not open a game');
+  const key='ct7:session:'+mode+':v1';
+  const order=JSON.parse(sessionStorage.getItem(key)).order;
+  assert(order.length===6&&new Set(order).size===6,'Fresh game must not duplicate footballers');
+  let score=0;
+  for(let i=0;i<6;i++){
+    const session=JSON.parse(sessionStorage.getItem(key));
+    assert(session.index===i,'Round progression mismatch');
+    const record=bank.records.find(r=>r.id===session.order[i]);
+    assert(record,'Unknown server-source record');
+    assert($('clueList').children.length >= 2,'Actual clue list not rendered');
+    if (i===0) {
+      $('guessInput').value='Futbolista que no existe 999';
+      $('guessForm').requestSubmit();
+      assert($('attemptsLabel').textContent.includes('2 INTENTOS'),'Wrong answers must decrement attempts');
+      $('revealButton').click();
+      assert(JSON.parse(sessionStorage.getItem(key)).revealed > session.revealed,
+        'Reveal must consume a new clue');
+    }
+    $('guessInput').value=record.name;
+    $('guessForm').requestSubmit();
+    assert(!$('answerView').hidden,'Correct answer must reveal source/result');
+    assert($('answerSource').href.startsWith('https://'),'Provenance link missing');
+    score=JSON.parse(sessionStorage.getItem(key)).score;
+    $('nextButton').click();
+  }
+  assert(!$('finishView').hidden,'Six rounds must end in final scoreboard');
+  const state=JSON.parse(sessionStorage.getItem(key));
+  assert(state.correct===6&&state.score===score,'Final total must be verified against actual play');
+  const local=JSON.parse(localStorage.getItem('ct7:local-progress:v1'));
+  assert(local.history.every(h=>h.scope==='local-only'),'Cannot pass local client points as verified');
+  assert(local.achievements.includes('explorador'),'Daily mission should unlock');
+  const content=$('finishView').textContent.trim().slice(0,70);
+  return {mode,correct:state.correct,score:state.score,rounds:local.rounds,
+    mission:local.achievements.includes('explorador'),finished:true,summary:content};
+}
+
 function probe(expectedWidth) {
   const width = window.innerWidth;
   const inspectWidth = Math.min(width, expectedWidth);
@@ -518,6 +566,18 @@ async function main(){
           throw Error('Wordle live reload failed '+width+': '+
             JSON.stringify(restored.exceptionDetails||restored.result).slice(0,800));
         console.log('WORDLE LIVE '+width+'px: '+JSON.stringify(first.result.value));
+      }
+      if(args.fixture === 'ct7-live') {
+        if(!['quien-soy.html','adivina-carrera.html'].includes(game))
+          throw Error('ct7-live requires one of the two editorial games');
+        const result=await command('Runtime.evaluate',{
+          expression:'('+ct7LiveProbe.toString()+')()',
+          returnByValue:true,awaitPromise:true
+        });
+        if(result.exceptionDetails||!result.result?.value?.finished)
+          throw Error('CT7 REAL CHROME PLAY FAILED '+game+' '+width+': '+
+            JSON.stringify(result.exceptionDetails||result.result).slice(0,1300));
+        console.log('CT7 LIVE '+game+' '+width+'px: '+JSON.stringify(result.result.value));
       }
       if(args.fixture==='pasala-fill'){
         if(game!=='pasalache.html')throw Error('pasala-fill requires pasalache.html');
