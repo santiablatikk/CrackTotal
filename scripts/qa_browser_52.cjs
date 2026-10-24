@@ -628,7 +628,7 @@ async function main(){
           expression:"performance.timeOrigin",returnByValue:true
         });
         const oldOrigin=beforeReload.result?.value;
-        await command('Runtime.evaluate',{expression:"localStorage.removeItem('wordle_game_state_v1')",returnByValue:true});
+        await command('Runtime.evaluate',{expression:"localStorage.removeItem('wordle_game_state_v1');localStorage.removeItem('wordle_stats')",returnByValue:true});
         await command('Page.reload',{ignoreCache:true});
         // A reload during a slow asset or daily-pool fetch can temporarily
         // leave the document without the game DOM. Wait for the actual game,
