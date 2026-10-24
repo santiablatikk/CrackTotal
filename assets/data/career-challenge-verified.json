@@ -238,6 +238,121 @@
         "https://www.fifa.com/es/tournaments/mens/worldcup/canadamexicousa2026/articles/vinicius-junior-brasil-records-estadisticas-frases"
       ],
       "verified_at": "2026-10-24"
+    },
+    {
+      "id": "neymar",
+      "name": "Neymar",
+      "aliases": [
+        "Neymar Jr",
+        "Neymar Junior",
+        "Neymar Júnior",
+        "Neymar da Silva Santos Júnior"
+      ],
+      "nationality": "Brasil",
+      "position": "Delantero",
+      "clubs": [
+        "Santos",
+        "FC Barcelona",
+        "Paris Saint-Germain",
+        "Al Hilal",
+        "Santos"
+      ],
+      "hints": [
+        "Surgió del Santos de Brasil.",
+        "Ganó la Copa Libertadores masculina de 2011.",
+        "Formó parte del tridente ofensivo del FC Barcelona con Messi y Luis Suárez.",
+        "Después de su etapa en Al Hilal regresó al Santos en 2025."
+      ],
+      "source_urls": [
+        "https://www.fifa.com/es/tournaments/mens/worldcup/canadamexicousa2026/articles/los-iconos-de-la-copa-mundial-de-la-fifa-que-regresaron-a-casa"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "maradona",
+      "name": "Diego Maradona",
+      "aliases": [
+        "Maradona",
+        "Diego Armando Maradona",
+        "El Diego",
+        "Pelusa"
+      ],
+      "nationality": "Argentina",
+      "position": "Mediapunta",
+      "clubs": [
+        "Argentinos Juniors",
+        "Boca Juniors",
+        "FC Barcelona",
+        "Napoli",
+        "Sevilla",
+        "Newell's Old Boys",
+        "Boca Juniors"
+      ],
+      "hints": [
+        "Debutó profesionalmente en Argentinos Juniors.",
+        "Fue campeón del mundo con Argentina en 1986.",
+        "Fue ídolo del Napoli, donde ganó dos títulos de Serie A.",
+        "Terminó su carrera como futbolista en Boca Juniors."
+      ],
+      "source_urls": [
+        "https://publications.fifa.com/es/annual-report-2020/obituaries-20/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "lewandowski",
+      "name": "Robert Lewandowski",
+      "aliases": [
+        "Lewandowski",
+        "Robert Lewandowski"
+      ],
+      "nationality": "Polonia",
+      "position": "Delantero",
+      "clubs": [
+        "Znicz Pruszków",
+        "Lech Poznań",
+        "Borussia Dortmund",
+        "Bayern Múnich",
+        "FC Barcelona"
+      ],
+      "hints": [
+        "Es delantero de la selección polaca.",
+        "Fue goleador en tres divisiones distintas del fútbol polaco.",
+        "Marcó cuatro goles con Borussia Dortmund ante Real Madrid en semifinales de Champions 2013.",
+        "Después de Bayern Múnich pasó al FC Barcelona."
+      ],
+      "source_urls": [
+        "https://es.uefa.com/news/0257-0e95a52de1e6-60e6b0ea06da-1000--centenario-lewangolski/",
+        "https://www.uefa.com/uefachampionsleague/news/0257-0e9a0f70e31c-e6f6d51eef60-1000--most-uefa-club-appearances/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "marcelo",
+      "name": "Marcelo Vieira",
+      "aliases": [
+        "Marcelo",
+        "Marcelo Vieira da Silva",
+        "Marcelo Vieira da Silva Júnior"
+      ],
+      "nationality": "Brasil",
+      "position": "Lateral izquierdo",
+      "clubs": [
+        "Fluminense",
+        "Real Madrid",
+        "Olympiacos",
+        "Fluminense"
+      ],
+      "hints": [
+        "Es un lateral izquierdo brasileño ya retirado.",
+        "Fue una pieza importante del Real Madrid durante dieciséis temporadas.",
+        "Jugó brevemente en Olympiacos después de dejar España.",
+        "Ganó la Copa Libertadores 2023 con Fluminense."
+      ],
+      "source_urls": [
+        "https://www.fifa.com/es/articles/marcelo-retirada-real-madrid-fluminense"
+      ],
+      "verified_at": "2026-10-24"
     }
   ]
 }
