@@ -265,6 +265,7 @@ const stagingWsOptions = process.env.CT_STAGING === 'true' ? {
             .split(',').map(origin => origin.trim()).filter(Boolean);
         const origin = info.origin || '';
         const allowed = !origin || configured.includes(origin) ||
+            origin === 'https://cracktotal-arena-staging.onrender.com' ||
             /^http:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?$/.test(origin);
         done(allowed, allowed ? undefined : 403, allowed ? undefined : 'Staging origin not allowed');
     }
