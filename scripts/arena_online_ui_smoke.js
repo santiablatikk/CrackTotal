@@ -97,3 +97,44 @@ assert.match(qsmCss,/Crack Total 5\.2 — QSM \/ shared Arena visual language/,
 assert.match(qsmCss,/\.form-group label\s*\{[^}]*color:#eaf2e8/s,
   'QSM form labels must remain readable');
 console.log('ARENA 5.2 CLIENT INTEGRITY: PASS — protocol handshake, isolated staging, recovery and asset versions.');
+
+// 6.1: execute only the standalone URL configuration, with synthetic location
+// values. This is a routing contract, not evidence of deployed WebSocket health.
+const vm=require('node:vm');
+const qsmConfig=qsm.slice(0,qsm.indexOf('// --- DOM Elements ---'));
+const mentirosoConfig=mentiroso.slice(0,mentiroso.indexOf('const MENTIROSO_EXPECTED_BANK_VERSION'));
+assert(qsmConfig.includes('QSM_ARENA_HOST')&&mentirosoConfig.includes('MENTIROSO_ARENA_HOST'),
+  'Staging Render must not silently route to legacy production online service');
+function endpoint(code,host,search,resultExpression){
+  const sandbox={location:{hostname:host,search},URLSearchParams,console:{log(){}}};
+  return vm.runInNewContext(code+';'+resultExpression,sandbox,{timeout:1000});
+}
+const previewHost='deploy-preview-1--zingy-haupia-53b742.netlify.app';
+const renderHost='cracktotal-arena-staging.onrender.com';
+for(const [title,code,accessor] of [
+ ['QSM',qsmConfig,'CONFIG.WEBSOCKET_URL'],
+ ['Mentiroso',mentirosoConfig,'WEBSOCKET_URL']
+]){
+  for(const host of [renderHost,previewHost]){
+    assert.equal(endpoint(code,host,'',accessor),'wss://cracktotal-arena-staging.onrender.com',
+      title+' must route the exact approved preview to Arena staging');
+  }
+  for(const host of ['localhost','127.0.0.1','other-preview.netlify.app']){
+    assert.equal(endpoint(code,host,'',accessor),null,
+      title+' development/unknown preview must not access production');
+  }
+  for(const host of ['www.cracktotal.com','cracktotal.com','cracktotal-pz9u.onrender.com']){
+    assert.equal(endpoint(code,host,'',accessor),'wss://cracktotal-servidor.onrender.com',
+      title+' production endpoint may not be silently changed');
+    assert.equal(endpoint(code,host,'?server=wss://attacker.invalid',accessor),
+      'wss://cracktotal-servidor.onrender.com',
+      title+' production must ignore preview-only override');
+  }
+  assert.equal(endpoint(code,'localhost','?server=wss://localhost.invalid',accessor),
+    'wss://localhost.invalid',title+' staging override must be explicit and secure');
+  assert.equal(endpoint(code,'localhost','?server=ws://localhost.invalid',accessor),null,
+    title+' insecure ws override must not be allowed');
+}
+assert.match(server,/configured\.push\('https:\/\/cracktotal-arena-staging\.onrender\.com'\)/,
+  'Staging same-origin browser must be explicitly allowed by its WebSocket server');
+console.log('ARENA 6.1 ENDPOINT ROUTING: PASS — production isolated from Render staging, Netlify previews and localhost.');

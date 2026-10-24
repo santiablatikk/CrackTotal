@@ -273,6 +273,9 @@ const stagingWsOptions = process.env.CT_STAGING === 'true' ? {
         const configured = (process.env.CT_STAGING_ORIGINS ||
             'https://deploy-preview-1--zingy-haupia-53b742.netlify.app')
             .split(',').map(origin => origin.trim()).filter(Boolean);
+        // Allow the verified staging service to serve its own 6.1 game pages.
+        // The same-site Render origin is trusted only in CT_STAGING mode.
+        configured.push('https://cracktotal-arena-staging.onrender.com');
         const origin = info.origin || '';
         const allowed = !origin || configured.includes(origin) ||
             /^http:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?$/.test(origin);
