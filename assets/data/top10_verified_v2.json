@@ -29,7 +29,7 @@
       50,
       45
     ],
-    "source_url": "https://www.bundesliga.com/en/bundesliga/matchday/2024-2025/33/fc-bayern-muenchen-vs-borussia-moenchengladbach/table",
+    "source_url": "https://report.bundesliga.de/2425/en/economic-report/german-licensed-football/overview/the-2024-25-season-at-a-glance.html",
     "aliases": {
       "Bayern Múnich": [
         "Bayern Munich",
@@ -81,9 +81,9 @@
     "unit": "pts",
     "rank_rule": "Orden oficial de la clasificación final de la liga, incluidos sus criterios reglamentarios de desempate",
     "cutoff": "2024/25 (temporada finalizada)",
-    "verified_at": "2026-10-20",
+    "verified_at": "2026-10-24",
     "audit_status": "verified_official",
-    "source": "Bundesliga — clasificación oficial",
+    "source": "DFL — informe económico oficial y clasificación final de Bundesliga",
     "version": 2
   },
   {
@@ -116,7 +116,7 @@
       42,
       42
     ],
-    "source_url": "https://www.bundesliga.com/en/bundesliga/matchday/2023-2024/33/vfl-bochum-1848-vs-bayer-04-leverkusen/table",
+    "source_url": "https://report.bundesliga.de/2324/en/economic-report/german-licensed-football/overview/the-2023-24-season-at-a-glance.html",
     "aliases": {
       "Bayer Leverkusen": [
         "Leverkusen",
@@ -163,9 +163,9 @@
     "unit": "pts",
     "rank_rule": "Orden oficial de la clasificación final de la liga, incluidos sus criterios reglamentarios de desempate",
     "cutoff": "2023/24 (temporada finalizada)",
-    "verified_at": "2026-10-20",
+    "verified_at": "2026-10-24",
     "audit_status": "verified_official",
-    "source": "Bundesliga — clasificación oficial",
+    "source": "DFL — informe económico oficial y clasificación final de Bundesliga",
     "version": 2
   },
   {
