@@ -47,3 +47,21 @@
 @media(prefers-reduced-motion:reduce){
  .ct6-game-hub .discover-section .home-game-card.ct7-catalog-card .home-game-media img{transition:none}
 }
+
+/* CT7 homepage: typographic feature below the existing five editorial blocks */
+.ct7-home-feature{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:32px;align-items:center;margin:24px 0 10px;padding:clamp(24px,3.5vw,48px);background:#20372c;border-top:4px solid #d89b70;color:#f4f2e9}
+.ct7-home-feature-heading>span{font-size:10px;font-weight:900;letter-spacing:.17em;color:#d89b70}
+.ct7-home-feature-heading h3{font-size:clamp(32px,4vw,58px);line-height:1;letter-spacing:-.065em;font-weight:850;margin:22px 0}
+.ct7-home-feature-heading h3 em{color:#b5eb53;font-style:normal}
+.ct7-home-feature-heading p{font-size:13px;color:#d0ded1;max-width:400px;line-height:1.7}
+.ct7-home-feature-list{border-top:1px solid #607667}
+.ct7-home-feature-list>a{display:flex;align-items:center;gap:17px;padding:24px 0;border-bottom:1px solid #607667;text-decoration:none;color:#f4f2e9;transition:color .15s ease}
+.ct7-home-feature-list>a:hover{color:#b5eb53}
+.ct7-home-counter{font-variant-numeric:tabular-nums;font-size:13px;font-weight:900;color:#d89b70}
+.ct7-home-feature-list>a span:nth-child(2){display:flex;flex-direction:column;gap:7px;flex:1;min-width:0}
+.ct7-home-feature-list>a b{font-weight:850;font-size:clamp(20px,2vw,28px);letter-spacing:-.04em}
+.ct7-home-feature-list>a small{color:#c3d3c8;font-size:12px;line-height:1.3}
+.ct7-home-feature-list>a i{font-size:26px;font-style:normal}
+@media(max-width:760px){.ct7-home-feature{grid-template-columns:1fr;gap:16px}.ct7-home-feature-heading h3{font-size:clamp(34px,8vw,58px)}}
+@media(max-width:360px){.ct7-home-feature{padding:21px}.ct7-home-feature-list>a{gap:10px}.ct7-home-feature-list>a b{font-size:20px}}
+@media(prefers-reduced-motion:reduce){.ct7-home-feature-list>a{transition:none}}
