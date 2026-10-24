@@ -1,0 +1,38 @@
+name: CT7.1 game, offline PWA and mobile QA
+on:
+  push:
+    branches:
+      - feature/crack-total-7-1-mobile-offline
+  pull_request:
+    branches:
+      - feature/crack-total-7-0-editorial-games
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  gameplay-and-offline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Run all games and PWA offline integrity tests
+        run: npm test
+      - name: Check direct static asset references
+        run: node scripts/release_asset_integrity.js
+  real-chromium-7-1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Play every new game in Chrome at four widths
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node scripts/qa_browser_52.cjs             --root .             --out "$RUNNER_TEMP/ct71-browser"             --games conexiones.html,quien-soy.html,adivina-carrera.html,ordena-historia.html             --fixture ct7-live             --widths 320,390,768,1366
