@@ -31,7 +31,7 @@ async function get(path){
   await wait(3500);
  }
  for(const [path,parts] of [
-  ['/index.html',['ct7-home-feature','ordena-historia.html']],
+  ['/',['ct7-home-feature','ordena-historia.html']],
   ['/games.html',['quien-soy.html','adivina-carrera.html','ordena-historia.html']],
   ['/quien-soy.html',['ct7-games.js','data-ct7-mode="identity"']],
   ['/adivina-carrera.html',['ct7-games.js','data-ct7-mode="career"']],
