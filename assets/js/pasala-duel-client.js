@@ -11,12 +11,18 @@
     roomId: null, question: null, statuses: {}, result: null, reconnecting: false,
     clockTimer: null, retryTimer: null, manualLeave: false, clockOffset: 0, pendingAction: false,
     pendingAnswer: null, connectionSlowTimer: null };
-  const isStaticPreview = /(?:^|\.)netlify\.app$/i.test(location.hostname) || /(?:^|\.)netlify\.com$/i.test(location.hostname);
-  // Connect automatically only on the exact isolated PR preview; never on production or other Netlify sites.
-  const previewStaging = location.hostname === 'deploy-preview-1--zingy-haupia-53b742.netlify.app'
-    ? 'wss://cracktotal-arena-staging.onrender.com' : '';
-  const urlOverride = params.get('server') || window.CRACK_TOTAL_DUEL_WS_URL || previewStaging;
-  const wsUrl = urlOverride || (!isStaticPreview ? ((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host) : '');
+  // The public website is STATIC. It has no WebSocket backend on location.host.
+  // Only an explicitly configured, compatible production Arena may be used.
+  const STAGING='wss://cracktotal-arena-staging.onrender.com';
+  const isStaging=location.hostname==='cracktotal-arena-staging.onrender.com' ||
+    location.hostname==='deploy-preview-1--zingy-haupia-53b742.netlify.app';
+  const isLocal=/^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  const isProduction=['cracktotal.com','www.cracktotal.com',
+    'cracktotal-pz9u.onrender.com'].includes(location.hostname);
+  const provided=String(window.CRACK_TOTAL_DUEL_WS_URL||'');
+  const override=isLocal||isStaging ? String(params.get('server')||'') : '';
+  const wsUrl=override || (isStaging ? STAGING : isProduction ? provided : '');
+
   const safeCode = code => /^[A-F0-9]{10}$/.test(code);
   const savedSession = () => { try { return JSON.parse(sessionStorage.getItem(storageKey) || 'null'); } catch { return null; } };
   const name = () => $('playerName').value.trim().slice(0,24) || 'Jugador';
@@ -52,7 +58,7 @@
   function connect() {
     setLobbyAvailability(false);
     if (!wsUrl) {
-      notice('Esta vista previa es estática: para jugar online falta desplegar el servidor WebSocket de esta rama. Podés explorar la interfaz.', true);
+      notice('El modo 1v1 necesita un servidor compatible. No hay conexión online habilitada para esta dirección.', true);
       $('reconnectButton').hidden = true; return;
     }
     if (!/^wss:\/\//i.test(wsUrl) && !/^ws:\/\/(localhost|127\.0\.0\.1)(:\d+)?\/?$/i.test(wsUrl)) {
