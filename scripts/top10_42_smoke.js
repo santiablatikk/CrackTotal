@@ -22,7 +22,8 @@ for(const topic of pool){
  assert.deepEqual(topic.metric_values,official[topic.id],topic.id+' official points/order');
  assert.equal(topic.audit_status,'verified_official');
  assert.match(topic.source_url,/^https:\/\/(?:(?:www\.)?bundesliga\.com|report\.bundesliga\.de|(?:www\.)?premierleague\.com)\//);
- assert.match(topic.verified_at,/^2026-10-20$/);
+ const expectedReviewDate = ['ct-top10-bl-2024-25-final','ct-top10-bl-2023-24-final'].includes(topic.id) ? '2026-10-24' : '2026-10-20';
+ assert.equal(topic.verified_at,expectedReviewDate,'Official table review date mismatch: '+topic.id);
  assert(topic.rank_rule.includes('Orden oficial'));
  for(let i=0;i<10;i++){
    assert.equal(core.match(topic,topic.answers[i]),i);
@@ -55,4 +56,4 @@ assert(read('index.html').includes('top10-verified.js'));
 assert(read('games.html').includes('top10-verified.js'));
 assert(read('index.html').includes('ct42-daily-ranks'));
 assert.equal((read('index.html').match(/ct42-daily-ranks[\s\S]*?<\/div>/)||[])[0].match(/<span>/g)?.length,10);
-console.log('Top 10 4.2 content and mechanics smoke PASS: 4 official tables / 40 positions; aliases; shared UTC picker; old 39 preserved');
+console.log('Top 10 4.2 content and mechanics smoke PASS: 4 official tables / 40 positions; aliases; shared UTC picker; 38 retained legacy topics');
