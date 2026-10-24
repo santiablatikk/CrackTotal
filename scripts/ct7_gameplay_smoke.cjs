@@ -6,7 +6,7 @@ const engine=read('assets/js/ct7-games.js');
 const normalize=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
   .toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
 assert.equal(dataset.editorial_scope,'male-senior-football');
-assert(dataset.records.length>=8,'At least eight traceable career dossiers');
+assert(dataset.records.length>=12,'At least twelve traceable career dossiers');
 const ids=new Set(),aliases=new Map();
 for(const item of dataset.records){
   assert(!ids.has(item.id),'Duplicate player ID: '+item.id);ids.add(item.id);
