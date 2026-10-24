@@ -125,3 +125,16 @@
 .ct6-game-hub .ct6-hub-feature-bottom{font-size:10px;flex-wrap:wrap}
 }
 @media(prefers-reduced-motion:reduce){.ct6-game-hub .ct6-hub-feature,.ct6-game-hub .ct6-hub-action,.ct6-game-hub .discover-section .home-game-card{transition:none!important;transform:none!important}}
+
+/* Identity archive: typographic cover art made in CSS, not a stock game thumbnail. */
+.ct6-game-hub .home-game-card.ctid-catalog-card .home-game-media{isolation:isolate;display:flex;flex-direction:column;align-items:stretch;justify-content:space-between;padding:20px;min-height:220px;overflow:hidden;position:relative}
+.ct6-game-hub .ctid-catalog-art--pistas{background:repeating-linear-gradient(90deg,transparent 0 58px,rgba(255,255,255,.045) 59px 60px),radial-gradient(circle at 83% 10%,#486b49,#193a2b 60%,#132d22);color:#d0f399}
+.ct6-game-hub .ctid-catalog-art--carrera{background:repeating-linear-gradient(0deg,transparent 0 59px,rgba(255,255,255,.06) 60px 61px),linear-gradient(130deg,#202d2d,#263e3d 62%,#32594a);color:#f3d6a9}
+.ct6-game-hub .ctid-catalog-art:before{content:"";position:absolute;right:-20px;bottom:-90px;width:240px;height:240px;border:1px solid currentColor;border-radius:50%;opacity:.18;pointer-events:none}
+.ct6-game-hub .ctid-catalog-art:after{content:"";position:absolute;right:34px;bottom:-60px;width:170px;height:170px;border:1px solid currentColor;border-radius:50%;opacity:.18;pointer-events:none}
+.ct6-game-hub .ctid-catalog-overline,.ct6-game-hub .ctid-catalog-graphic{font-size:10px;font-weight:900;letter-spacing:.18em;line-height:1.35;position:relative;z-index:1}
+.ct6-game-hub .ctid-catalog-art--pistas strong{font-family:var(--ct-font-display,"Space Grotesk",sans-serif);font-weight:900;font-size:clamp(75px,8vw,124px);letter-spacing:-.13em;line-height:.95;position:relative;z-index:1}
+.ct6-game-hub .ctid-catalog-route{font-weight:900;font-size:25px;display:flex;align-items:center;gap:6px;letter-spacing:-.04em;position:relative;z-index:1;margin:auto 0}
+.ct6-game-hub .ctid-catalog-route span{display:inline-flex;align-items:center;justify-content:center;width:51px;height:51px;border:1px solid currentColor;border-radius:50%;font-size:15px}
+.ct6-game-hub .ctid-catalog-art .home-game-badge{position:absolute;top:14px;right:14px;background:#b5eb53;color:#19352a;font-weight:900;font-size:11px;letter-spacing:0;text-transform:none;z-index:2}
+@media(max-width:480px){.ct6-game-hub .home-game-card.ctid-catalog-card .home-game-media{min-height:190px;padding:16px}.ct6-game-hub .ctid-catalog-art--pistas strong{font-size:82px}}
