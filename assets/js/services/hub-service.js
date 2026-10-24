@@ -23,7 +23,7 @@
             isApi: false,
             canUseApi() { return false; },
             mock: { basePath: 'assets/data/hub', simulateLatencyMs: 420 },
-            features: { fallbackToMockOnError: true, newsFromMock: true, gameOfDayFromMock: true, userRankingFromMock: true }
+            features: { fallbackToMockOnError: true, newsFromMock: true, gameOfDayFromMock: true, userRankingFromMock: false }
         };
     }
 
