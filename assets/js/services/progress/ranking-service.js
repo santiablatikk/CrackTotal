@@ -45,5 +45,5 @@
     catch(e){cb(unavailable(scope,e.message));return ()=>{};}
   }
   Services.RankingService={scopes:()=>scopes.slice(),getRanking,subscribe,
-    getAll:async()=>Object.fromEntries((await Promise.all(scopes.map(getRanking))).map(x=>[x.scope,x]))};
+    getAll:async()=>Object.fromEntries((await Promise.all(scopes.map(scope=>getRanking(scope)))).map(x=>[x.scope,x]))};
 })();
