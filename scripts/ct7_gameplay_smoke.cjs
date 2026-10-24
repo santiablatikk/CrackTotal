@@ -34,6 +34,18 @@ for(const [file,mode] of [['quien-soy.html','identity'],['adivina-carrera.html',
   assert(html.includes('assets/js/ct7-games.js')&&html.includes('assets/css/ct7-games.css'));
   for(const id of htmlIds) assert.equal((html.match(new RegExp('id="'+id+'"','g'))||[]).length,1,file+' ID '+id);
 }
+const profile=read('profile.html'),dossier=read('assets/js/ct7-profile.js');
+for(const id of ['ct7LocalProgress','ct7ProfileXp','ct7ProfileCorrect','ct7ProfileRounds',
+  'ct7ProfileStreak','ct7ProfileMedals','ct7ProfileHistory','ct7ClearLocal']){
+  assert.equal((profile.match(new RegExp('id="'+id+'"','g'))||[]).length,1,
+    'Profile missing/duplicate dossier element '+id);
+}
+assert(profile.includes('assets/js/ct7-profile.js') &&
+  profile.includes('assets/css/ct7-profile.css'));
+assert(dossier.includes("localStorage.removeItem(key)") &&
+  dossier.includes("window.confirm("),'Local profile should support explicit deletion');
+assert(!/\.innerHTML\s*=|leaderboard_scopes|window\.db/.test(dossier),
+  'Profile must render all user-supplied fields safely and never read competition records');
 assert(!/firebaseService|window\.db|leaderboard_scopes|\.innerHTML\s*=/.test(engine),
   'Client-only XP cannot publish to server leaderboards or inject HTML');
 assert(engine.includes("scope: 'local-only'"));
