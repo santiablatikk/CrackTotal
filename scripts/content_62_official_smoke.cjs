@@ -21,7 +21,7 @@ const additions=levels.flatMap(o=>o.preguntas)
  .filter(q=>q.content_batch==='62-verified-20261024');
 assert.equal(additions.length,12,'Exactly twelve new QSM prompts expected');
 for(const q of [...released,...additions]){
- assert.match(q.source_url,/^https:\/\/(?:www\.fifa\.com|www\.uefa\.com)/);
+ assert.match(q.source_url,/^https:\/\/(?:www\.fifa\.com|www\.uefa\.com|www\.afa\.com\.ar)/);
  assert.equal(q.verified_at,'2026-10-24');
  assert.equal(q.audit_status,'verified_official');
  assert(q.pregunta.length>25 && q.respuesta.length>1);
