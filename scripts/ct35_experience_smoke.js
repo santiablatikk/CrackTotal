@@ -19,9 +19,11 @@ for (const id of ['stagingSetup', 'stagingServerInput', 'stagingSetupFeedback'])
 }
 assert(arenaClient.includes("['https:', 'wss:'].includes(proposed.protocol)"), 'Only secure public staging URL schemes must be allowed');
 assert(arenaClient.includes("host === 'cracktotal.com' || host.endsWith('.cracktotal.com')"), 'Never offer to connect the production backend from preview');
-assert(arenaClient.includes("location.hostname === 'deploy-preview-1--zingy-haupia-53b742.netlify.app'"), 'Autoconnection must be restricted to the exact PR preview hostname');
+assert(arenaClient.includes("location.hostname==='deploy-preview-1--zingy-haupia-53b742.netlify.app'"), 'Only the exact PR preview or Render staging may auto-connect to Arena');
 assert(arenaClient.includes("'wss://cracktotal-arena-staging.onrender.com'"), 'The confirmed separate Render staging endpoint must be used');
-assert(arenaClient.includes("const urlOverride = params.get('server') || window.CRACK_TOTAL_DUEL_WS_URL || previewStaging;"), 'Explicit staging host must override the preview default');
+assert(arenaClient.includes("const urlOverride=override || (isStaging ? STAGING : '');"), 'Only staging/local overrides may be propagated to shared room links');
+assert(arenaClient.includes("const wsUrl=urlOverride || (isProduction ? provided : '');"), 'Public static site must require an explicitly configured production WS server');
+assert(!arenaClient.includes("location.host)"), 'Never infer a WebSocket backend from the static-site host');
 assert(arenaClient.includes("lobbyUrl.searchParams.set('server', urlOverride)"), 'Leaving the duel must preserve the selected staging server');
 assert(arenaClient.includes('setupForm.hidden = !isStaticPreview || !!urlOverride || watchOnly'), 'The staging setup must be hidden outside static preview');
 
