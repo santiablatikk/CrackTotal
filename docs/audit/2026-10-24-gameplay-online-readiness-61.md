@@ -45,3 +45,17 @@
 Las pruebas existentes cubren estructura responsive de las seis entradas, las seis etapas activas sintéticas, interacción real de teclado/persistencia de Wordle, validación larga de QSM y lista de 25 respuestas de Mentiroso. También hay integración real local de WebSocket. **Aún falta E2E externo sobre la versión 6.1 desplegada, auditoría factual exhaustiva y QA humano/automatizado de todas las transiciones de fin de partida.**
 
 Este informe no afirma haber verificado todos los detalles del juego ni que la corrección ya esté en producción.
+
+## Segunda pasada de Chromium — regresión real corregida
+
+Tras incorporar `--fixture pasala-live` al QA de Chrome, el primer ensayo encontró que la C figuraba como activa mientras `currentQuestionData` seguía siendo B. Causa: un `setTimeout(150)` que demoraba `loadQuestion()` tras la respuesta correcta. Se actualiza ahora en forma atómica tras resolver la anterior (`c079afd0`).
+
+El siguiente ensayo pasó las respuestas incorrectas y avanzó por el rosco completo, pero al volver a una letra pendiente el fondo conservaba un instante el color neutro. Se corrigió la transición `background 0.3s` y la prioridad de `.letter.active.pending`, dejando transiciones únicamente de movimiento y sombra (`e61cf204`).
+
+**Pruebas confirmadas en ejecución de GitHub Actions `40093535299`, HEAD `e61cf204`:**
+- `npm test`: aprobado, incluidos tests reales WebSocket en loopback, controles de banco masculino y protección de Wordle.
+- `pasala-live` en Chromium 360 px: aprobado; respuesta B correcta, C incorrecta, A pasada y conservada, vuelta completa de letras, contadores `[1,1,24]`, derrota en el cuarto error en modo Normal y eliminación del resaltado activo al finalizar.
+- `top10-live` en Chromium 360 px: aprobado; error, acierto, duplicado, resultado, persistencia y bloqueo final, con tema `ct-top10-bl-2022-23-final`.
+- Los tests `pasala-live` y `top10-live` **no son fixtures visuales sintéticos**: accionan botones y verifican datos del juego en el DOM. Están limitados a navegador local aislado; no comprueban los despliegues externos.
+
+El QA visual completo con diez anchos y cinco medidas del rosco continúa en GitHub Actions independientemente. Mantener `main` y Render de producción sin cambios.
