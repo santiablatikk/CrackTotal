@@ -19,7 +19,7 @@ for(const row of bank.jugadores){
  assert(!/femenin|women|female/i.test(JSON.stringify(row)));
  for(const alias of row.aliases) {
    const key=normalized(alias);
-   assert(key.length>=4);
+   assert(key.length>=3,'Valid public aliases include CR7');
    assert(!aliases.has(key),'Ambiguous shared alias '+key);
    aliases.add(key);
  }
