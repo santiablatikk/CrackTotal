@@ -60,7 +60,7 @@ for(const file of runtimePaths){
 for(const gone of ['blog-detail-futbol-femenino.html','assets/images/blog/futbol femenino.png']){
  assert(!fs.existsSync(path.join(root,gone)),'Withdrawn resource still exists: '+gone);
 }
-assert.match(fs.readFileSync(path.join(root,'server.js'),'utf8'),/pathname === '\\/blog-detail-futbol-femenino.html'/);
-assert.match(fs.readFileSync(path.join(root,'netlify.toml'),'utf8'),/from = "\\/blog-detail-futbol-femenino.html"/);
+assert(fs.readFileSync(path.join(root,'server.js'),'utf8').includes("pathname === '/blog-detail-futbol-femenino.html'"));
+assert(fs.readFileSync(path.join(root,'netlify.toml'),'utf8').includes('from = "/blog-detail-futbol-femenino.html"'));
 assert.match(fs.readFileSync(path.join(root,'.htaccess'),'utf8'),/blog-detail-futbol-femenino/);
 console.log('MEN-ONLY CONTENT: PASS ('+inspected+' game/provenance banks + '+runtimePaths.length+' public files).');
