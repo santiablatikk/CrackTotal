@@ -2106,6 +2106,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function endGame(result = 'timeout') {
         if (gameEnded) return;
         gameEnded = true;
+        updateLetterStyles(); // Nunca dejar la siguiente letra "activa" al terminar.
         clearInterval(timerInterval);
     
         if (window.soundManager) {

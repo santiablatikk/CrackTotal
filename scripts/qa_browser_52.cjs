@@ -424,6 +424,8 @@ async function pasalaLiveProbe() {
     throw Error('Defeat did not preserve the fourth incorrect result');
   if(!letter('B').classList.contains('correct')||!letter('A').classList.contains('pending'))
     throw Error('End state erased earlier letter outcomes');
+  if(document.querySelectorAll('#lettersContainer .letter.active').length)
+    throw Error('Ended rosco still displays an active letter');
   return {correct,incorrect,pending,revisitedA:true,counters:stats,defeatAt:4};
 }
 
