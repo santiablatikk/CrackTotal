@@ -349,6 +349,9 @@
         }
 
         rowRatings[currentRow] = result;
+        // La interfaz pinta cada casilla escalonadamente; el modal no puede
+        // tapar el tablero antes de que termine la secuencia.
+        const revealFinishDelayMs = 90 * Math.max(0, guessArr.length - 1) + 470;
         // paint
         for (let i = 0; i < guessArr.length; i++) {
             const tile = getTile(currentRow, i);
@@ -368,9 +371,12 @@
             const attemptsUsed = currentRow + 1;
             currentRow = BOARD_ROWS; // lock
             finished = true; wonToday = true; saveGame();
-            tryConfetti();
+            document.querySelectorAll('.key').forEach(key => { key.disabled = true; });
             registerResult(true,attemptsUsed,Math.max(1,Math.floor((Date.now()-startTime)/1000)));
-            openResultModal(true);
+            setTimeout(() => {
+                tryConfetti();
+                openResultModal(true);
+            }, revealFinishDelayMs);
             return;
         }
 
@@ -378,9 +384,10 @@
         currentCol = 0;
         if (currentRow >= BOARD_ROWS) {
             finished = true; wonToday = false; saveGame();
+            document.querySelectorAll('.key').forEach(key => { key.disabled = true; });
             setMessage(`La palabra era: ${target.toUpperCase()}`);
             registerResult(false,BOARD_ROWS,Math.max(1,Math.floor((Date.now()-startTime)/1000)));
-            openResultModal(false);
+            setTimeout(() => openResultModal(false), revealFinishDelayMs);
         } else {
             saveGame();
             setMessage('Seguí intentando');

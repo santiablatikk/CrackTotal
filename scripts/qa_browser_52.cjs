@@ -502,6 +502,61 @@ async function top10LiveProbe(){
     incorrectColor,rankingAccessible:true,gameLocked:true};
 }
 
+/**
+ * Real Wordle first-try win after the existing reload/invalid-guess test.
+ * Reads the exact verified daily pool rather than injecting synthetic scores.
+ */
+async function wordleVictoryRevealProbe(){
+  const waitFor=async (test,label)=>{
+    for(let i=0;i<80;i++){const ok=test();if(ok)return ok;
+      await new Promise(resolve=>setTimeout(resolve,85));}
+    throw Error('Wordle victory timeout: '+label);
+  };
+  const state=JSON.parse(localStorage.getItem('wordle_game_state_v1')||'null');
+  if(state?.board?.[0]?.[0]!=='m'||state?.currentRow!==0)
+    throw Error('Pre-victory Wordle session unexpectedly changed');
+  const pool=await (await fetch('assets/data/wordle_pool.json')).json();
+  const d=new Date(),seed=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
+  const answer=pool[seed%92];
+  const target=String(answer.answer||answer.name||'messi').toLowerCase()
+    .normalize('NFD').replace(/\p{Diacritic}/gu,'').replace(/[^a-zñ]/g,'');
+  if(target.length!==Number(document.querySelector('#board').dataset.columns))
+    throw Error('Daily Wordle picker changed unexpectedly');
+  const key=letter=>document.querySelector('.key[data-key="'+letter+'"]');
+  key('⌫')?.click();
+  for(const letter of target){
+    const button=key(letter);
+    if(!button)throw Error('Missing key for daily football word: '+letter);
+    button.click();
+  }
+  if(document.querySelectorAll('#board [data-row="0"].filled').length!==target.length)
+    throw Error('Daily Wordle answer was not entered through visible keyboard');
+  key('↵')?.click();
+  const modal=document.getElementById('wordleResultModal');
+  if(modal?.classList.contains('active'))
+    throw Error('Wordle winner modal obscured letters before reveal animation');
+  await waitFor(()=>{
+    const tiles=[...document.querySelectorAll('#board [data-row="0"]')];
+    return tiles.length===target.length&&tiles.every(t=>t.classList.contains('correct'));
+  },'all correct tiles');
+  const tile=document.querySelector('#board [data-row="0"][data-col="0"]');
+  const neutral=document.querySelector('#board [data-row="1"][data-col="0"]');
+  const green=getComputedStyle(tile).backgroundColor;
+  if(green===getComputedStyle(neutral).backgroundColor)
+    throw Error('Wordle green correct-feedback color missing: '+green);
+  if(!tile.getAttribute('aria-label')?.includes('posición correcta'))
+    throw Error('Wordle tiles lost accessible result labels');
+  const persisted=JSON.parse(localStorage.getItem('wordle_game_state_v1')||'null');
+  if(!persisted?.finished||!persisted?.won||!persisted.rowRatings[0].every(x=>x==='correct'))
+    throw Error('Wordle completed correct state not persisted');
+  const keyboard=[...document.querySelectorAll('.key')];
+  if(!keyboard.length||keyboard.some(x=>!x.disabled))
+    throw Error('Wordle terminal game still exposes actionable keyboard controls');
+  await waitFor(()=>modal?.classList.contains('active'),'result modal after tile reveal');
+  return {answerLength:target.length,feedback:green,allCorrect:true,
+    modalAfterReveal:true,persisted:true,keyboardLocked:true};
+}
+
 async function main(){
   if (widths.some(w=>!Number.isInteger(w) || w<280 || w>3000)||!Number.isInteger(viewportHeight)||viewportHeight<480||viewportHeight>2160)throw Error('Invalid viewport');
   fs.mkdirSync(out,{recursive:true});
@@ -624,7 +679,15 @@ async function main(){
         if(restored.exceptionDetails||restored.result?.value!==true)
           throw Error('Wordle live reload failed '+width+': '+
             JSON.stringify(restored.exceptionDetails||restored.result).slice(0,800));
-        console.log('WORDLE LIVE '+width+'px: '+JSON.stringify(first.result.value));
+        const victory=await command('Runtime.evaluate',{
+          expression:'('+wordleVictoryRevealProbe.toString()+')()',
+          returnByValue:true,awaitPromise:true
+        });
+        if(victory.exceptionDetails||!victory.result?.value?.modalAfterReveal)
+          throw Error('Wordle real victory and color feedback failed '+width+': '+
+            JSON.stringify(victory.exceptionDetails||victory.result).slice(0,1100));
+        console.log('WORDLE LIVE '+width+'px: '+
+          JSON.stringify({...first.result.value,victory:victory.result.value}));
       }
       if(args.fixture==='top10-live'){
         if(game!=='top10.html')throw Error('top10-live requires Top 10');
@@ -727,7 +790,7 @@ async function main(){
     const failed=rows.filter(x=>!x.title.includes('Crack Total') || x.expectedWidth!==x.width || x.overflow>2 || x.offscreen.length);
     const summary='# Crack Total 6.0 — Chromium QA\n\n'+(args.baseline?'Before':'After')+' · '+rows.length+' viewport/page combinations · '+failed.length+' alerts\n\n'+
       (failed.map(x=>'- '+x.game+' '+x.expectedWidth+'px: title='+x.title+', overflow='+x.overflow+', offscreen='+x.offscreen.length).join('\n') || 'No reported overflow or offscreen primary controls')+
-      '\n\nScope: ' + (args.fixture === 'match' ? 'synthetic match-state layout only (no game logic or WebSocket assertions).' : args.fixture === 'top10-live' ? 'real daily Top 10 invalid, correct, duplicate, result, read-only ranking and persisted state.' : args.fixture === 'pasala-live' ? 'real solo Pasala controls, correct/wrong/pass states, computed colors, and 26-letter round persistence (no backend assertions).' : args.fixture === 'wordle-live' ? 'real local Wordle keyboard clicks, deletion, saved progress, page reload, invalid submit, and layout geometry (no backend or date rollover assertions).' : 'initial screens only. Gameplay, results, WebSocket and disconnect states require separate QA.') + '\n';
+      '\n\nScope: ' + (args.fixture === 'match' ? 'synthetic match-state layout only (no game logic or WebSocket assertions).' : args.fixture === 'top10-live' ? 'real daily Top 10 invalid, correct, duplicate, result, read-only ranking and persisted state.' : args.fixture === 'pasala-live' ? 'real solo Pasala controls, correct/wrong/pass states, computed colors, and 26-letter round persistence (no backend assertions).' : args.fixture === 'wordle-live' ? 'real local Wordle keyboard clicks, deletion, saved progress, page reload, invalid submit, color-verified victory, and terminal keyboard lock (no backend or date rollover assertions).' : 'initial screens only. Gameplay, results, WebSocket and disconnect states require separate QA.') + '\n';
     fs.writeFileSync(path.join(out,'SUMMARY.md'),summary);
     if(failed.length&&!args.baseline)process.exitCode=1;
   } finally {
