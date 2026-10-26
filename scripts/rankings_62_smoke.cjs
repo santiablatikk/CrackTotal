@@ -20,17 +20,20 @@ const data=[
  {id:'b',data:()=>({playerId:'b',name:'Beto',score:50,verified:true,verifiedBy:'server',schemaVersion:1,victories:1})}
 ];
 let callback;let cleaned=false;const snapshot=()=>({forEach:fn=>data.forEach(fn)});
+const queryOps=[];
+const query={
+ where:(field,op,val)=>{queryOps.push(['where',field,op,val]);return query;},
+ orderBy:(field,dir)=>{queryOps.push(['orderBy',field,dir]);return query;},
+ limit:n=>{queryOps.push(['limit',n]);return {
+   get:async()=>snapshot(),
+   onSnapshot:fn=>{callback=fn;return ()=>{cleaned=true;}}
+ }}
+};
 const fakeDb={collection:root=>{
  assert.equal(root,'leaderboard_scopes');
  return {doc:scope=>{
    assert.equal(scope,'global');
-   return {collection:child=>{
-     assert.equal(child,'entries');
-     return {orderBy:()=>({limit:n=>({
-       get:async()=>snapshot(),
-       onSnapshot:fn=>{callback=fn;return ()=>{cleaned=true;}}
-     })})};
-   }};
+   return {collection:child=>{assert.equal(child,'entries');return query;}};
  }};
 }};
 const window={db:fakeDb,CrackTotalServices:{}};
@@ -38,13 +41,27 @@ vm.runInNewContext(svc,{window,Date,Promise,Number,String,Array,Object,Error,Typ
 const ranking=window.CrackTotalServices.RankingService;
 const updates=[];const stop=ranking.subscribe('global',v=>updates.push(JSON.parse(JSON.stringify(v))),10);
 callback(snapshot());
+assert.deepEqual(queryOps.slice(0,7),[
+ ['where','verified','==',true],
+ ['where','verifiedBy','==','server'],
+ ['where','schemaVersion','==',1],
+ ['orderBy','score','desc'],
+ ['orderBy','victories','desc'],
+ ['orderBy','playerId','asc'],
+ ['limit',10]
+],'Verified filters must run before the score-limit and tie-breaking belongs to Firestore');
 assert.deepEqual(updates[0].items.map(v=>v.name),['Beto','Ana']);
 assert.equal(updates[0].source,'verified-firestore');
 data[0]={id:'a',data:()=>({playerId:'a',name:'Ana',score:75,verified:true,verifiedBy:'server',schemaVersion:1,victories:2})};
 callback(snapshot());
 assert.deepEqual(updates[1].items.map(v=>v.name),['Ana','Beto']);
+data.push({id:'c',data:()=>({playerId:'c',name:'Carlos',score:75,verified:true,
+ verifiedBy:'server',schemaVersion:1,victories:7})});
+callback(snapshot());
+assert.deepEqual(updates[2].items.map(v=>v.playerId),['c','a','b'],
+ 'Equal-score players must be sorted by victories then stable ID');
 stop();assert(cleaned);
 ranking.getRanking('global',10).then(r=>{
- assert.equal(r.items.length,2);
+ assert.equal(r.items.length,3);
  console.log('PASS 6.2: only server-verified players, live reorder, unsubscribe, no mock ranking');
 }).catch(e=>{console.error(e);process.exitCode=1});

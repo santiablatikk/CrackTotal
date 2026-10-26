@@ -49,7 +49,37 @@
           "order": "DESCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "entries",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "verified",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "verifiedBy",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "schemaVersion",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "score",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "victories",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "playerId",
+          "order": "ASCENDING"
+        }
+      ]
     }
   ],
   "fieldOverrides": []
-} 
+}
