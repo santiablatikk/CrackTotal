@@ -108,7 +108,16 @@
       "source_urls": [
         "https://inside.fifa.com/es/news/feliz-cumpleanos-2834504-x0194"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Ronaldo_Naz%C3%A1rio.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Ronaldo_Naz%C3%A1rio.jpg",
+        "creator": "Dmitriy Sadovnikov",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Retrato de Ronaldo Nazário, 14 de junio de 2018; fotografía de Dmitriy Sadovnikov/soccer.ru.",
+        "checked_at": "2026-10-26"
+      }
     },
     {
       "id": "ronaldinho",
@@ -139,7 +148,16 @@
       "source_urls": [
         "https://inside.fifa.com/es/news/ronaldinho-punto-y-final-2926510"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Ronaldinho.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Ronaldinho.jpg",
+        "creator": "Darz Mol",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Ronaldinho durante el FC Barcelona–Numancia, 3 de octubre de 2004. Fotografía original de Darz Mol.",
+        "checked_at": "2026-10-26"
+      }
     },
     {
       "id": "dimaria",
@@ -315,7 +333,16 @@
       "source_urls": [
         "https://publications.fifa.com/es/annual-report-2020/obituaries-20/"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Diego_Maradona_2017_%28headshot%29.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Diego_Maradona_2017_(headshot).jpg",
+        "creator": "Dmitriy Sadovnikov",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Diego Maradona, diciembre de 2017; recorte de fotografía de Dmitriy Sadovnikov/soccer.ru.",
+        "checked_at": "2026-10-26"
+      }
     },
     {
       "id": "lewandowski",
@@ -396,7 +423,16 @@
       "source_urls": [
         "https://www.fifa.com/es/articles/influencia-zidane-real-madrid-juventus"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Zinedine-Zidane.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Zinedine-Zidane.jpg",
+        "creator": "Raphaël Labbé",
+        "license": "CC BY-SA 2.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+        "caption": "Fotografía de Zinedine Zidane, 7 de septiembre de 2008, por Raphaël Labbé.",
+        "checked_at": "2026-10-26"
+      }
     },
     {
       "id": "modric",
