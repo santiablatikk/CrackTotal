@@ -28,7 +28,16 @@
       "source_urls": [
         "https://www.fifa.com/es/articles/en-que-equipos-jugo-lionel-messi-partidos-titulos-y-carrera-del-argentino"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Lionel_Messi_20180626_%283x4_cropped%29.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Lionel_Messi_20180626_(3x4_cropped).jpg",
+        "creator": "Kirill Venediktov",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Fotografía del Mundial 2018. Imagen recortada a partir de original de soccer.ru.",
+        "checked_at": "2026-10-26"
+      }
     },
     {
       "id": "cristiano",
@@ -58,7 +67,16 @@
         "https://www.fifa.com/es/tournaments/mens/worldcup/articles/26-superestrellas-cristiano-ronaldo",
         "https://www.fifa.com/es/tournaments/mens/worldcup/canadamexicousa2026/articles/cristiano-ronaldo-maximo-goleador-portugues-en-copa-del-mundo"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Cristiano_Ronaldo_2018.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Cristiano_Ronaldo_2018.jpg",
+        "creator": "Anna Nessi",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Fotografía durante Portugal-España en el Mundial 2018, publicada por soccer.ru.",
+        "checked_at": "2026-10-26"
+      }
     },
     {
       "id": "ronaldo9",
@@ -947,5 +965,6 @@
       ],
       "verified_at": "2026-10-24"
     }
-  ]
+  ],
+  "visual_asset_policy": "Solo imágenes reales con permiso verificable y atribución. Retratos ocultos durante la pregunta; resto de jugadores con fallback textual."
 }
