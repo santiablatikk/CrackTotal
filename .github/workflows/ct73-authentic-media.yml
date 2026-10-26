@@ -1,12 +1,13 @@
 name: CT7.3 licensed imagery and browser quality
+# Run once per PR revision, instead of both push and PR events for the same SHA.
 on:
-  push:
-    branches:
-      - feature/crack-total-7-3-authentic-visuals
   pull_request:
     branches:
       - feature/crack-total-7-2-content-missions
   workflow_dispatch:
+concurrency:
+  group: ct73-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
