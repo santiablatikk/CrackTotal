@@ -179,7 +179,7 @@
   }
   function showPlay() {
     var rec = current(); if (!rec) { finish(); return; }
-    setScreen('play'); updateHeader(); buildClues(rec);
+    setScreen('play'); renderAnswerPortrait(null); updateHeader(); buildClues(rec);
     $('questionHeading').textContent = mode === 'identity' ? 'UN NOMBRE. CUATRO PISTAS.' : 'RECONSTRUÍ LA TRAYECTORIA.';
     $('guessInput').value = '';
     status('');
