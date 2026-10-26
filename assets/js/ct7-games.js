@@ -73,6 +73,60 @@
     return mode === 'identity' ? 1 : Math.min(2, Math.max(1, rec.clubs.length - 1));
   }
   function availableClues(rec) { return mode === 'identity' ? rec.hints : rec.clubs; }
+
+  // Approved portraits appear ONLY when a round is resolved. Never spoil the question.
+  function approvedPortrait(rec) {
+    var p = rec && rec.portrait;
+    if (!p || p.license !== 'CC BY-SA 3.0' ||
+        p.license_url !== 'https://creativecommons.org/licenses/by-sa/3.0/' ||
+        !/^https:\/\/commons\.wikimedia\.org\/wiki\/Special:FilePath\/[A-Za-z0-9_%().-]+\.jpg\?width=480$/.test(p.url) ||
+        !/^https:\/\/commons\.wikimedia\.org\/wiki\/File:[^?#]+\.jpg$/.test(p.source_page) ||
+        !p.creator || !p.checked_at) return null;
+    return p;
+  }
+  function renderAnswerPortrait(rec) {
+    var target = $('answerPortrait');
+    target.replaceChildren();
+    target.hidden = true;
+    var portrait = approvedPortrait(rec);
+    if (!portrait) return;
+    var figure = document.createElement('figure');
+    figure.className = 'ct7-portrait-figure';
+    var image = document.createElement('img');
+    image.className = 'ct7-player-portrait';
+    image.loading = 'lazy';
+    image.decoding = 'async';
+    image.width = 200; image.height = 264;
+    image.alt = 'Fotografía de ' + rec.name;
+    image.src = portrait.url;
+    image.addEventListener('error', function () { target.hidden = true; target.replaceChildren(); });
+    var caption = document.createElement('figcaption');
+    var attribution = document.createElement('a');
+    attribution.href = portrait.source_page;
+    attribution.target = '_blank';
+    attribution.rel = 'noopener noreferrer';
+    attribution.textContent = 'Foto: ' + portrait.creator + ' · ' + portrait.license;
+    var licenseLink = document.createElement('a');
+    licenseLink.href = portrait.license_url;
+    licenseLink.target = '_blank';
+    licenseLink.rel = 'noopener noreferrer';
+    licenseLink.textContent = 'Licencia';
+    caption.appendChild(attribution);
+    caption.appendChild(licenseLink);
+    figure.appendChild(image);
+    figure.appendChild(caption);
+    target.appendChild(figure);
+    target.hidden = false;
+  }
+  // Neutral typographic club marker. Never presented as an official crest.
+  function clubMarker(clubName) {
+    var marker = document.createElement('span');
+    marker.className = 'ct7-club-marker';
+    marker.setAttribute('aria-hidden', 'true');
+    marker.textContent = String(clubName).replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 ]/g, '')
+      .split(/\s+/).filter(Boolean).slice(0, 2).map(function (x) { return x[0]; }).join('').toUpperCase();
+    return marker;
+  }
   function setScreen(view) {
     ['start', 'play', 'answer', 'finish'].forEach(function (name) {
       $(name + 'View').hidden = name !== view;
@@ -114,7 +168,9 @@
       var content = document.createElement('span');
       content.className = 'ct7-clue-body';
       content.textContent = i < state.revealed ? items[i] : 'Pista reservada';
-      row.appendChild(counter); row.appendChild(content); list.appendChild(row);
+      row.appendChild(counter);
+      if (mode === 'career' && i < state.revealed) row.appendChild(clubMarker(items[i]));
+      row.appendChild(content); list.appendChild(row);
     }
     $('revealLabel').textContent = state.revealed + ' / ' + items.length + ' PISTAS';
     $('attemptsLabel').textContent = (3 - state.attempts) + ' INTENTOS';
@@ -166,6 +222,7 @@
     setScreen('answer'); updateHeader();
     $('answerState').textContent = won ? 'ACIERTO / JUGADA DE PRIMER NIVEL' : 'NO SALIÓ / LA PRÓXIMA ES TUYA';
     $('answerName').textContent = rec.name.toUpperCase();
+    renderAnswerPortrait(rec);
     $('answerText').textContent = mode === 'identity'
       ? 'Pistas completas: ' + rec.hints.join(' · ')
       : 'Carrera de clubes: ' + rec.clubs.join(' → ');
@@ -213,6 +270,7 @@
       setScreen('answer'); updateHeader();
       $('answerState').textContent = state.result && state.result.won ? 'ACIERTO / JUGADA DE PRIMER NIVEL' : 'NO SALIÓ / LA PRÓXIMA ES TUYA';
       $('answerName').textContent = rec.name.toUpperCase();
+      renderAnswerPortrait(rec);
       $('answerText').textContent = mode === 'identity' ? 'Pistas completas: ' + rec.hints.join(' · ') : 'Carrera de clubes: ' + rec.clubs.join(' → ');
       $('answerPoints').textContent = state.result && state.result.won ? '+' + state.result.points + ' PUNTOS' : '0 PUNTOS';
       $('answerSource').href = rec.source_urls[0];
