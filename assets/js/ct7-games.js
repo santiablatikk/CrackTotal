@@ -77,8 +77,11 @@
   // Approved portraits appear ONLY when a round is resolved. Never spoil the question.
   function approvedPortrait(rec) {
     var p = rec && rec.portrait;
-    if (!p || p.license !== 'CC BY-SA 3.0' ||
-        p.license_url !== 'https://creativecommons.org/licenses/by-sa/3.0/' ||
+    var allowedLicenses = {
+      'CC BY-SA 3.0': 'https://creativecommons.org/licenses/by-sa/3.0/',
+      'CC BY-SA 2.0': 'https://creativecommons.org/licenses/by-sa/2.0/'
+    };
+    if (!p || allowedLicenses[p.license] !== p.license_url ||
         !/^https:\/\/commons\.wikimedia\.org\/wiki\/Special:FilePath\/[A-Za-z0-9_%().-]+\.jpg\?width=480$/.test(p.url) ||
         !/^https:\/\/commons\.wikimedia\.org\/wiki\/File:[^?#]+\.jpg$/.test(p.source_page) ||
         !p.creator || !p.checked_at) return null;
