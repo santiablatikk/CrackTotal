@@ -10,8 +10,18 @@
     source:'verified-firestore',message:'Ranking verificado no disponible.',error:String(error)});
   function entries(scope,limit) {
     if(!window.db) throw new Error('Firestore no disponible');
+    // Server-created verified records only: filter BEFORE sorting/limiting.
+    // Each scope is a single collection; matching composite index is declared
+    // in firestore.indexes.json. Missing indexes fail closed (not fake scores).
     return window.db.collection('leaderboard_scopes').doc(scope)
-      .collection('entries').orderBy('score','desc').limit(size(limit));
+      .collection('entries')
+      .where('verified','==',true)
+      .where('verifiedBy','==','server')
+      .where('schemaVersion','==',1)
+      .orderBy('score','desc')
+      .orderBy('victories','desc')
+      .orderBy('playerId','asc')
+      .limit(size(limit));
   }
   function parse(snapshot,scope,limit,stream=false) {
     const items=[];
@@ -27,8 +37,9 @@
         gamesPlayed:Math.max(0,Number(d.gamesPlayed)||0),
         victories:Math.max(0,Number(d.victories)||0),meta:'Resultado validado'});
     });
+    // Reapply identical ordering in case snapshots are mocked or cached.
     items.sort((a,b)=>b.score-a.score||b.victories-a.victories||
-      a.name.localeCompare(b.name,'es')||a.playerId.localeCompare(b.playerId));
+      a.playerId.localeCompare(b.playerId));
     items.length=Math.min(items.length,size(limit));
     items.forEach((x,i)=>{x.rank=i+1;});
     return {ok:true,scope,items,updatedAt:lastUpdated?lastUpdated.toISOString():null,
