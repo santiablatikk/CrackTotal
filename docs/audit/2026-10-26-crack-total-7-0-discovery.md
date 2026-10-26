@@ -40,8 +40,8 @@ Hallazgos sobre `feature/crack-total-6-2-realtime-integrity`:
 ## Identidad visual y juegos 7.3
 
 - ¿Quién soy? y Adiviná la carrera ya comparten motor local de rondas, recuperación de sesión y registro de XP **local exclusivamente**.
-- Se incorporan metadatos de autor y CC BY-SA 3.0 para retratos reales de Messi y Cristiano Ronaldo desde Wikimedia Commons. Son imágenes históricas verificables; no fotografías generadas ni supuestamente oficiales de la temporada vigente.
-- Las imágenes aparecen **solo en resultados** y se limpian al comenzar cada nueva ronda; nunca se muestran durante la adivinanza.
+- Se incorporan metadatos de autor y CC BY-SA 3.0 para retratos reales de Messi, Cristiano Ronaldo, Ronaldo Nazário, Ronaldinho, Maradona y Zidane desde Wikimedia Commons. Son imágenes históricas verificables; no fotografías generadas ni supuestamente oficiales de la temporada vigente.
+- Las seis imágenes aparecen **solo en resultados** y se limpian al comenzar cada nueva ronda; nunca se muestran durante la adivinanza.
 - Trayectorias: marcadores tipográficos de clubes de aspecto coherente. No identificarlos como **escudos oficiales**. Una biblioteca posterior deberá validar marca, versión histórica, licencia y autorización de cada escudo.
 - Comportamiento de error: ocultar fotografía fallida y conservar nombre/resultado textual.
 - Pruebas en `scripts/ct73_media_smoke.cjs` y CI `.github/workflows/ct73-authentic-media.yml`.
