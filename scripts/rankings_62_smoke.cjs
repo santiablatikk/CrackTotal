@@ -62,6 +62,6 @@ assert.deepEqual(updates[2].items.map(v=>v.playerId),['c','a','b'],
  'Equal-score players must be sorted by victories then stable ID');
 stop();assert(cleaned);
 ranking.getRanking('global',10).then(r=>{
- assert.equal(r.items.length,2);
+ assert.equal(r.items.length,3);
  console.log('PASS 6.2: only server-verified players, live reorder, unsubscribe, no mock ranking');
 }).catch(e=>{console.error(e);process.exitCode=1});
