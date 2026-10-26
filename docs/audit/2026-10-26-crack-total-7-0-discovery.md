@@ -33,7 +33,7 @@ Hallazgos sobre `feature/crack-total-6-2-realtime-integrity`:
 2. `firestore.rules` en la rama plantea `allow write: if false` para la colección competitiva y lectura selectiva. **No consta aquí prueba de despliegue de esas reglas a Firebase**.
 3. No se encontró en la revisión un publicador productivo confiable de resultados con credenciales server-side y escrituras atómicas. Un campo `verified` en cliente no constituye garantía de legitimidad.
 4. `/matches` y `/user_stats` mantienen reglas legadas para escrituras de usuarios autenticados; **no deben promoverse directamente** a un leaderboard competitivo.
-5. La consulta ordena por `score` y limita resultados antes del filtro de validación y los desempates en cliente. Puede descartar posiciones válidas si los datos recuperados no cumplen el contrato o hay empates en el corte. Diseñar clasificación/índices y migración con pruebas de Firestore antes de activar competición.
+5. **Corregido en la PR #8 (no desplegado):** la consulta anterior limitaba resultados antes del filtro de validación y los desempates en el cliente. Ahora filtra `verified/verifiedBy/schemaVersion` y ordena por `score DESC, victories DESC, playerId ASC` directamente en Firestore antes de `limit()`. Se agregó el índice compuesto correspondiente en `firestore.indexes.json` y una prueba unitaria de contrato de consulta. Pendiente: creación efectiva de ese índice, comprobación de seguridad de reglas, identidad autenticada y E2E remoto con datos reales.
 
 **Gate innegociable:** partida terminada con dos clientes externos; resultado computado por servidor; persistencia única e inmutable/auditable; actualización atómica de estadísticas; lectura Firestore desde otra sesión; intento de manipulación y de duplicación rechazados. Sin este gate, mostrar ranking vacío o no disponible, jamás simulado.
 
@@ -62,3 +62,11 @@ Hallazgos sobre `feature/crack-total-6-2-realtime-integrity`:
 6. Auditar licencias y recursos de escudos antes de incorporarlos a los juegos públicos.
 
 **Producción deliberadamente sin cambios en este trabajo.**
+
+## 26/10 — CI y notificaciones duplicadas
+
+- El correo de Actions que reporta fallo de `da211a7` pertenece a un SHA anterior, no al último commit aprobado.
+- Se eliminaron triggers `push` redundantes del workflow de la PR #8; se conserva `pull_request` y `workflow_dispatch`, con `concurrency.cancel-in-progress` para revisiones superadas.
+- Se restringió el workflow 6.2 a su rama propia y a PRs cuyo destino es `main`. La PR #8 **sigue ejecutando** `npm test` completo, sin silenciar errores.
+- Tras estos cambios, `CT7.3 licensed imagery and browser quality` finalizó correctamente para el commit `00a2c0524902b156d682776096590c6bb709c6f2` (run `40380933884`; regresión y navegador verde).
+- Estos cambios no pueden retractar correos de ejecuciones anteriores. Nuevos fallos deben diagnosticarse; no usar `continue-on-error` para esconderlos.
