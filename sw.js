@@ -3,7 +3,7 @@
  * Offline play is limited to four editorial SOLO modes; competitive play needs network.
  */
 'use strict';
-const VERSION='ct71-20261024-offline-2';
+const VERSION='ct75-20261027-offline-3';
 const PREFIX='ct7-offline-';
 const CACHE=PREFIX+VERSION;
 const LEGACY=/^crack-total(?:-static|-dynamic|-images|-api)?-v/i;
@@ -19,6 +19,8 @@ const ASSETS=[
   '/assets/css/ct7-games.css',
   '/assets/css/ct7-timeline.css',
   '/assets/css/ct71-conexiones.css',
+  '/assets/css/ct74-unified.css',
+  '/assets/css/ct7-pwa.css',
   '/assets/css/design-system/tokens.css',
   '/assets/icons/ct7-app.svg',
   '/portada.ico'
