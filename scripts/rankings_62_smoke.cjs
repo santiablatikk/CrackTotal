@@ -60,6 +60,20 @@ data.push({id:'c',data:()=>({playerId:'c',name:'Carlos',score:75,verified:true,
 callback(snapshot());
 assert.deepEqual(updates[2].items.map(v=>v.playerId),['c','a','b'],
  'Equal-score players must be sorted by victories then stable ID');
+// Corrupt or untrusted-looking leaderboard documents must fail closed.
+data.push({id:'bad-number',data:()=>({playerId:'bad-number',name:'Corrupt',
+ score:999999,verified:true,verifiedBy:'server',schemaVersion:1,
+ gamesPlayed:Infinity,victories:0})});
+data.push({id:'bad-name',data:()=>({playerId:'bad-name',name:'   ',
+ score:999999,verified:true,verifiedBy:'server',schemaVersion:1})});
+data.push({id:'bad-wins',data:()=>({playerId:'bad-wins',name:'Wins',
+ score:999999,verified:true,verifiedBy:'server',schemaVersion:1,
+ gamesPlayed:1,victories:1000})});
+data.push({id:'bad-id!',data:()=>({playerId:'bad-id!',name:'Invalid key',
+ score:999999,verified:true,verifiedBy:'server',schemaVersion:1})});
+callback(snapshot());
+assert.deepEqual(updates[3].items.map(v=>v.playerId),['c','a','b'],
+ 'Malformed verified rows must not enter the public competitive board');
 stop();assert(cleaned);
 ranking.getRanking('global',10).then(r=>{
  assert.equal(r.items.length,3);

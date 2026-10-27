@@ -26,7 +26,19 @@ jobs:
       - name: Ten games at eight widths in Chromium
         run: |
           export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
-          node scripts/qa_browser_52.cjs --root . --out "$RUNNER_TEMP/ct74-all" --games pasalache.html,pasala-1v1.html,quiensabemas.html,mentiroso.html,top10.html,wordle-futbol.html,quien-soy.html,adivina-carrera.html,ordena-historia.html,conexiones.html --widths 320,360,390,430,768,1024,1366,1920
+          test -x "$CHROME_BIN"
+          # Retry once ONLY when headless Chromium fails to expose CDP.
+          # Any actual game/layout assertion fails immediately.
+          for attempt in 1 2; do
+            if node scripts/qa_browser_52.cjs --root . --out "$RUNNER_TEMP/ct74-all" --games pasalache.html,pasala-1v1.html,quiensabemas.html,mentiroso.html,top10.html,wordle-futbol.html,quien-soy.html,adivina-carrera.html,ordena-historia.html,conexiones.html --widths 320,360,390,430,768,1024,1366,1920 > "$RUNNER_TEMP/ct74-browser.log" 2>&1; then
+              cat "$RUNNER_TEMP/ct74-browser.log"
+              break
+            fi
+            cat "$RUNNER_TEMP/ct74-browser.log"
+            if ! grep -q 'Cannot access Chrome DevTools protocol (port discovery timed out)' "$RUNNER_TEMP/ct74-browser.log" || [ "$attempt" -eq 2 ]; then exit 1; fi
+            echo "Chromium CDP launch failed; retrying in fresh process"
+            sleep 2
+          done
       - name: Real gameplay for four new modes
         run: |
           export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
