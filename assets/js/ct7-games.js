@@ -84,8 +84,8 @@
       'CC BY-SA 4.0': 'https://creativecommons.org/licenses/by-sa/4.0/'
     };
     if (!p || allowedLicenses[p.license] !== p.license_url ||
-        !/^https:\/\/commons\.wikimedia\.org\/wiki\/Special:FilePath\/[A-Za-z0-9_%().-]+\.jpg\?width=480$/.test(p.url) ||
-        !/^https:\/\/commons\.wikimedia\.org\/wiki\/File:[^?#]+\.jpg$/.test(p.source_page) ||
+        !/^https:\/\/commons\.wikimedia\.org\/wiki\/Special:FilePath\/[A-Za-z0-9_%().-]+\.(?:jpg|JPG)\?width=480$/.test(p.url) ||
+        !/^https:\/\/commons\.wikimedia\.org\/wiki\/File:[^?#]+\.(?:jpg|JPG)$/.test(p.source_page) ||
         !p.creator || !p.checked_at || !p.caption) return null;
     return p;
   }
