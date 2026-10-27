@@ -132,6 +132,37 @@ async function checkRejectedOrigin(port) {
     });
   });
 }
+// The actual Render staging web page must be authorized even if the
+// configurable preview-origin allowlist only mentions Netlify.
+async function checkActualRenderSameOrigin(port) {
+  const socket = new WebSocket('ws://127.0.0.1:' + port, {
+    origin: 'https://cracktotal-arena-staging.onrender.com'
+  });
+  try {
+    await new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => reject(new Error('Render staging origin handshake timed out')), 4000);
+      const finish = (error) => {
+        clearTimeout(timeout);
+        if (error) reject(error); else resolve();
+      };
+      socket.once('error', finish);
+      socket.once('unexpected-response', (request, response) => {
+        response.resume();
+        finish(new Error('Staging rejected its own origin: HTTP ' + response.statusCode));
+      });
+      socket.on('message', raw => {
+        try {
+          const event = JSON.parse(String(raw));
+          if (event.type === 'arena:hello') {
+            assert.equal(event.payload.protocol, 'cracktotal-arena-5.2');
+            assert.equal(event.payload.features.pasalaDuel, true);
+            finish();
+          }
+        } catch (error) { finish(error); }
+      });
+    });
+  } finally { socket.terminate(); }
+}
 async function main() {
   const port = await reservePort();
   serverProcess = spawn(process.execPath, ['server.js'], {
@@ -148,6 +179,7 @@ async function main() {
   });
   await awaitHealthy(port);
   await checkRejectedOrigin(port);
+  await checkActualRenderSameOrigin(port);
 
   let host = await connect(port);
   const opponent = await connect(port);

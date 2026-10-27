@@ -1,0 +1,49 @@
+name: CT7.3 licensed imagery and browser quality
+# Run once per PR revision, instead of both push and PR events for the same SHA.
+on:
+  pull_request:
+    branches:
+      - feature/crack-total-7-2-content-missions
+  workflow_dispatch:
+concurrency:
+  group: ct73-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Media provenance, no-spoiler and full regression
+        run: npm test
+      - name: Release asset integrity
+        run: node scripts/release_asset_integrity.js
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Real game play at mobile and desktop widths
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node scripts/qa_browser_52.cjs \
+            --root . --out "$RUNNER_TEMP/ct73-browser" \
+            --games quien-soy.html,adivina-carrera.html \
+            --fixture ct7-live --widths 320,390,768,1366
+      - name: Browser screenshots and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ct73-browser-evidence
+          path: ${{ runner.temp }}/ct73-browser/
+          if-no-files-found: warn

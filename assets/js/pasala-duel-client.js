@@ -10,13 +10,21 @@
   const state = { ws: null, connected: false, room: null, selfId: null, spectator: watchOnly,
     roomId: null, question: null, statuses: {}, result: null, reconnecting: false,
     clockTimer: null, retryTimer: null, manualLeave: false, clockOffset: 0, pendingAction: false,
-    pendingAnswer: null, connectionSlowTimer: null };
-  const isStaticPreview = /(?:^|\.)netlify\.app$/i.test(location.hostname) || /(?:^|\.)netlify\.com$/i.test(location.hostname);
-  // Connect automatically only on the exact isolated PR preview; never on production or other Netlify sites.
-  const previewStaging = location.hostname === 'deploy-preview-1--zingy-haupia-53b742.netlify.app'
-    ? 'wss://cracktotal-arena-staging.onrender.com' : '';
-  const urlOverride = params.get('server') || window.CRACK_TOTAL_DUEL_WS_URL || previewStaging;
-  const wsUrl = urlOverride || (!isStaticPreview ? ((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host) : '');
+    pendingAnswer: null, connectionSlowTimer: null, helloTimer: null };
+  // The public website is STATIC. It has no WebSocket backend on location.host.
+  // Only an explicitly configured, compatible production Arena may be used.
+  const STAGING='wss://cracktotal-arena-staging.onrender.com';
+  const isStaging=location.hostname==='cracktotal-arena-staging.onrender.com' ||
+    location.hostname==='deploy-preview-1--zingy-haupia-53b742.netlify.app';
+  const isLocal=/^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  const isProduction=['cracktotal.com','www.cracktotal.com',
+    'cracktotal-pz9u.onrender.com'].includes(location.hostname);
+  const provided=String(window.CRACK_TOTAL_DUEL_WS_URL||'');
+  const override=isLocal||isStaging ? String(params.get('server')||'') : '';
+  const isStaticPreview=/(?:^|\.)netlify\.(?:app|com)$/i.test(location.hostname) || isLocal;
+  const urlOverride=override || (isStaging ? STAGING : '');
+  const wsUrl=urlOverride || (isProduction ? provided : '');
+
   const safeCode = code => /^[A-F0-9]{10}$/.test(code);
   const savedSession = () => { try { return JSON.parse(sessionStorage.getItem(storageKey) || 'null'); } catch { return null; } };
   const name = () => $('playerName').value.trim().slice(0,24) || 'Jugador';
@@ -52,12 +60,13 @@
   function connect() {
     setLobbyAvailability(false);
     if (!wsUrl) {
-      notice('Esta vista previa es estática: para jugar online falta desplegar el servidor WebSocket de esta rama. Podés explorar la interfaz.', true);
+      notice('El modo 1v1 necesita un servidor compatible. No hay conexión online habilitada para esta dirección.', true);
       $('reconnectButton').hidden = true; return;
     }
     if (!/^wss:\/\//i.test(wsUrl) && !/^ws:\/\/(localhost|127\.0\.0\.1)(:\d+)?\/?$/i.test(wsUrl)) {
       notice('La dirección del servidor debe usar una conexión segura (wss://).', true); return;
     }
+    if (state.helloTimer) { clearTimeout(state.helloTimer); state.helloTimer = null; }
     if (state.ws) { state.ws.onclose = null; state.ws.close(); }
     notice('Conectando al servidor del duelo…');
     if (state.connectionSlowTimer) clearTimeout(state.connectionSlowTimer);
@@ -68,30 +77,56 @@
     try { ws = new WebSocket(wsUrl); }
     catch { notice('No se pudo abrir el servidor de la arena. Revisá su dirección.', true); return; }
     state.ws = ws; state.connected = false;
-    ws.onopen = () => {
-      if (state.ws !== ws) return;
+    let incompatible = false;
+    const activateCompatibleArena = () => {
+      if (state.ws !== ws || state.connected) return;
       state.connected = true;
+      if (state.helloTimer) { clearTimeout(state.helloTimer); state.helloTimer = null; }
       if (state.connectionSlowTimer) clearTimeout(state.connectionSlowTimer);
-      setLobbyAvailability(true); notice('Arena conectada. Lista para jugar.');
+      setLobbyAvailability(true); notice('Arena compatible y conectada. Lista para jugar.');
       if (watchOnly && safeCode(initialRoom)) send('spectate', { roomId: initialRoom });
       else if (savedSession()?.roomId && savedSession()?.reconnectToken && savedSession()?.endpoint === wsUrl && !state.manualLeave && (!safeCode(initialRoom) || initialRoom === savedSession().roomId)) {
         state.reconnecting = true; send('resume', { roomId: savedSession().roomId, reconnectToken: savedSession().reconnectToken });
       } else if (state.spectator && safeCode(state.roomId || initialRoom)) send('spectate', { roomId: state.roomId || initialRoom });
       else if (safeCode(initialRoom)) send('join', { roomId: initialRoom, name: name() });
     };
+    ws.onopen = () => {
+      if (state.ws !== ws) return;
+      // WebSocket OPEN is not proof of game compatibility.
+      notice('Verificando la versión del servidor de duelos…');
+      state.helloTimer = setTimeout(() => {
+        if (state.ws !== ws || state.connected) return;
+        notice('El servidor no confirmó compatibilidad con Pasala Che 1v1.', true);
+        ws.close();
+      }, 10000);
+    };
     ws.onmessage = event => {
       if (state.ws !== ws) return;
       let message; try { message = JSON.parse(event.data); } catch { return; }
-      if (typeof message.type !== 'string' || !message.type.startsWith('pasala:')) return;
+      if (!message || typeof message !== 'object') return;
+      if (message.type === 'arena:hello') {
+        if (message.payload?.protocol !== 'cracktotal-arena-5.2' ||
+            message.payload?.features?.pasalaDuel !== true) {
+          incompatible = true;
+          notice('El servidor usa una versión incompatible de Pasala Che 1v1.', true);
+          ws.close();
+          return;
+        }
+        activateCompatibleArena();
+        return;
+      }
+      if (!state.connected || typeof message.type !== 'string' || !message.type.startsWith('pasala:')) return;
       receive(message.type.slice(7), message.payload || {});
     };
     ws.onerror = () => notice('No se pudo establecer la conexión. Revisá que el servidor de duelos esté activo.', true);
     ws.onclose = () => {
       if (state.ws !== ws) return;
       state.connected = false; setLobbyAvailability(false); setActionControls(false);
+      if (state.helloTimer) { clearTimeout(state.helloTimer); state.helloTimer = null; }
       if (state.connectionSlowTimer) clearTimeout(state.connectionSlowTimer);
-      notice('Conexión interrumpida. Intentando volver a la sala…', true);
-      if (!state.manualLeave && wsUrl && !state.retryTimer) {
+      notice(incompatible ? 'Versión incompatible. No se puede iniciar el duelo.' :
+        'Conexión interrumpida. Intentando volver a la sala…', true);
+      if (!incompatible && !state.manualLeave && wsUrl && !state.retryTimer) {
         state.retryTimer = setTimeout(() => { state.retryTimer = null; connect(); }, 3500);
       }
     };

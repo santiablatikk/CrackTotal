@@ -1,0 +1,120 @@
+{
+  "version": "2026-10-24-ct71-connect1",
+  "editorial_scope": "men-senior-football",
+  "as_of": "2026-10-24",
+  "notes": "Cada grupo corresponde a cuatro futbolistas titulares de UNA final concreta. Las pistas no aceptan carreras completas ni nacionalidades: se evalúa el once de esa final.",
+  "puzzles": [
+    {
+      "id": "mundiales-once",
+      "title": "CUATRO GENERACIONES",
+      "eyebrow": "ARCHIVO / MUNDIALES",
+      "description": "Dieciséis futbolistas. Cuatro selecciones campeonas. Todos fueron titulares en la final de su respectivo Mundial.",
+      "groups": [
+        {
+          "id": "esp2010",
+          "title": "ESPAÑA · FINAL 2010",
+          "source_url": "https://www.fifa.com/es/tournaments/mens/worldcup/articles/todos-partidos-espana-mundial",
+          "members": [
+            "Iker Casillas",
+            "Carles Puyol",
+            "Xavi Hernández",
+            "Andrés Iniesta"
+          ],
+          "verified_at": "2026-10-24"
+        },
+        {
+          "id": "ale2014",
+          "title": "ALEMANIA · FINAL 2014",
+          "source_url": "https://www.fifa.com/de/tournaments/mens/worldcup/articles/wm-titel-deutschland-ueberblick-ergebnisse-torschuetzen-kader",
+          "members": [
+            "Philipp Lahm",
+            "Toni Kroos",
+            "Miroslav Klose",
+            "Mesut Özil"
+          ],
+          "verified_at": "2026-10-24"
+        },
+        {
+          "id": "fra2018",
+          "title": "FRANCIA · FINAL 2018",
+          "source_url": "https://inside.fifa.com/tournaments/mens/worldcup/2018russia/news/worldcupathome-france-croatia-russia-2018-3072767",
+          "members": [
+            "Kylian Mbappé",
+            "Paul Pogba",
+            "Antoine Griezmann",
+            "Olivier Giroud"
+          ],
+          "verified_at": "2026-10-24"
+        },
+        {
+          "id": "arg2022",
+          "title": "ARGENTINA · FINAL 2022",
+          "source_url": "https://www.fifa.com/en/tournaments/mens/worldcup/articles/argentina-france-2022-final-greatest-games",
+          "members": [
+            "Lionel Messi",
+            "Ángel Di María",
+            "Julián Álvarez",
+            "Enzo Fernández"
+          ],
+          "verified_at": "2026-10-24"
+        }
+      ]
+    },
+    {
+      "id": "champions-finales",
+      "title": "NOCHES DE EUROPA",
+      "eyebrow": "ARCHIVO / CHAMPIONS",
+      "description": "Cuatro finales de Champions League. Agrupá los titulares que levantaron la Orejona en cada una.",
+      "groups": [
+        {
+          "id": "bar11",
+          "title": "BARCELONA · FINAL 2011",
+          "source_url": "https://www.uefa.com/uefachampionsleague/news/0250-0c50f8161545-f1d22c5e52ca-1000--barcelona-crowned-as-messi-and-villa-see-off-united/",
+          "members": [
+            "Lionel Messi",
+            "Andrés Iniesta",
+            "Xavi Hernández",
+            "David Villa"
+          ],
+          "verified_at": "2026-10-24"
+        },
+        {
+          "id": "mad17",
+          "title": "REAL MADRID · FINAL 2017",
+          "source_url": "https://www.uefa.com/uefachampionsleague/match/2019641/events/",
+          "members": [
+            "Cristiano Ronaldo",
+            "Sergio Ramos",
+            "Luka Modrić",
+            "Marcelo"
+          ],
+          "verified_at": "2026-10-24"
+        },
+        {
+          "id": "liv19",
+          "title": "LIVERPOOL · FINAL 2019",
+          "source_url": "https://www.uefa.com/uefachampionsleague/match/2025486--tottenham-vs-liverpool/events/",
+          "members": [
+            "Mohamed Salah",
+            "Sadio Mané",
+            "Virgil van Dijk",
+            "Roberto Firmino"
+          ],
+          "verified_at": "2026-10-24"
+        },
+        {
+          "id": "bay20",
+          "title": "BAYERN · FINAL 2020",
+          "source_url": "https://www.uefa.com/uefachampionsleague/news/0260-102bd7b338ad-016d4aaba4d4-1000--champions-league-final-preview/",
+          "members": [
+            "Manuel Neuer",
+            "Thomas Müller",
+            "Robert Lewandowski",
+            "Alphonso Davies"
+          ],
+          "verified_at": "2026-10-24"
+        }
+      ]
+    }
+  ]
+}

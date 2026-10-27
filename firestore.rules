@@ -33,6 +33,14 @@ service cloud.firestore {
         && request.auth.uid == userId;
     }
     
+    // Resultados de clasificación validados por el backend. Los clientes
+    // solo pueden leer; Admin SDK escribe fuera de las reglas de cliente.
+    match /leaderboard_scopes/{scope}/entries/{playerId} {
+      allow read: if scope in ['global','weekly','monthly','pasalache',
+        'pasala-duel','quiensabemas','mentiroso','top10','wordle'];
+      allow write: if false;
+    }
+
     // ================================
     // REGLAS POR DEFECTO
     // ================================

@@ -50,6 +50,7 @@
     <link rel="stylesheet" href="assets/css/design-system/index.css?v=20261020v5">
 <link rel="stylesheet" href="assets/css/layout.css?v=202505272312">
     <link rel="stylesheet" href="assets/css/profile.css?v=202505272312">
+    <link rel="stylesheet" href="assets/css/ct7-profile.css?v=20261024v1">
     <link rel="stylesheet" href="assets/css/gamification.css?v=20260801e">
     <link rel="stylesheet" href="assets/css/performance.css?v=202505272312">
     <link rel="stylesheet" href="assets/css/ranking.css?v=202505272312">
@@ -117,6 +118,8 @@
     <script type="module" src="assets/js/firebase-init.js"></script>
     <link rel="stylesheet" href="assets/css/home.css?v=20260804v">
     <link rel="stylesheet" href="assets/css/discover.css?v=20260804v">
+    <link rel="manifest" href="/config/manifest.json?v=20261024-71">
+    <link rel="stylesheet" href="/assets/css/ct7-pwa.css?v=20261024-71">
 </head>
 <body class="discover-page profile-body ct-ds">
     <!-- Skip Link para accesibilidad -->
@@ -145,6 +148,27 @@
         <main id="main-content" class="game-content profile-container discover-main">
             <div class="container">
                 <h2 class="profile-title">Tu Perfil de Jugador</h2>
+
+                <section id="ct7LocalProgress" class="ct7-profile" aria-labelledby="ct7-local-title">
+                    <div class="ct7-profile-heading"><span>07 / TU LIBRETA DE CANCHA</span><h3 id="ct7-local-title">EL EXPEDIENTE.</h3>
+                        <p>Estadísticas de ¿Quién soy? y Adiviná la carrera, guardadas en este dispositivo. No son resultados competitivos certificados ni se publican en rankings.</p>
+                    </div>
+                    <div class="ct7-profile-stats" aria-label="Tus estadísticas locales">
+                        <div><span>XP LOCAL</span><strong id="ct7ProfileXp">0</strong></div>
+                        <div><span>ACIERTOS</span><strong id="ct7ProfileCorrect">0</strong></div>
+                        <div><span>RONDAS</span><strong id="ct7ProfileRounds">0</strong></div>
+                        <div><span>RACHA DIARIA</span><strong id="ct7ProfileStreak">0</strong></div>
+                    </div>
+                    <p class="ct7-profile-medals" id="ct7ProfileMedals">Sin medallas locales todavía.</p>
+                    <h4>ÚLTIMAS JUGADAS</h4>
+                    <ol id="ct7ProfileHistory" class="ct7-profile-history"><li>Todavía no jugaste estos dos modos.</li></ol>
+                    <div class="ct7-profile-actions">
+                        <a href="quien-soy.html">JUGAR ¿QUIÉN SOY? ↗</a>
+                        <a href="adivina-carrera.html">ADIVINÁ LA CARRERA ↗</a>
+                        <button type="button" id="ct7ClearLocal">BORRAR PROGRESO LOCAL</button>
+                    </div>
+                    <p class="ct7-profile-note" id="ct7ProfileNotice" role="status" aria-live="polite"></p>
+                </section>
 
                 <section class="profile-identity-card" aria-labelledby="profile-identity-title">
                     <div class="profile-identity-icon ct-avatar ct-avatar--lg" id="profileIdentityAvatar" aria-hidden="true">
@@ -417,10 +441,12 @@
     <script type="module" src="assets/js/profile.js?v=202505272312"></script>
     <script type="module" src="assets/js/firebase-utils.js"></script>
     <script src="assets/js/profile-gamification.js?v=20260801f"></script>
+    <script defer src="assets/js/ct7-profile.js?v=20261024v1"></script>
     <script src="assets/js/components/navbar.js?v=20260803n"></script>
     <script src="assets/js/components/footer.js?v=20260803n"></script>
     <script src="assets/js/components/shell.js?v=20260803n"></script>
   <script src="assets/js/cookie-consent.js?v=20260804a"></script>
+  <script src="/assets/js/ct7-pwa.js?v=20261024-71" defer></script>
 </body>
 </html> 
 

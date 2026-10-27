@@ -28,7 +28,13 @@ for (const q of all) {
 }
 assert.equal(verified.questions.length, verified.newQuestionCount);
 assert.equal(verified.newQuestionCount, 29);
-for (const fact of verified.questions) {
+// The 2026-10-19 provenance ledger is historical. Its retired women's
+// questions remain in the ledger for auditability, never in active men's banks.
+const retiredHistory = /femenin|women(?:'s)?|Ullevaal|Pajor/i;
+const activeOriginalFacts = verified.questions.filter(f => !retiredHistory.test(f.pregunta));
+assert.equal(verified.questions.length - activeOriginalFacts.length, 5,
+  'Exactly five formerly sourced facts have left the active male-only Pasala bank');
+for (const fact of activeOriginalFacts) {
   const q = all.find(row => row.letter === fact.letter && row.pregunta === fact.pregunta);
   assert.ok(q, 'Missing sourced Pasala fact: ' + fact.pregunta);
   assert.equal(q.respuesta, fact.respuesta);
@@ -41,7 +47,7 @@ for (const fact of verified.questions) {
   assert.equal(new Set(acceptable).size, acceptable.length, 'Redundant alias: ' + fact.pregunta);
 }
 const official = top10.filter(x => x.source_url && x.verified_at);
-assert.equal(official.length, 7, 'Seven official UEFA challenges must be available');
+assert.equal(official.length, 6, 'Six in-scope UEFA Top 10 challenges must be available');
 for (const topic of official) {
   assert.equal(topic.verified_at, verified.cutoff);
   assert.match(topic.source_url, /^https:\/\/www\.uefa\.com\//);
@@ -60,8 +66,8 @@ assert.ok(wordle.every(item => item.answer && normalize(item.answer).length >= 3
 const qsmLevel1 = require('../assets/data/level_1.json').preguntas;
 const qsmFacts = require('../docs/football-facts-qsm-2026-10-19.json');
 assert.equal(qsmFacts.cutoff, verified.cutoff, 'QSM source registry dated with review cutoff');
-assert.equal(qsmLevel1.length, qsmFacts.reviewedQuestions + qsmFacts.newQuestions,
-  'QSM bank must preserve existing questions and include verified additions');
+assert.equal(qsmLevel1.length, qsmFacts.reviewedQuestions + qsmFacts.newQuestions - 1 + 4,
+  'QSM keeps the original baseline except one retired women’s question and four new 6.2 entries');
 assert.equal(qsmFacts.questions.filter(fact => fact.kind === 'new').length, qsmFacts.newQuestions);
 assert.equal(qsmFacts.questions.filter(fact => fact.kind === 'recovered').length, qsmFacts.recoveredQuestions);
 assert.equal(qsmFacts.questions.filter(fact => fact.kind === 'corrected').length, qsmFacts.correctedQuestions);

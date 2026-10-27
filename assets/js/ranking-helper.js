@@ -10,6 +10,18 @@ class RankingHelper {
         this.rankingTable = null;
     }
 
+    // Legacy match documents are user-submitted and not trusted HTML.
+    escapeText(value) {
+        return String(value ?? '').replace(/[&<>"']/g, char => ({
+            '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+        })[char]);
+    }
+
+    safeNonnegative(value, max = 10000000) {
+        const n = Number(value);
+        return Number.isFinite(n) ? Math.min(max, Math.max(0, n)) : 0;
+    }
+
     // Inicializar elementos del DOM
     initializeElements() {
         this.spinner = document.getElementById('ranking-spinner');
@@ -150,40 +162,68 @@ class RankingHelper {
     }
 
     // Cargar ranking de un juego específico
+    // Live competitive rankings use ONLY server-validated Firestore entries.
+    // Legacy browser-submitted matches remain available as unverified history.
     async loadGameRanking(gameType, limit = 15, tableBodyId = 'ranking-body') {
-        console.log(`🏆 Cargando ranking ${gameType}...`);
-        
-        // Mostrar estado de carga
-        const tbody = document.getElementById(tableBodyId);
-        if (tbody) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="5" class="loading-state" style="text-align: center; padding: 20px; color: #007bff;">
-                        🔄 Buscando a los cracks... ¡Espera un momento!
-                    </td>
-                </tr>
-            `;
+        const tbody=document.getElementById(tableBodyId);
+        if(!tbody)return;
+        if(!this._verifiedSubscriptions)this._verifiedSubscriptions=new Map();
+        if(this._verifiedSubscriptions.has(tableBodyId)) {
+            this._verifiedSubscriptions.get(tableBodyId)();
+            this._verifiedSubscriptions.delete(tableBodyId);
         }
-
+        const state=(message,css)=>{
+            tbody.replaceChildren();
+            const tr=document.createElement('tr');
+            const td=document.createElement('td');
+            td.colSpan=5;td.className=css;td.textContent=message;
+            td.style.textAlign='center';td.style.padding='24px';
+            tr.appendChild(td);tbody.appendChild(tr);
+        };
+        state('Conectando al ranking verificado…','loading-state');
         try {
-            // Esperar a que el servicio esté listo
             await this.waitForFirebaseService();
-            
-            console.log('🔍 Obteniendo datos del ranking agregado...');
-            const rankingData = await window.firebaseService.getAggregatedRanking(gameType, limit);
-            
-            if (rankingData && rankingData.length > 0) {
-                this.populateRankingTable(rankingData, tableBodyId);
-            } else {
-                this.showEmpty(
-                    `Todavía no hay partidas de ${this.getGameDisplayName(gameType)}. ¡Sé el primero en aparecer!`,
-                    tableBodyId
-                );
+            const service=window.CrackTotalServices?.RankingService;
+            if(!service?.subscribe)throw new Error('Servicio de rankings no disponible');
+            const stop=service.subscribe(gameType,(result)=>{
+                if(!result.ok) {
+                    state('Ranking verificado no disponible. No se muestran puntuaciones sin validar.','error-state');
+                    return;
+                }
+                if(!result.items.length) {
+                    state('Todavía no hay resultados competitivos verificados.','no-data-state');
+                    return;
+                }
+                tbody.replaceChildren();
+                for(const player of result.items) {
+                    const tr=document.createElement('tr');
+                    tr.className='ranking-row';
+                    const values=[
+                        String(player.rank),
+                        player.name,
+                        String(player.score),
+                        String(player.gamesPlayed),
+                        'Validado'
+                    ];
+                    const classes=['position','player-name','total-score','games-played','accuracy hide-mobile'];
+                    values.forEach((value,i)=>{
+                        const td=document.createElement('td');
+                        td.className=classes[i];td.textContent=value;tr.appendChild(td);
+                    });
+                    tbody.appendChild(tr);
+                }
+            },limit);
+            this._verifiedSubscriptions.set(tableBodyId,stop);
+            if(!this._rankingUnloadBound) {
+                this._rankingUnloadBound=true;
+                window.addEventListener('pagehide',()=>{
+                    this._verifiedSubscriptions.forEach(stop=>stop());
+                    this._verifiedSubscriptions.clear();
+                });
             }
-
-        } catch (error) {
-            console.error('Error cargando ranking:', error);
-            this.showError('No pudimos cargar el ranking. Revisá tu conexión y volvé a intentar.', tableBodyId);
+        } catch(error) {
+            console.warn('Verified ranking unavailable:',error);
+            state('No se pudo conectar al ranking verificado.','error-state');
         }
     }
 
@@ -231,22 +271,22 @@ class RankingHelper {
 
                 const historyHTML = historyData.map((match, index) => {
                     // Información básica
-                    const score = match.score || 0;
-                    const correctAnswers = match.correctAnswers || 0;
-                    const totalQuestions = match.totalQuestions || 26;
-                    const accuracy = match.accuracy || 0;
+                    const score = this.safeNonnegative(match.score);
+                    const correctAnswers = this.safeNonnegative(match.correctAnswers, 10000);
+                    const totalQuestions = this.safeNonnegative(match.totalQuestions || 26, 10000);
+                    const accuracy = this.safeNonnegative(match.accuracy, 100);
                     const gameResult = match.gameResult || 'unknown';
                     const difficulty = match.difficulty || 'normal';
-                    const playerName = match.playerName || 'Anónimo';
+                    const playerName = this.escapeText(String(match.playerName || 'Anónimo').slice(0, 64));
                     
                     // Información de tiempo
-                    const duration = match.duration || 0;
-                    const timeFormatted = match.timeFormatted || this.formatDuration(duration);
+                    const duration = this.safeNonnegative(match.duration, 604800);
+                    const timeFormatted = this.escapeText(String(match.timeFormatted || this.formatDuration(duration)).slice(0, 32));
                     
                     // Información adicional
-                    const incorrectAnswers = match.incorrectAnswers || 0;
-                    const passedAnswers = match.passedAnswers || 0;
-                    const helpUsed = match.helpUsed || 0;
+                    const incorrectAnswers = this.safeNonnegative(match.incorrectAnswers, 10000);
+                    const passedAnswers = this.safeNonnegative(match.passedAnswers, 10000);
+                    const helpUsed = this.safeNonnegative(match.helpUsed, 10000);
                     
                     // Determinar tipo de resultado usando la nueva lógica
                     const result = this.determineGameResult(match, gameType);
@@ -368,7 +408,7 @@ class RankingHelper {
                                     <div>
                                         <h4 style="margin: 0; color: #ecf0f1; font-size: 1em;">
                                             👤 ${playerName} - ${difficultyDisplay}
-                                            ${showAllPlayers ? `<span style="font-size: 0.7em; color: #777; margin-left: 8px;">(${(match.playerId || '').substring(0, 8)}...)</span>` : ''}
+                                            ${showAllPlayers ? `<span style="font-size: 0.7em; color: #777; margin-left: 8px;">(${this.escapeText(String(match.playerId || '').substring(0, 8))}...)</span>` : ''}
                                         </h4>
                                         <p style="margin: 4px 0 0 0; color: #bdc3c7; font-size: 0.85em;">
                                             📅 ${gameDate}

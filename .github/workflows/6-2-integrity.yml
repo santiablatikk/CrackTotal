@@ -1,0 +1,25 @@
+name: Crack Total 6.2 quick integrity
+# This foundational check belongs on its own feature branch and PR to main.
+# Downstream CT7 PRs already run the same npm test in their scoped workflow.
+on:
+  push:
+    branches:
+      - feature/crack-total-6-2-realtime-integrity
+  pull_request:
+    branches:
+      - main
+permissions:
+  contents: read
+jobs:
+  integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - name: Verify source bank, leaderboard integrity and online protocols
+        run: npm test

@@ -1,0 +1,87 @@
+/* CT 7 — two clearly authored editorial entries in the main games grid.
+   Same palette; sharper, asymmetric layout. Does not restyle the six existing games. */
+.ct6-game-hub .discover-section .home-game-card.ct7-catalog-card{
+ grid-column:span 6;display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);
+ min-height:360px;border-top-color:#d89b70!important;background:#1b3129!important
+}
+.ct6-game-hub .discover-section .home-game-card.ct7-catalog-card .home-game-media{
+ position:relative;min-height:100%;height:100%;overflow:hidden
+}
+.ct6-game-hub .discover-section .home-game-card.ct7-catalog-card .home-game-media::after{
+ content:"";position:absolute;inset:0;background:linear-gradient(175deg,transparent 22%,rgba(8,23,16,.7));pointer-events:none
+}
+.ct6-game-hub .discover-section .home-game-card.ct7-catalog-card .home-game-media img{
+ width:100%;height:100%;object-fit:cover;filter:saturate(.5) contrast(1.15)
+}
+.ct6-game-hub .discover-section .home-game-card.ct7-catalog-card:hover .home-game-media img{filter:saturate(.8) contrast(1.07)}
+.ct6-game-hub .discover-section .home-game-card.ct7-catalog-card .home-game-icon{z-index:2}
+.ct6-game-hub .discover-section .home-game-card.ct7-catalog-card .home-game-badge{
+ z-index:2;background:#d89b70!important;color:#17251d!important
+}
+.ct6-game-hub .discover-section .home-game-card.ct7-catalog-card h3{
+ margin:14px 0!important;font-size:clamp(29px,2.6vw,40px)!important;line-height:1.07!important
+}
+.ct6-game-hub .discover-section .home-game-card.ct7-catalog-card .home-game-content{
+ position:relative;justify-content:center;padding:clamp(18px,2vw,30px)!important
+}
+.ct7-catalog-serial{color:#d89b70;font-size:10px;font-weight:900;letter-spacing:.16em}
+.ct6-game-hub .discover-section .home-game-card.ct7-catalog-card .home-game-facts{margin-bottom:auto;padding-bottom:16px}
+.ct6-game-hub .discover-section .home-game-card.ct7-catalog-card .home-game-description{font-size:13px}
+.ct6-game-hub .discover-section .home-game-card.ct7-catalog-card .home-game-action{
+ margin-top:16px;color:#d2e5b2!important
+}
+@media(max-width:1180px){
+ .ct6-game-hub .discover-section .home-game-card.ct7-catalog-card{
+   display:flex;flex-direction:column;grid-column:span 6;min-height:0
+ }
+ .ct6-game-hub .discover-section .home-game-card.ct7-catalog-card .home-game-media{height:210px;min-height:0}
+}
+@media(max-width:620px){
+ .ct6-game-hub .discover-section .home-game-card.ct7-catalog-card{
+   grid-column:1;display:flex;flex-direction:column
+ }
+ .ct6-game-hub .discover-section .home-game-card.ct7-catalog-card .home-game-media{height:180px}
+ .ct6-game-hub .discover-section .home-game-card.ct7-catalog-card .home-game-content{padding:21px!important}
+ .ct6-game-hub .discover-section .home-game-card.ct7-catalog-card h3{font-size:30px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .ct6-game-hub .discover-section .home-game-card.ct7-catalog-card .home-game-media img{transition:none}
+}
+
+/* CT7 homepage: typographic feature below the existing five editorial blocks */
+.ct7-home-feature{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:32px;align-items:center;margin:24px 0 10px;padding:clamp(24px,3.5vw,48px);background:#20372c;border-top:4px solid #d89b70;color:#f4f2e9}
+.ct7-home-feature-heading>span{font-size:10px;font-weight:900;letter-spacing:.17em;color:#d89b70}
+.ct7-home-feature-heading h3{font-size:clamp(32px,4vw,58px);line-height:1;letter-spacing:-.065em;font-weight:850;margin:22px 0}
+.ct7-home-feature-heading h3 em{color:#b5eb53;font-style:normal}
+.ct7-home-feature-heading p{font-size:13px;color:#d0ded1;max-width:400px;line-height:1.7}
+.ct7-home-feature-list{border-top:1px solid #607667}
+.ct7-home-feature-list>a{display:flex;align-items:center;gap:17px;padding:24px 0;border-bottom:1px solid #607667;text-decoration:none;color:#f4f2e9;transition:color .15s ease}
+.ct7-home-feature-list>a:hover{color:#b5eb53}
+.ct7-home-counter{font-variant-numeric:tabular-nums;font-size:13px;font-weight:900;color:#d89b70}
+.ct7-home-feature-list>a span:nth-child(2){display:flex;flex-direction:column;gap:7px;flex:1;min-width:0}
+.ct7-home-feature-list>a b{font-weight:850;font-size:clamp(20px,2vw,28px);letter-spacing:-.04em}
+.ct7-home-feature-list>a small{color:#c3d3c8;font-size:12px;line-height:1.3}
+.ct7-home-feature-list>a i{font-size:26px;font-style:normal}
+@media(max-width:760px){.ct7-home-feature{grid-template-columns:1fr;gap:16px}.ct7-home-feature-heading h3{font-size:clamp(34px,8vw,58px)}}
+@media(max-width:360px){.ct7-home-feature{padding:21px}.ct7-home-feature-list>a{gap:10px}.ct7-home-feature-list>a b{font-size:20px}}
+@media(prefers-reduced-motion:reduce){.ct7-home-feature-list>a{transition:none}}
+
+/* Third editorial catalogue entry: archival chronology, not a repeated hero. */
+.ct6-game-hub .discover-section .home-game-card.ct7-catalog-timeline{grid-column:1/-1;grid-template-columns:minmax(0,.65fr) minmax(0,1.35fr);border-top-color:#b5eb53!important;background:#1b302a!important;min-height:310px}
+.ct6-game-hub .discover-section .home-game-card.ct7-catalog-timeline .home-game-media img{object-position:center 42%}
+@media(max-width:1180px){.ct6-game-hub .discover-section .home-game-card.ct7-catalog-timeline{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)}.ct6-game-hub .discover-section .home-game-card.ct7-catalog-timeline .home-game-media{height:100%;min-height:300px}}
+@media(max-width:620px){.ct6-game-hub .discover-section .home-game-card.ct7-catalog-timeline{grid-column:1;display:flex;flex-direction:column}.ct6-game-hub .discover-section .home-game-card.ct7-catalog-timeline .home-game-media{min-height:0;height:185px}}
+
+/* Fourth editorial card — grid illustration drawn in CSS, not a generic stock image. */
+.ct6-game-hub .discover-section .home-game-card.ct71-catalog-connections{
+  border-top-color:#ce946c!important;background:#1a2b25!important}
+.ct71-connection-media{display:grid!important;place-items:center!important;
+  background:repeating-linear-gradient(0deg,#1d3128 0px,#1d3128 16px,#22392f 16px,#22392f 17px)!important}
+.ct71-four{display:grid;grid-template-columns:repeat(2,96px);gap:10px;transform:rotate(-5deg)}
+.ct71-four span{display:grid;place-items:center;height:90px;border:1px solid #6f8b77;
+  background:#304d3b;color:#d5f199;font:900 26px Manrope,system-ui,sans-serif;border-radius:5px}
+.ct71-four span:nth-child(2){background:#67533d;color:#f2d1b8}
+.ct71-four span:nth-child(3){background:#465b79;color:#c2d5f1}
+.ct71-four span:nth-child(4){background:#5f516c;color:#e0ccec}
+@media(max-width:620px){.ct71-four{grid-template-columns:repeat(2,72px);gap:7px}
+ .ct71-four span{height:59px;font-size:19px}}

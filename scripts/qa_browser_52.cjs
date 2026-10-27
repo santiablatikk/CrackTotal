@@ -34,6 +34,139 @@ function serve(req,res) {
     });
   } catch {res.writeHead(400).end();}
 }
+async function ct71ConexionesLiveProbe(){
+ const assert=(ok,message)=>{if(!ok)throw Error(message);};
+ const $=id=>document.getElementById(id);
+ const response=await fetch('/assets/data/conexiones-verified.json',{cache:'no-cache'});
+ const bank=await response.json();
+ for(let retry=0;retry<35&&$('cxStartButton').disabled;retry++)
+   await new Promise(done=>setTimeout(done,100));
+ assert(!$('cxStartButton').disabled,'Connection challenge data did not load');
+ $('cxStartButton').click();
+ assert(!$('cxPlay').hidden,'Connection stage did not open');
+ assert($('cxTiles').children.length===16,'16 tile buttons expected');
+ const sessionKey='ct71:connections:session:v1';
+ const session=()=>JSON.parse(sessionStorage.getItem(sessionKey));
+ const board=bank.puzzles.find(b=>b.id===session().puzzleId);
+ assert(board,'Unknown sourced puzzle');
+ for(const group of board.groups){
+  for(const name of group.members){
+   const button=[...$('cxTiles').children].find(b=>b.textContent===name);
+   assert(button,'Missing clickable name '+name);
+   button.click();
+   assert(session().selection.includes(name),
+    'Actual tile click was not captured by the game state');
+  }
+  assert(!$('cxCheck').disabled,'Four selections must enable check');
+  $('cxCheck').click();
+ }
+ const last=session();
+ assert(last.phase==='end'&&last.won,'Actual Chrome game should end in victory');
+ assert(last.solved.length===4&&last.score>=400,'Victory should score four validated groupings');
+ assert($('cxEndSources').children.length===4,'Source links must be visible on final');
+ const progress=JSON.parse(localStorage.getItem('ct7:local-progress:v1'));
+ assert(progress.history.some(h=>h.mode==='connections'&&h.scope==='local-only'));
+ return {finished:true,groups:last.solved.length,points:last.score,
+   sourceCards:$('cxEndSources').children.length};
+}
+
+async function ct7TimelineLiveProbe(){
+  const assert=(ok,message)=>{if(!ok)throw Error(message);};
+  const $=id=>document.getElementById(id);
+  const key='ct7:timeline:session:v1';
+  const response=await fetch('/assets/data/timeline-verified.json');
+  const dataset=await response.json();
+  for(let i=0;i<25&&$('tlStartButton').disabled;i++)
+    await new Promise(done=>setTimeout(done,100));
+  assert(!$('tlStartButton').disabled,'Official chronology bank did not load');
+  $('tlStartButton').click();
+  assert(!$('tlPlay').hidden,'Start must reveal sortable cards');
+  let correct=0;
+  for(let round=0;round<5;round++){
+    const session=JSON.parse(sessionStorage.getItem(key));
+    assert(session.idx===round,'Round sequence changed');
+    const record=dataset.rounds.find(r=>r.id===session.roundIds[round]);
+    assert(record&&record.events.length===4,'Missing verified chronology events');
+    const ordered=record.events.slice().sort((a,b)=>a.year-b.year);
+    for(let pos=0;pos<ordered.length;pos++){
+      const target=ordered[pos].id;
+      let at=JSON.parse(sessionStorage.getItem(key)).order.indexOf(target);
+      while(at>pos){
+        const row=[...$('tlItems').children].find(el=>el.dataset.eventId===target);
+        assert(row,'Target row missing');
+        const up=row.querySelector('button[data-direction="-1"]');
+        assert(up&&!up.disabled,'Up move must be enabled');
+        up.click();at--;
+      }
+    }
+    assert(JSON.parse(sessionStorage.getItem(key)).order.every((id,i)=>id===ordered[i].id),
+      'Actual arrow clicks must produce correct chronology');
+    $('tlCheck').click();
+    assert(!$('tlAnswer').hidden,'A checked chronology must show official answer');
+    assert($('tlPoints').textContent.includes('500'),'Perfect positions must add 500 points');
+    assert($('tlSource').href.startsWith('https://'),'Answer must link official primary source');
+    correct++;
+    $('tlNext').click();
+  }
+  assert(!$('tlEnd').hidden,'Five actual rounds must finish');
+  const final=JSON.parse(sessionStorage.getItem(key));
+  assert(final.score===2500&&final.perfect===5&&final.correctPositions===20,
+    'Timeline result disagrees with five complete chronology submissions');
+  const progress=JSON.parse(localStorage.getItem('ct7:local-progress:v1'));
+  assert(progress.history.filter(x=>x.mode==='timeline'&&x.scope==='local-only').length>=5);
+  assert(progress.achievements.includes('explorador'),'Daily goal not awarded');
+  return {finished:true,score:final.score,perfect:final.perfect,rounds:correct,
+    xp:progress.xp,localHistory:progress.history.length};
+}
+
+async function ct7LiveProbe() {
+  const assert = (condition,message) => { if (!condition) throw Error(message); };
+  const mode = document.body.dataset.ct7Mode;
+  assert(['identity','career'].includes(mode),'Invalid CT7 game mode');
+  const $ = id => document.getElementById(id);
+  const response = await fetch('/assets/data/career-challenge-verified.json');
+  const bank = await response.json();
+  for(let retry=0;retry<24 && $('startButton').disabled;retry++)
+    await new Promise(resolve => setTimeout(resolve,100));
+  assert(!$('startButton').disabled,'Game bank did not initialize');
+  $('startButton').click();
+  assert(!$('playView').hidden,'Start action did not open a game');
+  const key='ct7:session:'+mode+':v1';
+  const order=JSON.parse(sessionStorage.getItem(key)).order;
+  assert(order.length===6&&new Set(order).size===6,'Fresh game must not duplicate footballers');
+  let score=0;
+  for(let i=0;i<6;i++){
+    const session=JSON.parse(sessionStorage.getItem(key));
+    assert(session.index===i,'Round progression mismatch');
+    const record=bank.records.find(r=>r.id===session.order[i]);
+    assert(record,'Unknown server-source record');
+    assert($('clueList').children.length >= 2,'Actual clue list not rendered');
+    if (i===0) {
+      $('guessInput').value='Futbolista que no existe 999';
+      $('guessForm').requestSubmit();
+      assert($('attemptsLabel').textContent.includes('2 INTENTOS'),'Wrong answers must decrement attempts');
+      $('revealButton').click();
+      assert(JSON.parse(sessionStorage.getItem(key)).revealed > session.revealed,
+        'Reveal must consume a new clue');
+    }
+    $('guessInput').value=record.name;
+    $('guessForm').requestSubmit();
+    assert(!$('answerView').hidden,'Correct answer must reveal source/result');
+    assert($('answerSource').href.startsWith('https://'),'Provenance link missing');
+    score=JSON.parse(sessionStorage.getItem(key)).score;
+    $('nextButton').click();
+  }
+  assert(!$('finishView').hidden,'Six rounds must end in final scoreboard');
+  const state=JSON.parse(sessionStorage.getItem(key));
+  assert(state.correct===6&&state.score===score,'Final total must be verified against actual play');
+  const local=JSON.parse(localStorage.getItem('ct7:local-progress:v1'));
+  assert(local.history.every(h=>h.scope==='local-only'),'Cannot pass local client points as verified');
+  assert(local.achievements.includes('explorador'),'Daily mission should unlock');
+  const content=$('finishView').textContent.trim().slice(0,70);
+  return {mode,correct:state.correct,score:state.score,rounds:local.rounds,
+    mission:local.achievements.includes('explorador'),finished:true,summary:content};
+}
+
 function probe(expectedWidth) {
   const width = window.innerWidth;
   const inspectWidth = Math.min(width, expectedWidth);
@@ -518,6 +651,35 @@ async function main(){
           throw Error('Wordle live reload failed '+width+': '+
             JSON.stringify(restored.exceptionDetails||restored.result).slice(0,800));
         console.log('WORDLE LIVE '+width+'px: '+JSON.stringify(first.result.value));
+      }
+      if(args.fixture === 'ct7-live') {
+        if(game==='profile.html'){
+          const result=await command('Runtime.evaluate',{
+            expression:"(()=>({xp:Number(document.getElementById('ct7ProfileXp')?.textContent||'0'),"+
+              "wins:Number(document.getElementById('ct7ProfileCorrect')?.textContent||'0'),"+
+              "entries:document.getElementById('ct7ProfileHistory')?.children.length||0,"+
+              "medal:document.getElementById('ct7ProfileMedals')?.textContent||''}))()",
+            returnByValue:true
+          });
+          const data=result.result?.value;
+          if(result.exceptionDetails||!data||data.xp<=0||data.wins<6||data.entries<2||
+             !data.medal.includes('Explorador'))
+            throw Error('CT7 profile failed to display real local history '+width+': '+
+              JSON.stringify(result.exceptionDetails||data).slice(0,700));
+          console.log('CT7 PROFILE '+width+'px: '+JSON.stringify(data));
+        }else{
+          if(!['quien-soy.html','adivina-carrera.html','ordena-historia.html','conexiones.html'].includes(game))
+            throw Error('ct7-live requires editorial games or local profile');
+          const probe=game==='conexiones.html'?ct71ConexionesLiveProbe:game==='ordena-historia.html'?ct7TimelineLiveProbe:ct7LiveProbe;
+          const result=await command('Runtime.evaluate',{
+            expression:'('+probe.toString()+')()',
+            returnByValue:true,awaitPromise:true
+          });
+          if(result.exceptionDetails||!result.result?.value?.finished)
+            throw Error('CT7 REAL CHROME PLAY FAILED '+game+' '+width+': '+
+              JSON.stringify(result.exceptionDetails||result.result).slice(0,1300));
+          console.log('CT7 LIVE '+game+' '+width+'px: '+JSON.stringify(result.result.value));
+        }
       }
       if(args.fixture==='pasala-fill'){
         if(game!=='pasalache.html')throw Error('pasala-fill requires pasalache.html');

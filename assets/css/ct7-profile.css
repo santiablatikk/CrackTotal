@@ -1,0 +1,22 @@
+/* CT7 - local progress lives in a separate, honest dossier inside player profile. */
+.ct7-profile{max-width:1120px;margin:24px auto 33px;background:#1c3027;color:#f4f2e9;padding:clamp(22px,3.7vw,44px);border-top:5px solid #d89b70;border-radius:2px;box-shadow:0 10px 26px rgba(16,27,27,.12)}
+.ct7-profile-heading>span{font-size:10px;font-weight:850;letter-spacing:.17em;color:#d89b70}
+.ct7-profile-heading h3{margin:14px 0 15px;font-size:clamp(30px,4.5vw,56px);font-family:"Manrope",sans-serif;letter-spacing:-.07em;line-height:1;color:#f4f2e9}
+.ct7-profile-heading p{margin:0 0 25px;color:#c0d5c5;font-size:13px;line-height:1.7;max-width:690px}
+.ct7-profile-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.ct7-profile-stats>div{border-top:1px solid #647969;padding:14px 4px 15px;min-width:0}
+.ct7-profile-stats span{display:block;color:#a9c1af;font-weight:850;font-size:10px;letter-spacing:.08em}
+.ct7-profile-stats strong{font-family:"Manrope",sans-serif;display:block;margin:8px 0;font-size:clamp(25px,3vw,45px);font-weight:850;letter-spacing:-.07em;font-variant-numeric:tabular-nums}
+.ct7-profile-medals{border-left:3px solid #b5eb53;padding:10px 14px;font-weight:700;color:#bcd6b8;font-size:13px;margin:22px 0}
+.ct7-profile h4{font-size:11px;letter-spacing:.15em;color:#d89b70;font-weight:850;margin:28px 0 12px}
+.ct7-profile-history{margin:0;padding:0;list-style:none}
+.ct7-profile-history li{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:11px 0;border-bottom:1px solid #46604d;font-size:13px;line-height:1.5;color:#d8e6da}
+.ct7-profile-history time,.ct7-profile-history small{font-size:11px;color:#9db7a6}
+.ct7-profile-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:24px}
+.ct7-profile-actions a,.ct7-profile-actions button{font-size:11px!important;font-weight:850;letter-spacing:.045em;padding:12px 15px;border:1px solid #9cbba4;color:#f4f2e9;background:transparent;text-decoration:none;border-radius:2px}
+.ct7-profile-actions a:hover,.ct7-profile-actions button:hover{border-color:#b5eb53;color:#b5eb53}
+.ct7-profile-actions button{color:#d9b3a2;border-color:#9c7569;margin-left:auto;cursor:pointer}
+.ct7-profile-note{min-height:22px;font-size:12px;color:#b5eb53!important;margin-top:16px}
+.ct7-profile :is(a,button):focus-visible{outline:3px solid #b5eb53;outline-offset:3px}
+@media(max-width:760px){.ct7-profile-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.ct7-profile-actions button{margin-left:0}}
+@media(max-width:420px){.ct7-profile{padding:22px 18px}.ct7-profile-heading h3{font-size:32px}.ct7-profile-stats strong{font-size:30px}.ct7-profile-actions{flex-direction:column;align-items:stretch}.ct7-profile-actions a,.ct7-profile-actions button{text-align:center}}

@@ -1,9 +1,12 @@
 // --- WebSocket URL (¡Configura esto!) ---
 // Firebase Integration - Usa window.firebaseService
-const MENTIROSO_PREVIEW = /(?:^|\.)netlify\.(?:app|com)$/i.test(location.hostname);
+const MENTIROSO_ARENA_HOST = location.hostname === 'cracktotal-arena-staging.onrender.com';
+const MENTIROSO_PREVIEW = MENTIROSO_ARENA_HOST ||
+    /(?:^|\.)netlify\.(?:app|com)$/i.test(location.hostname) ||
+    /^(?:localhost|127\.0\.0\.1)$/.test(location.hostname);
 const MENTIROSO_STAGING = new URLSearchParams(location.search).get('server');
 const MENTIROSO_STAGING_WS = MENTIROSO_STAGING && /^wss:\/\/[a-z0-9.-]+(?::\d+)?(?:\/[^?#]*)?$/i.test(MENTIROSO_STAGING) ? MENTIROSO_STAGING : null;
-const MENTIROSO_PREVIEW_WS = location.hostname === 'deploy-preview-1--zingy-haupia-53b742.netlify.app'
+const MENTIROSO_PREVIEW_WS = MENTIROSO_ARENA_HOST || location.hostname === 'deploy-preview-1--zingy-haupia-53b742.netlify.app'
     ? 'wss://cracktotal-arena-staging.onrender.com' : null;
 const WEBSOCKET_URL = MENTIROSO_PREVIEW ? (MENTIROSO_STAGING_WS || MENTIROSO_PREVIEW_WS) : 'wss://cracktotal-servidor.onrender.com';
 const MENTIROSO_EXPECTED_BANK_VERSION = '2026-10-21-objective-20min-2';

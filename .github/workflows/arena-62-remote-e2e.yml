@@ -1,0 +1,23 @@
+name: External Arena 6.2 staging WebSocket E2E
+on:
+  push:
+    branches:
+      - redesign/crack-total-2
+    paths:
+      - 'scripts/staging_62_live_ws.cjs'
+      - '.github/workflows/arena-62-remote-e2e.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  remote-arena:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - name: Check actual Render SHA and exercise two independent Internet WS clients
+        run: node scripts/staging_62_live_ws.cjs

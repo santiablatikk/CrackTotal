@@ -1,0 +1,153 @@
+{
+  "version": "2026-10-24-ct7-timeline1",
+  "scope": "men-senior-official",
+  "cutoff": "2026-10-24",
+  "instructions": "Ordená cada hecho del más antiguo al más reciente. Las tarjetas ocultan el año; se revela en el resultado.",
+  "rounds": [
+    {
+      "id": "mundiales-fundacionales",
+      "title": "ANTES DE LA TELE EN COLOR",
+      "deck": "Cuatro consagraciones de distintas selecciones. ¿Qué pasó primero?",
+      "source_url": "https://www.fifa.com/en/tournaments/mens/worldcup/articles/world-cup-champions-1930-1978-uruguay-italy-germany-brazil-england-argentina",
+      "source_label": "FIFA · Campeones 1930–1978",
+      "events": [
+        {
+          "id": "uru30",
+          "label": "Uruguay levanta la primera Copa del Mundo",
+          "year": 1930
+        },
+        {
+          "id": "ita34",
+          "label": "Italia gana su primer Mundial",
+          "year": 1934
+        },
+        {
+          "id": "bra58",
+          "label": "Brasil celebra su primera estrella",
+          "year": 1958
+        },
+        {
+          "id": "arg78",
+          "label": "Argentina conquista el Mundial en casa",
+          "year": 1978
+        }
+      ]
+    },
+    {
+      "id": "mundiales-ochenta",
+      "title": "DE ROSSI A ROMÁRIO",
+      "deck": "De España 82 a Estados Unidos 94: ordená estos campeones.",
+      "source_url": "https://www.fifa.com/en/tournaments/mens/worldcup/articles/world-cup-champions-1982-2026-italy-argentina-germany-brazil-france-spain",
+      "source_label": "FIFA · Campeones 1982–2026",
+      "events": [
+        {
+          "id": "ita82",
+          "label": "Italia gana el Mundial de España",
+          "year": 1982
+        },
+        {
+          "id": "arg86",
+          "label": "Argentina levanta la Copa en México",
+          "year": 1986
+        },
+        {
+          "id": "ger90",
+          "label": "Alemania Federal conquista el Mundial de Italia",
+          "year": 1990
+        },
+        {
+          "id": "bra94",
+          "label": "Brasil derrota a Italia por penales en Estados Unidos",
+          "year": 1994
+        }
+      ]
+    },
+    {
+      "id": "copa-cambio",
+      "title": "DEL 98 A SUDÁFRICA",
+      "deck": "Cuatro campeones, cuatro estilos y una nueva era.",
+      "source_url": "https://www.fifa.com/en/tournaments/mens/worldcup/articles/world-cup-champions-1982-2026-italy-argentina-germany-brazil-france-spain",
+      "source_label": "FIFA · Campeones 1982–2026",
+      "events": [
+        {
+          "id": "fra98",
+          "label": "Francia conquista su primer Mundial",
+          "year": 1998
+        },
+        {
+          "id": "bra02",
+          "label": "Brasil logra su quinta estrella",
+          "year": 2002
+        },
+        {
+          "id": "ita06",
+          "label": "Italia supera a Francia en la final",
+          "year": 2006
+        },
+        {
+          "id": "esp10",
+          "label": "España gana su primera Copa del Mundo",
+          "year": 2010
+        }
+      ]
+    },
+    {
+      "id": "champions-clasicos",
+      "title": "NOCHES DE EUROPA",
+      "deck": "Finales recordadas de la Champions moderna. Ordenalas.",
+      "source_url": "https://es.uefa.com/uefachampionsleague/news/0252-0e98d341867a-1f3b773dccf1-1000--todas-las-finales-de-la-champions-league-en-video/",
+      "source_label": "UEFA · Historial de finales de Champions",
+      "events": [
+        {
+          "id": "bar09",
+          "label": "Barcelona supera a Manchester United en Roma",
+          "year": 2009
+        },
+        {
+          "id": "che12",
+          "label": "Chelsea derrota a Bayern por penales en Múnich",
+          "year": 2012
+        },
+        {
+          "id": "rma14",
+          "label": "Real Madrid vence a Atlético tras la prórroga",
+          "year": 2014
+        },
+        {
+          "id": "liv19",
+          "label": "Liverpool vence a Tottenham en Madrid",
+          "year": 2019
+        }
+      ]
+    },
+    {
+      "id": "champions-renovacion",
+      "title": "LOS AÑOS RECIENTES",
+      "deck": "Un Bayern imparable, una sorpresa inglesa y dos campeones más.",
+      "source_url": "https://es.uefa.com/uefachampionsleague/news/0252-0e98d341867a-1f3b773dccf1-1000--todas-las-finales-de-la-champions-league-en-video/",
+      "source_label": "UEFA · Historial de finales de Champions",
+      "events": [
+        {
+          "id": "bay20",
+          "label": "Bayern Múnich derrota a Paris Saint-Germain",
+          "year": 2020
+        },
+        {
+          "id": "che21",
+          "label": "Chelsea le gana a Manchester City en Oporto",
+          "year": 2021
+        },
+        {
+          "id": "rma22",
+          "label": "Real Madrid vence a Liverpool en París",
+          "year": 2022
+        },
+        {
+          "id": "mci23",
+          "label": "Manchester City gana su primera Champions",
+          "year": 2023
+        }
+      ]
+    }
+  ]
+}

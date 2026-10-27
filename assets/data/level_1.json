@@ -625,16 +625,6 @@
       "respuesta_correcta": "C"
     },
     {
-      "pregunta": "¿En qué año se disputó el primer Mundial femenino?",
-      "opciones": {
-        "A": "1989",
-        "B": "1991",
-        "C": "1995",
-        "D": "1987"
-      },
-      "respuesta_correcta": "B"
-    },
-    {
       "pregunta": "¿Qué selección es conocida como 'Les Bleus'?",
       "opciones": {
         "A": "Italia",
@@ -1222,6 +1212,94 @@
         "D": "5-0"
       },
       "respuesta_correcta": "D"
+    },
+    {
+      "pregunta": "¿Quién marcó el único gol de la final del Mundial masculino de 2026?",
+      "question": "¿Quién marcó el único gol de la final del Mundial masculino de 2026?",
+      "respuesta": "Ferran Torres",
+      "answer": "Ferran Torres",
+      "opciones": {
+        "A": "Ferran Torres",
+        "B": "Nico Williams",
+        "C": "Lamine Yamal",
+        "D": "Álvaro Morata"
+      },
+      "respuesta_correcta": "A",
+      "dificultad": 1,
+      "audit_status": "verified_official",
+      "source_url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/spain-argentina-final-report-highlights",
+      "source_urls": [
+        "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/spain-argentina-final-report-highlights"
+      ],
+      "verified_at": "2026-10-24",
+      "as_of": "2026-10-24",
+      "content_batch": "62-verified-20261024"
+    },
+    {
+      "pregunta": "¿Qué selección terminó tercera en el Mundial masculino de 2026?",
+      "question": "¿Qué selección terminó tercera en el Mundial masculino de 2026?",
+      "respuesta": "Inglaterra",
+      "answer": "Inglaterra",
+      "opciones": {
+        "A": "Francia",
+        "B": "Marruecos",
+        "C": "Inglaterra",
+        "D": "Noruega"
+      },
+      "respuesta_correcta": "C",
+      "dificultad": 1,
+      "audit_status": "verified_official",
+      "source_url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/match-schedule-fixtures-results-teams-stadiums",
+      "source_urls": [
+        "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/match-schedule-fixtures-results-teams-stadiums"
+      ],
+      "verified_at": "2026-10-24",
+      "as_of": "2026-10-24",
+      "content_batch": "62-verified-20261024"
+    },
+    {
+      "pregunta": "¿Qué club derrotó a Rayo Vallecano en la final de Conference League 2025/26?",
+      "question": "¿Qué club derrotó a Rayo Vallecano en la final de Conference League 2025/26?",
+      "respuesta": "Crystal Palace",
+      "answer": "Crystal Palace",
+      "opciones": {
+        "A": "West Ham",
+        "B": "Crystal Palace",
+        "C": "Chelsea",
+        "D": "AZ Alkmaar"
+      },
+      "respuesta_correcta": "B",
+      "dificultad": 1,
+      "audit_status": "verified_official",
+      "source_url": "https://www.uefa.com/uefaconferenceleague/news/0298-1d6e887134f4-450771540b4a-1000/",
+      "source_urls": [
+        "https://www.uefa.com/uefaconferenceleague/news/0298-1d6e887134f4-450771540b4a-1000/"
+      ],
+      "verified_at": "2026-10-24",
+      "as_of": "2026-10-24",
+      "content_batch": "62-verified-20261024"
+    },
+    {
+      "pregunta": "¿Qué club ganó el Torneo Apertura argentino 2026 tras vencer a River?",
+      "question": "¿Qué club ganó el Torneo Apertura argentino 2026 tras vencer a River?",
+      "respuesta": "Belgrano",
+      "answer": "Belgrano",
+      "opciones": {
+        "A": "Talleres",
+        "B": "Belgrano",
+        "C": "Argentinos Juniors",
+        "D": "Racing"
+      },
+      "respuesta_correcta": "B",
+      "dificultad": 1,
+      "audit_status": "verified_official",
+      "source_url": "https://www.afa.com.ar/a/posts/belgrano-vencio-3-2-a-river-y-se-quedo-con-el-torneo-apertura-2026",
+      "source_urls": [
+        "https://www.afa.com.ar/a/posts/belgrano-vencio-3-2-a-river-y-se-quedo-con-el-torneo-apertura-2026"
+      ],
+      "verified_at": "2026-10-24",
+      "as_of": "2026-10-24",
+      "content_batch": "62-verified-20261024"
     }
   ]
 }
