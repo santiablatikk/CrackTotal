@@ -84,7 +84,7 @@
     if (!p || allowedLicenses[p.license] !== p.license_url ||
         !/^https:\/\/commons\.wikimedia\.org\/wiki\/Special:FilePath\/[A-Za-z0-9_%().-]+\.jpg\?width=480$/.test(p.url) ||
         !/^https:\/\/commons\.wikimedia\.org\/wiki\/File:[^?#]+\.jpg$/.test(p.source_page) ||
-        !p.creator || !p.checked_at) return null;
+        !p.creator || !p.checked_at || !p.caption) return null;
     return p;
   }
   function renderAnswerPortrait(rec) {
