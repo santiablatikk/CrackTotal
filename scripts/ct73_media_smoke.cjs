@@ -6,16 +6,16 @@ const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
 const bank=JSON.parse(read('assets/data/career-challenge-verified.json'));
 const engine=read('assets/js/ct7-games.js');
 const featured=bank.records.filter(p=>Boolean(p.portrait));
-assert.equal(featured.length,14,'Fourteen individually reviewed photos must map to stable player IDs');
+assert.equal(featured.length,21,'Twenty-one individually reviewed photos must map to stable player IDs');
 for(const rec of featured){
   const p=rec.portrait;
   assert(p&&p.creator&&p.caption&&['2026-10-26','2026-10-27'].includes(p.checked_at));
-  assert(['CC BY-SA 3.0','CC BY-SA 2.0'].includes(p.license));
-  assert.equal(p.license_url,'https://creativecommons.org/licenses/by-sa/'+(p.license==='CC BY-SA 3.0'?'3.0':'2.0')+'/');
+  assert(['CC BY-SA 3.0','CC BY-SA 2.0','CC BY-SA 4.0'].includes(p.license));
+  assert.equal(p.license_url,'https://creativecommons.org/licenses/by-sa/'+(p.license.slice(-3))+'/');
   assert.match(p.source_page,/^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);
   assert.match(p.url,/^https:\/\/commons\.wikimedia\.org\/wiki\/Special:FilePath\//);
 }
-assert.equal(bank.records.filter(p=>p.portrait).length,14,'Only reviewed records may have a photo');
+assert.equal(bank.records.filter(p=>p.portrait).length,21,'Only reviewed records may have a photo');
 for(const page of ['quien-soy.html','adivina-carrera.html']){
   assert.equal((read(page).match(/id="answerPortrait"/g)||[]).length,1);
   assert.match(read(page),/id="answerPortrait"[^>]*hidden/);
@@ -95,5 +95,5 @@ async function verifyMode(mode,group){
     await verifyMode('identity',group);
     await verifyMode('career',group);
   }
-  console.log('PASS CT7.5: fourteen licensed portraits, attribution, no spoiler, missing/broken-image fallbacks');
+  console.log('PASS CT7.5: twenty-one licensed portraits, attribution, no spoiler, missing/broken-image fallbacks');
 })().catch(e=>{console.error(e);process.exitCode=1});
