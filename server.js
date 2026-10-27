@@ -610,7 +610,8 @@ wss.on('connection', (ws, req) => {
             // // console.log(`Received from ${clientId}:`, parsedMessage); // ELIMINAR ESTA LÍNEA
             handleClientMessage(ws, parsedMessage);
         } catch (error) {
-            console.error(`Failed to parse message or handle: ${message}`, error);
+            // Never log untrusted WS payloads: auth messages may contain bearer credentials.
+            console.error('Invalid Arena WebSocket message', { errorType: error?.name || 'Error' });
             safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid message format.' } });
         }
     });
