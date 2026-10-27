@@ -17,6 +17,7 @@ const expected=['/quien-soy.html','/adivina-carrera.html','/ordena-historia.html
 '/assets/js/ct7-games.js','/assets/js/ct7-timeline.js','/assets/js/ct71-conexiones.js',
 '/assets/data/career-challenge-verified.json','/assets/data/timeline-verified.json','/assets/data/conexiones-verified.json',
 '/assets/css/ct7-games.css','/assets/css/ct7-timeline.css','/assets/css/ct71-conexiones.css',
+'/assets/css/ct74-unified.css','/assets/css/ct7-pwa.css',
 '/assets/css/design-system/tokens.css','/assets/icons/ct7-app.svg','/portada.ico'];
 expected.forEach(p=>assert(fs.existsSync(path.join(root,p.slice(1))),'Missing '+p));
 const handlers={};let activated=false,claimed=false,online=true,fetchCalls=0;

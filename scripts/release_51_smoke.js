@@ -37,7 +37,8 @@ assert(server.includes("'Cache-Control': 'no-store, no-cache, must-revalidate'")
 require('node:vm').runInNewContext('new Function('+JSON.stringify(server)+')');
 
 const sw=read('sw.js');
-assert(sw.includes("const VERSION='ct71-20261024-offline-2'"),'SW must use a distinct versioned offline cache');
+assert(/const VERSION='ct[0-9]+-[0-9]{8}-offline-[0-9]+';/.test(sw),'SW must use a distinct versioned offline cache');
+assert(sw.includes('const CACHE=PREFIX+VERSION'),'Offline cache must use the release version');
 assert(sw.includes("if(!PATHS.has(path))return"),'SW must explicitly exclude personalized/online requests');
 assert(sw.includes("if(request.method!=='GET')return"),'SW must never cache state-changing HTTP calls');
 assert(!sw.includes("DYNAMIC_CACHE_NAME")&&!sw.includes("API_CACHE_NAME"),'Overbroad legacy API caches must be retired');

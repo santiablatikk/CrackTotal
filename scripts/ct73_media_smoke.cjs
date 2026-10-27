@@ -5,17 +5,17 @@ const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
 const bank=JSON.parse(read('assets/data/career-challenge-verified.json'));
 const engine=read('assets/js/ct7-games.js');
-const featured=bank.records.filter(p=>['messi','cristiano','ronaldo9','ronaldinho','maradona','zidane'].includes(p.id));
-assert.equal(featured.length,6,'All six licensed portraits must map to player IDs');
+const featured=bank.records.filter(p=>Boolean(p.portrait));
+assert.equal(featured.length,14,'Fourteen individually reviewed photos must map to stable player IDs');
 for(const rec of featured){
   const p=rec.portrait;
-  assert(p&&p.creator&&p.caption&&p.checked_at==='2026-10-26');
+  assert(p&&p.creator&&p.caption&&['2026-10-26','2026-10-27'].includes(p.checked_at));
   assert(['CC BY-SA 3.0','CC BY-SA 2.0'].includes(p.license));
   assert.equal(p.license_url,'https://creativecommons.org/licenses/by-sa/'+(p.license==='CC BY-SA 3.0'?'3.0':'2.0')+'/');
   assert.match(p.source_page,/^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);
   assert.match(p.url,/^https:\/\/commons\.wikimedia\.org\/wiki\/Special:FilePath\//);
 }
-assert.equal(bank.records.filter(p=>p.portrait).length,6,'Do not add unreviewed stock or generated images');
+assert.equal(bank.records.filter(p=>p.portrait).length,14,'Only reviewed records may have a photo');
 for(const page of ['quien-soy.html','adivina-carrera.html']){
   assert.equal((read(page).match(/id="answerPortrait"/g)||[]).length,1);
   assert.match(read(page),/id="answerPortrait"[^>]*hidden/);
@@ -85,9 +85,15 @@ async function verifyMode(mode,group){
   assert.deepEqual(seen.sort(),group.filter(p=>p.portrait).map(p=>p.id).sort());
 }
 (async()=>{
-  for(const group of [featured.slice(0,5).concat(fallback),featured.slice(1,6).concat(fallback)]){
+  const noPhoto=bank.records.filter(p=>!p.portrait);
+  const groups=[];
+  for(let i=0;i<featured.length;i+=5){
+    const photos=featured.slice(i,i+5);
+    groups.push(photos.concat(noPhoto.slice(0,6-photos.length)));
+  }
+  for(const group of groups){
     await verifyMode('identity',group);
     await verifyMode('career',group);
   }
-  console.log('PASS CT7.3: all six licensed portraits, attribution, no spoiler, missing/broken-image fallbacks');
+  console.log('PASS CT7.5: fourteen licensed portraits, attribution, no spoiler, missing/broken-image fallbacks');
 })().catch(e=>{console.error(e);process.exitCode=1});

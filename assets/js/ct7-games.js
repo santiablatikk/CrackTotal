@@ -13,6 +13,7 @@
   var SESSION_KEY = 'ct7:session:' + mode + ':v1';
   var LIMIT = 6;
   var records = [];
+  var clubCrests = {};
   var byId = new Map();
   var state = null;
   var ramProgress = null;
@@ -84,7 +85,7 @@
     if (!p || allowedLicenses[p.license] !== p.license_url ||
         !/^https:\/\/commons\.wikimedia\.org\/wiki\/Special:FilePath\/[A-Za-z0-9_%().-]+\.jpg\?width=480$/.test(p.url) ||
         !/^https:\/\/commons\.wikimedia\.org\/wiki\/File:[^?#]+\.jpg$/.test(p.source_page) ||
-        !p.creator || !p.checked_at) return null;
+        !p.creator || !p.checked_at || !p.caption) return null;
     return p;
   }
   function renderAnswerPortrait(rec) {
@@ -121,13 +122,35 @@
     target.appendChild(figure);
     target.hidden = false;
   }
-  // Neutral typographic club marker. Never presented as an official crest.
+  // Use authentic, documented club emblems only as factual team identification.
+  // Trademarks remain the club's property. A monogram is the resilient fallback.
+  function reviewedCrest(clubName) {
+    var item = clubCrests[clubName];
+    if (!item || item.license !== 'PD-textlogo' || item.trademark !== true ||
+        !item.credit || !item.source_page || !item.checked_at ||
+        !/^https:\/\/commons\.wikimedia\.org\/wiki\/Special:FilePath\/[A-Za-z0-9_%().-]+\.(?:png|svg)\?width=80$/.test(item.url) ||
+        !/^https:\/\/commons\.wikimedia\.org\/wiki\/File:[A-Za-z0-9_%().-]+\.(?:png|svg)$/.test(item.source_page)) return null;
+    return item;
+  }
   function clubMarker(clubName) {
     var marker = document.createElement('span');
     marker.className = 'ct7-club-marker';
     marker.setAttribute('aria-hidden', 'true');
-    marker.textContent = String(clubName).replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 ]/g, '')
+    var initials = String(clubName).replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 ]/g, '')
       .split(/\s+/).filter(Boolean).slice(0, 2).map(function (x) { return x[0]; }).join('').toUpperCase();
+    marker.textContent = initials;
+    var crest = reviewedCrest(clubName);
+    if (crest) {
+      var img = document.createElement('img');
+      img.className = 'ct7-verified-club-crest';
+      img.src = crest.url;
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.alt = '';
+      img.title = clubName + ' · escudo identificativo (sin afiliación)';
+      img.addEventListener('error', function () { marker.textContent = initials; });
+      marker.replaceChildren(img);
+    }
     return marker;
   }
   function setScreen(view) {
@@ -330,6 +353,7 @@
       return response.json();
     }).then(function (json) {
       if (!json || !Array.isArray(json.records) || json.editorial_scope !== 'male-senior-football') throw Error('Catálogo inválido');
+      clubCrests = json.club_crests && typeof json.club_crests === 'object' ? json.club_crests : {};
       records = json.records.filter(function (rec) {
         return rec && rec.id && rec.name && Array.isArray(rec.aliases) &&
           Array.isArray(rec.clubs) && rec.clubs.length >= 2 &&
