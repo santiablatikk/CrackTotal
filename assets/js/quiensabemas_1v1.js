@@ -8,15 +8,16 @@ console.log("✨ quiensabemas_1v1.js cargado (v3 Renovada - Junio 2024)");
 // --- Configuración ---
 // La vista previa estática no debe usar inadvertidamente el servidor de producción.
 const QSM_ARENA_HOST = location.hostname === 'cracktotal-arena-staging.onrender.com';
-const QSM_PREVIEW = QSM_ARENA_HOST ||
+const QSM_PRODUCTION = ['cracktotal.com','www.cracktotal.com','cracktotal-pz9u.onrender.com'].includes(location.hostname);
+const QSM_PREVIEW = QSM_PRODUCTION || QSM_ARENA_HOST ||
     /(?:^|\.)netlify\.(?:app|com)$/i.test(location.hostname) ||
     /^(?:localhost|127\.0\.0\.1)$/.test(location.hostname);
-const QSM_STAGING = new URLSearchParams(location.search).get('server');
+const QSM_STAGING = QSM_PRODUCTION ? null : new URLSearchParams(location.search).get('server');
 const QSM_STAGING_WS = QSM_STAGING && /^wss:\/\/[a-z0-9.-]+(?::\d+)?(?:\/[^?#]*)?$/i.test(QSM_STAGING) ? QSM_STAGING : null;
 const QSM_PREVIEW_WS = QSM_ARENA_HOST || location.hostname === 'deploy-preview-1--zingy-haupia-53b742.netlify.app'
     ? 'wss://cracktotal-arena-staging.onrender.com' : null;
 const CONFIG = {
-    WEBSOCKET_URL: QSM_PREVIEW ? (QSM_STAGING_WS || QSM_PREVIEW_WS) : 'wss://cracktotal-servidor.onrender.com',
+    WEBSOCKET_URL: QSM_PRODUCTION ? 'wss://cracktotal-arena-prod.onrender.com' : (QSM_PREVIEW ? (QSM_STAGING_WS || QSM_PREVIEW_WS) : null),
     RECONNECT_DELAY: 3000,
     MAX_RECONNECT_ATTEMPTS: 5,
     TIME_PER_QUESTION: 20,
