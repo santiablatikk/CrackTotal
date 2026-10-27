@@ -6,8 +6,11 @@ const path = require('path'); // Added for constructing file paths
 const { createPasalaDuelService } = require('./server/pasala-duel');
 const objectiveMentiroso = require('./server/multiplayer/objective-mentiroso');
 const { secureCode, safePlayerName } = require('./server/multiplayer/core');
-// Explicit staging-only feature flag: historical production backend stays unchanged.
-const OBJECTIVE_MENTIROSO = process.env.CT_STAGING === 'true' && process.env.CT_OBJECTIVE_MENTIROSO === 'true';
+// Dedicated Arena runtime, separate from the historical QSM/Mentiroso host.
+// This flag is NOT an authentication mechanism; competition publication stays disabled.
+const CT_ARENA_PRODUCTION = process.env.CT_ARENA_PRODUCTION === 'true';
+const CT_ARENA_RUNTIME = process.env.CT_STAGING === 'true' || CT_ARENA_PRODUCTION;
+const OBJECTIVE_MENTIROSO = CT_ARENA_RUNTIME && process.env.CT_OBJECTIVE_MENTIROSO === 'true';
 
 // --- Constants ---
 const MAX_LEVELS = 6; // 6 niveles de dificultad
@@ -42,7 +45,7 @@ function getMimeType(filePath) {
 // Función para canonicalizar URLs - CRÍTICO PARA SEO
 function canonicalizeUrl(req, res) {
     // Opt-in only for isolated staging backends; production keeps its canonical host policy.
-    if (process.env.CT_STAGING === 'true') return false;
+    if (CT_ARENA_RUNTIME) return false;
     const host = req.headers.host || 'cracktotal.com';
     const protocol = req.headers['x-forwarded-proto'] || 'http';
     const url = req.url;
@@ -108,6 +111,22 @@ const server = http.createServer((req, res) => {
             features: { pasalaDuel: true, qsmResume: LEGACY_SESSION_RECOVERY,
                 mentirosoObjective: OBJECTIVE_MENTIROSO },
             contentVersions: { mentiroso: objectiveMentiroso.catalog.version },
+            commit: process.env.RENDER_GIT_COMMIT || null,
+            branch: process.env.RENDER_GIT_BRANCH || null
+        }));
+        return;
+    }
+    // Public, non-secret availability metadata for the dedicated production
+    // arena. Never publish service credentials, room tokens or usernames.
+    if (CT_ARENA_PRODUCTION && req.method === 'GET' &&
+        req.url.split('?')[0] === '/__ct_arena/health') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8',
+            'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
+        res.end(JSON.stringify({
+            ok: true, service: 'cracktotal-arena-production', websocket: true,
+            arenaProtocol: 'cracktotal-arena-5.2',
+            features: { pasalaDuel: true, qsmResume: LEGACY_SESSION_RECOVERY,
+                mentirosoObjective: OBJECTIVE_MENTIROSO },
             commit: process.env.RENDER_GIT_COMMIT || null,
             branch: process.env.RENDER_GIT_BRANCH || null
         }));
@@ -257,13 +276,28 @@ const PORT = process.env.PORT || (3001 + Math.floor(Math.random() * 999));
 // Attach WebSocket server to the HTTP server
 // Limit untrusted browser origins and message size on staging only.
 // The production server's existing WebSocket configuration remains unchanged.
-const stagingWsOptions = process.env.CT_STAGING === 'true' ? {
+const stagingWsOptions = CT_ARENA_RUNTIME ? {
     maxPayload: 64 * 1024,
     verifyClient(info, done) {
+        const origin = info.origin || '';
+        if (CT_ARENA_PRODUCTION) {
+            const sites = new Set([
+                'https://cracktotal.com',
+                'https://www.cracktotal.com',
+                'https://cracktotal-pz9u.onrender.com'
+            ]);
+            // Explicit additional origins for first-party custom domains only.
+            for (const value of (process.env.CT_ARENA_PRODUCTION_ORIGINS || '').split(',')) {
+                if (/^https:\/\/[a-z0-9.-]+$/i.test(value.trim())) sites.add(value.trim());
+            }
+            const allowed = sites.has(origin);
+            done(allowed, allowed ? undefined : 403,
+                allowed ? undefined : 'Arena production origin not allowed');
+            return;
+        }
         const configured = (process.env.CT_STAGING_ORIGINS ||
             'https://deploy-preview-1--zingy-haupia-53b742.netlify.app')
             .split(',').map(origin => origin.trim()).filter(Boolean);
-        const origin = info.origin || '';
         const allowed = !origin || configured.includes(origin) ||
             origin === 'https://cracktotal-arena-staging.onrender.com' ||
             /^http:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?$/.test(origin);
@@ -426,7 +460,7 @@ const clients = new Map(); // Map<WebSocket, {id: string, roomId: string | null}
 const rooms = new Map(); // Map<string, Room>
 // Independent duel service: does not alter QSM or Mentiroso room semantics.
 const pasalaDuels = createPasalaDuelService();
-const LEGACY_SESSION_RECOVERY = process.env.CT_STAGING === 'true';
+const LEGACY_SESSION_RECOVERY = CT_ARENA_RUNTIME;
 const ROOM_GRACE_MS = 45000;
 const QSM_QUESTION_MS = process.env.CT_STAGING === 'true' && process.env.CT_QSM_TEST_QUESTION_MS
     ? Math.max(600, Math.min(20000, Number(process.env.CT_QSM_TEST_QUESTION_MS) || 20000)) : 20000;
