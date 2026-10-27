@@ -31,11 +31,22 @@
       if(d.verified!==true||d.verifiedBy!=='server'||d.schemaVersion!==1||
          d.playerId!==doc.id||typeof d.playerId!=='string'||typeof d.name!=='string'||
          !Number.isSafeInteger(d.score)||d.score<0||d.score>100000000) return;
+      // Field-level defense in depth: an unexpectedly malformed server
+      // document must never make a competitive score or profile statistic.
+      const numeric=(value,maximum)=>{
+        if(value===undefined||value===null) return 0; // legacy verified rows
+        return Number.isSafeInteger(value)&&value>=0&&value<=maximum ? value : null;
+      };
+      const gamesPlayed=numeric(d.gamesPlayed,10000000);
+      const victories=numeric(d.victories,10000000);
+      if(gamesPlayed===null||victories===null||
+         (d.gamesPlayed!==undefined && victories>gamesPlayed)||
+         d.name.trim().length===0||d.name.length>80||
+         !/^[a-zA-Z0-9_-]{1,100}$/.test(d.playerId)) return;
       const modified=d.updatedAt?.toDate?.() || (typeof d.updatedAt==='string' ? new Date(d.updatedAt) : null);
       if(modified && Number.isFinite(modified.getTime()) && (!lastUpdated || modified>lastUpdated)) lastUpdated=modified;
-      items.push({playerId:d.playerId,name:d.name.slice(0,32),score:d.score,
-        gamesPlayed:Math.max(0,Number(d.gamesPlayed)||0),
-        victories:Math.max(0,Number(d.victories)||0),meta:'Resultado validado'});
+      items.push({playerId:d.playerId,name:d.name.trim().slice(0,32),score:d.score,
+        gamesPlayed,victories,meta:'Resultado validado'});
     });
     // Reapply identical ordering in case snapshots are mocked or cached.
     items.sort((a,b)=>b.score-a.score||b.victories-a.victories||
