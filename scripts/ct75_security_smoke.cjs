@@ -39,4 +39,13 @@ for(const r of portraits){
 const game=read('assets/js/ct7-games.js');
 assert.match(game,/renderAnswerPortrait\(null\)/);
 assert.doesNotMatch(game,/\.innerHTML\s*=/);
-console.log('PASS CT7.5: 14 credited portraits, verified source matching and no legacy ranking XSS');
+assert.equal(Object.keys(bank.club_crests).length,2);
+for(const [club,item] of Object.entries(bank.club_crests)){
+ assert(['Boca Juniors','River Plate'].includes(club));
+ assert.equal(item.license,'PD-textlogo');
+ assert.equal(item.trademark,true);
+ assert.match(item.url,/^https:\/\/commons\.wikimedia\.org\/wiki\/Special:FilePath\//);
+ assert.match(item.source_page,/^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);
+ assert(item.usage.includes('sin afiliación'));
+}
+console.log('PASS CT7.5: 14 licensed portraits, 2 sourced crests, provenance, and no legacy ranking XSS');

@@ -405,3 +405,7 @@ body[data-ct74="true"].profile-body .ct7-profile :is(button,a):focus-visible { o
     scroll-behavior: auto !important;
   }
 }
+
+/* CT7.5 — reviewed real club emblems (text fallback on load failure). */
+body[data-ct74="true"].ct7 .ct7-verified-club-crest{display:block;max-width:100%;width:34px;height:34px;object-fit:contain;border:0;background:transparent}
+@media(max-width:600px){body[data-ct74="true"].ct7 .ct7-verified-club-crest{width:29px;height:29px}}

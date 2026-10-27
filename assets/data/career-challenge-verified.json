@@ -1076,5 +1076,27 @@
   ],
   "visual_asset_policy": "Solo imágenes reales con permiso verificable y atribución. Retratos ocultos durante la pregunta; resto de jugadores con fallback textual.",
   "media_revision": "2026-10-27-ct75-licensed-portraits-v1",
-  "media_policy": "Portraits are individually credited Creative Commons photographs from Wikimedia Commons. Player visibility strictly follows the result phase. Other players have text-only fallback. Club emblems require trademark review."
+  "media_policy": "Portraits are individually credited Creative Commons photographs from Wikimedia Commons. Player visibility strictly follows the result phase. Other players have text-only fallback. Club emblems require trademark review.",
+  "club_crests": {
+    "Boca Juniors": {
+      "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Boca_Juniors_logo.png?width=80",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Boca_Juniors_logo.png",
+      "credit": "Lorenzo Shakespear Estudio",
+      "license": "PD-textlogo",
+      "trademark": true,
+      "usage": "identificación nominativa de trayectoria; sin afiliación ni patrocinio",
+      "period": "1995–",
+      "checked_at": "2026-10-27"
+    },
+    "River Plate": {
+      "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Club_Atl%C3%A9tico_River_Plate_logo.svg?width=80",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Club_Atl%C3%A9tico_River_Plate_logo.svg",
+      "credit": "Club Atlético River Plate",
+      "license": "PD-textlogo",
+      "trademark": true,
+      "usage": "identificación nominativa de trayectoria; sin afiliación ni patrocinio",
+      "period": "2022–",
+      "checked_at": "2026-10-27"
+    }
+  }
 }
