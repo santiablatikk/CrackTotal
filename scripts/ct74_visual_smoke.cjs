@@ -18,7 +18,7 @@ assert.doesNotMatch(css,/\.tile\.(?:correct|present|absent)/);
 for(const file of [...games,...others]){
  const html=read(file);
  assert.equal((html.match(/ct74-unified\.css/g)||[]).length,1,'Missing style '+file);
- assert.match(html,/<body\b[^>]*\bclass="[^"]*\bct74\b/i,'Scope missing '+file);
+ assert.match(html,/<body\b[^>]*\bdata-ct74="true"/i,'Scope missing '+file);
  assert(html.indexOf('ct74-unified.css')<html.toLowerCase().indexOf('</head>'),'Style outside head '+file);
  assert.match(html,/<script[^>]+src=/i,'Lost game engine '+file);
 }
