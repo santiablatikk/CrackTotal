@@ -58,7 +58,9 @@ unverified.challenges[0].audit_status = 'pending';
 assert.throws(() => checkCatalog(unverified), /Unverified/);
 
 const serverSource = fs.readFileSync(path.join(__dirname, '../server.js'), 'utf8');
-assert.ok(serverSource.includes("const OBJECTIVE_MENTIROSO = process.env.CT_STAGING === 'true' && process.env.CT_OBJECTIVE_MENTIROSO === 'true'"));
+assert.match(serverSource,/const CT_ARENA_RUNTIME = process\.env\.CT_STAGING === 'true' \|\| CT_ARENA_PRODUCTION/);
+assert.match(serverSource,/const OBJECTIVE_MENTIROSO = CT_ARENA_RUNTIME && process\.env\.CT_OBJECTIVE_MENTIROSO === 'true'/);
+assert.match(serverSource,/const CT_ARENA_PRODUCTION = process\.env\.CT_ARENA_PRODUCTION === 'true'/);
 assert.ok(serverSource.includes('objectiveMentiroso.adjudicate('));
 assert.ok(serverSource.includes('gameType: targetGameType'));
 console.log('OBJECTIVE MENTIROSO: PASS (' + summary.count + ' sourced categories; ' + summary.answerCount + ' canonical entries; min=' + summary.minObserved + ', max=' + summary.maxObserved + '; no subjective validation).');
