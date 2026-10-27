@@ -8,7 +8,9 @@ const objectiveMentiroso = require('./server/multiplayer/objective-mentiroso');
 const { secureCode, safePlayerName } = require('./server/multiplayer/core');
 // Dedicated Arena runtime, separate from the historical QSM/Mentiroso host.
 // This flag is NOT an authentication mechanism; competition publication stays disabled.
-const CT_ARENA_PRODUCTION = process.env.CT_ARENA_PRODUCTION === 'true';
+// Staging integration tests spawn child servers; staging must take precedence
+// even when its parent Render process is a production Arena.
+const CT_ARENA_PRODUCTION = process.env.CT_ARENA_PRODUCTION === 'true' && process.env.CT_STAGING !== 'true';
 const CT_ARENA_RUNTIME = process.env.CT_STAGING === 'true' || CT_ARENA_PRODUCTION;
 const OBJECTIVE_MENTIROSO = CT_ARENA_RUNTIME && process.env.CT_OBJECTIVE_MENTIROSO === 'true';
 
