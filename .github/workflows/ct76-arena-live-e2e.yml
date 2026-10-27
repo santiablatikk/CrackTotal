@@ -1,0 +1,25 @@
+name: CT7.6 production Arena external two-client smoke
+on:
+  push:
+    branches: [feature/ct76-arena-live-e2e]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ct76-live-arena
+  cancel-in-progress: true
+jobs:
+  production-multiplayer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Verify exact deployed Arena and two external competitors
+        env:
+          CT_EXPECTED_ARENA_SHA: c27f06ac3898fc1332f64844406d43a253450f0e
+        run: node scripts/ct76_prod_remote_ws.cjs
