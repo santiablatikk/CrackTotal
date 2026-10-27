@@ -1,0 +1,25 @@
+name: CT7.6 external QSM and Mentiroso multiplayer E2E
+on:
+  push:
+    branches: [feature/ct76-qsm-mentiroso-production-e2e]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ct76-qsm-mentiroso-external
+  cancel-in-progress: true
+jobs:
+  remote-qsm-mentiroso:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Verify real external match on pinned production Arena
+        env:
+          CT_EXPECTED_ARENA_SHA: eae745e276b38d32f7af5bf0cb750291c362369e
+        run: node scripts/ct76_qsm_mentiroso_remote_ws.cjs
