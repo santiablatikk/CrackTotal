@@ -11,19 +11,19 @@
     roomId: null, question: null, statuses: {}, result: null, reconnecting: false,
     clockTimer: null, retryTimer: null, manualLeave: false, clockOffset: 0, pendingAction: false,
     pendingAnswer: null, connectionSlowTimer: null, helloTimer: null };
-  // The public website is STATIC. It has no WebSocket backend on location.host.
-  // Only an explicitly configured, compatible production Arena may be used.
+  // The public website is STATIC. The dedicated Arena is hosted separately.
+  // Production does not accept URL query overrides; handshake must match protocol.
   const STAGING='wss://cracktotal-arena-staging.onrender.com';
+  const PRODUCTION='wss://cracktotal-arena-prod.onrender.com';
   const isStaging=location.hostname==='cracktotal-arena-staging.onrender.com' ||
     location.hostname==='deploy-preview-1--zingy-haupia-53b742.netlify.app';
   const isLocal=/^(localhost|127\.0\.0\.1)$/.test(location.hostname);
   const isProduction=['cracktotal.com','www.cracktotal.com',
     'cracktotal-pz9u.onrender.com'].includes(location.hostname);
-  const provided=String(window.CRACK_TOTAL_DUEL_WS_URL||'');
   const override=isLocal||isStaging ? String(params.get('server')||'') : '';
   const isStaticPreview=/(?:^|\.)netlify\.(?:app|com)$/i.test(location.hostname) || isLocal;
   const urlOverride=override || (isStaging ? STAGING : '');
-  const wsUrl=urlOverride || (isProduction ? provided : '');
+  const wsUrl=urlOverride || (isProduction ? PRODUCTION : '');
 
   const safeCode = code => /^[A-F0-9]{10}$/.test(code);
   const savedSession = () => { try { return JSON.parse(sessionStorage.getItem(storageKey) || 'null'); } catch { return null; } };
