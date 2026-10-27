@@ -80,7 +80,8 @@
     var p = rec && rec.portrait;
     var allowedLicenses = {
       'CC BY-SA 3.0': 'https://creativecommons.org/licenses/by-sa/3.0/',
-      'CC BY-SA 2.0': 'https://creativecommons.org/licenses/by-sa/2.0/'
+      'CC BY-SA 2.0': 'https://creativecommons.org/licenses/by-sa/2.0/',
+      'CC BY-SA 4.0': 'https://creativecommons.org/licenses/by-sa/4.0/'
     };
     if (!p || allowedLicenses[p.license] !== p.license_url ||
         !/^https:\/\/commons\.wikimedia\.org\/wiki\/Special:FilePath\/[A-Za-z0-9_%().-]+\.jpg\?width=480$/.test(p.url) ||
