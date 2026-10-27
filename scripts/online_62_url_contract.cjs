@@ -28,8 +28,9 @@ for(const host of ['localhost','127.0.0.1','preview-other.netlify.app']){
   assert.equal(evaluate(bm,host,'','WEBSOCKET_URL'),null);
 }
 for(const host of ['cracktotal.com','www.cracktotal.com']){
-  assert.equal(evaluate(duet,host,'?server=wss://example.org','wsUrl'),'',
-    'Static site cannot pretend to have a local WebSocket engine');
+  assert.equal(evaluate(duet,host,'?server=wss://example.org','wsUrl'),
+    'wss://cracktotal-arena-prod.onrender.com',
+    'Production host must use tested dedicated Arena, never query/staging/custom overrides');
   assert.equal(evaluate(qm,host,'?server=wss://example.org','CONFIG.WEBSOCKET_URL'),
     'wss://cracktotal-servidor.onrender.com');
   assert.equal(evaluate(bm,host,'?server=wss://example.org','WEBSOCKET_URL'),
