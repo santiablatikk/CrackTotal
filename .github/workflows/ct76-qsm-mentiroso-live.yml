@@ -1,7 +1,7 @@
 name: CT7.6 external QSM and Mentiroso multiplayer E2E
 on:
   push:
-    branches: [feature/ct76-qsm-mentiroso-production-e2e]
+    branches: [feature/ct76-qsm-mentiroso-production-e2e, feature/ct76-qsm-mentiroso-live-routing]
   workflow_dispatch:
 permissions:
   contents: read

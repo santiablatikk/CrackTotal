@@ -32,9 +32,11 @@ for(const host of ['cracktotal.com','www.cracktotal.com']){
     'wss://cracktotal-arena-prod.onrender.com',
     'Production host must use tested dedicated Arena, never query/staging/custom overrides');
   assert.equal(evaluate(qm,host,'?server=wss://example.org','CONFIG.WEBSOCKET_URL'),
-    'wss://cracktotal-servidor.onrender.com');
+    'wss://cracktotal-arena-prod.onrender.com',
+    'QSM production must use dedicated certified Arena, no query server override');
   assert.equal(evaluate(bm,host,'?server=wss://example.org','WEBSOCKET_URL'),
-    'wss://cracktotal-servidor.onrender.com');
+    'wss://cracktotal-arena-prod.onrender.com',
+    'Mentiroso production must use dedicated certified Arena, no query server override');
 }
 assert.equal(evaluate(duet,'localhost','?server=wss://localhost.example','wsUrl'),'wss://localhost.example');
 // Opening a socket must not enable matchmaking: require exact Arena handshake.
