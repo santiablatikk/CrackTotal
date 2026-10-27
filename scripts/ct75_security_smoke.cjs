@@ -21,12 +21,12 @@ helper.showError(attack);assert(!tbody.innerHTML.includes(attack),'Error message
 helper.showEmpty(attack);assert(!tbody.innerHTML.includes(attack),'Empty state must be escaped');
 const bank=JSON.parse(read('assets/data/career-challenge-verified.json'));
 const portraits=bank.records.filter(p=>p.portrait);
-assert.equal(bank.records.length,35);assert.equal(portraits.length,14);
+assert.equal(bank.records.length,35);assert.equal(portraits.length,17);
 const ids=new Set();
 for(const r of portraits){
  assert(!ids.has(r.id),'Duplicate portrait');ids.add(r.id);
  const p=r.portrait;
- const match=/^CC BY-SA (2\.0|3\.0)$/.exec(p.license);
+ const match=/^CC BY-SA (2\.0|3\.0|4\.0)$/.exec(p.license);
  assert(match,'Unreviewed license '+r.id);
  assert.equal(p.license_url,'https://creativecommons.org/licenses/by-sa/'+match[1]+'/');
  assert.match(p.url,/^https:\/\/commons\.wikimedia\.org\/wiki\/Special:FilePath\/[A-Za-z0-9_%().-]+\.jpg\?width=480$/);
@@ -48,4 +48,4 @@ for(const [club,item] of Object.entries(bank.club_crests)){
  assert.match(item.source_page,/^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);
  assert(item.usage.includes('sin afiliación'));
 }
-console.log('PASS CT7.5: 14 licensed portraits, 2 sourced crests, provenance, and no legacy ranking XSS');
+console.log('PASS CT7.5: 17 licensed portraits, 2 sourced crests, provenance, and no legacy ranking XSS');
