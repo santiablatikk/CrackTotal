@@ -570,7 +570,16 @@
       "source_urls": [
         "https://www.uefa.com/uefachampionsleague/news/0257-0e9a0f70e31c-e6f6d51eef60-1000--who-has-made-the-most-uefa-club-competition-appearances/"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Iker_Casillas.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Iker_Casillas.jpg",
+        "creator": "Антон Зайцев (Anton Zaitsev)",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Iker Casillas en FC Porto contra Lokomotiv de Moscú (24 de octubre de 2018), fotografía difundida por soccer.ru.",
+        "checked_at": "2026-10-27"
+      }
     },
     {
       "id": "moutinho",
@@ -843,7 +852,16 @@
       "source_urls": [
         "https://www.uefa.com/uefachampionsleague/news/025a-0e9f8a3d1e40-d534e8b4a897-1000--all-time-champions-league-most-appearances/"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Manuel_Neuer_2473.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Manuel_Neuer_2473.jpg",
+        "creator": "Harald Bischoff",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Manuel Neuer durante la celebración del triplete del Bayern de Múnich, 2 de junio de 2013.",
+        "checked_at": "2026-10-27"
+      }
     },
     {
       "id": "sergio-ramos",
@@ -868,7 +886,16 @@
       "source_urls": [
         "https://www.uefa.com/uefachampionsleague/news/025a-0e9f8a3d1e40-d534e8b4a897-1000--all-time-champions-league-most-appearances/"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/SRamo.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:SRamo.jpg",
+        "creator": "Майоров Владимир (Vladimir Mayorov)",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Sergio Ramos en una fotografía de 21 de febrero de 2012, vía soccer.ru.",
+        "checked_at": "2026-10-27"
+      }
     },
     {
       "id": "pique",
@@ -1036,7 +1063,16 @@
       "source_urls": [
         "https://www.uefa.com/uefachampionsleague/news/0266-1190ecaf35c9-0d3e4c5a230e-1000/"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Thierry_Henry_2007.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Thierry_Henry_2007.jpg",
+        "creator": "Christophe95",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Fotografía de Thierry Henry (2007), obra original de Christophe95.",
+        "checked_at": "2026-10-27"
+      }
     },
     {
       "id": "griezmann",
