@@ -37,7 +37,7 @@ class RankingHelper {
             tbody.innerHTML = `
                 <tr>
                     <td colspan="5" class="error-state" style="text-align: center; padding: 20px; color: #dc3545;">
-                        ⚠️ ${message}
+                        ⚠️ ${this.escapeText(message)}
                     </td>
                 </tr>
             `;
@@ -51,7 +51,7 @@ class RankingHelper {
             tbody.innerHTML = `
                 <tr>
                     <td colspan="5" class="no-data-state" style="text-align: center; padding: 20px; color: #6c757d;">
-                        🎮 ${message}
+                        🎮 ${this.escapeText(message)}
                     </td>
                 </tr>
             `;
@@ -119,27 +119,27 @@ class RankingHelper {
                     <tr class="ranking-row ${position <= 3 ? 'top-three' : ''}">
                         <td class="position">${positionDisplay}</td>
                         <td class="player-name">
-                            ${player.playerName || 'Anónimo'}
+                            ${this.escapeText(player.playerName || 'Anónimo')}
                             <div style="font-size: 0.7em; color: #888; margin-top: 2px;">
-                                ${player.victories}V - ${player.defeats}D - ${player.timeouts}T
+                                ${this.safeNonnegative(player.victories)}V - ${this.safeNonnegative(player.defeats)}D - ${this.safeNonnegative(player.timeouts)}T
                             </div>
                         </td>
                         <td class="total-score">
-                            <strong>${player.bestScore}</strong>
+                            <strong>${this.safeNonnegative(player.bestScore)}</strong>
                             <div style="font-size: 0.7em; color: #888;">
-                                Mejor: ${player.bestScore} | Prom: ${player.averageScore}
+                                Mejor: ${this.safeNonnegative(player.bestScore)} | Prom: ${this.safeNonnegative(player.averageScore)}
                             </div>
                         </td>
                         <td class="games-played">
-                            <strong>${player.totalGames}</strong>
+                            <strong>${this.safeNonnegative(player.totalGames)}</strong>
                             <div style="font-size: 0.7em; color: #888;">
-                                ${player.winRate}% victorias
+                                ${this.safeNonnegative(player.winRate,100)}% victorias
                             </div>
                         </td>
                         <td class="accuracy hide-mobile">
-                            ${player.bestAccuracy}%
+                            ${this.safeNonnegative(player.bestAccuracy,100)}%
                             <div style="font-size: 0.7em; color: #888;">
-                                Prom: ${player.averageAccuracy}%
+                                Prom: ${this.safeNonnegative(player.averageAccuracy,100)}%
                             </div>
                         </td>
                     </tr>
@@ -149,10 +149,10 @@ class RankingHelper {
                 return `
                     <tr class="ranking-row ${position <= 3 ? 'top-three' : ''}">
                         <td class="position">${positionDisplay}</td>
-                        <td class="player-name">${player.playerName || 'Anónimo'}</td>
-                        <td class="total-score">${(player.score || 0).toLocaleString()}</td>
-                        <td class="games-played">${player.totalQuestions || player.correctAnswers || 'N/A'}</td>
-                        <td class="accuracy hide-mobile">${player.accuracy || 0}%</td>
+                        <td class="player-name">${this.escapeText(player.playerName || 'Anónimo')}</td>
+                        <td class="total-score">${this.safeNonnegative(player.score).toLocaleString()}</td>
+                        <td class="games-played">${this.safeNonnegative(player.totalQuestions || player.correctAnswers)}</td>
+                        <td class="accuracy hide-mobile">${this.safeNonnegative(player.accuracy,100)}%</td>
                     </tr>
                 `;
             }
