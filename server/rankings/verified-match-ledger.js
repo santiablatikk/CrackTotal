@@ -20,6 +20,7 @@
  */
 const GAME_TYPES=new Set(['pasala-duel','quiensabemas','mentiroso']);
 const MATCH_ID=/^[a-zA-Z0-9_-]{16,96}$/;
+const ROOM_ID=/^[a-zA-Z0-9_-]{4,96}$/;
 const SERVER_PLAYER_ID=/^[a-zA-Z0-9_-]{8,128}$/;
 const FIREBASE_UID=/^[a-zA-Z0-9:_-]{1,128}$/;
 function reject(message){throw new TypeError('Verified match rejected: '+message);}
@@ -35,7 +36,7 @@ function validScore(score) {
 function validateFinishedMatch(match,requestedMatchId) {
  if(!match||typeof match!=='object'||match.matchId!==requestedMatchId||
     match.finalised!==true||!GAME_TYPES.has(match.gameType))reject('match not finalised or unknown game');
- if(typeof match.roomId!=='string'||!MATCH_ID.test(match.roomId))reject('invalid room reference');
+ if(typeof match.roomId!=='string'||!ROOM_ID.test(match.roomId))reject('invalid room reference');
  if(!Array.isArray(match.players)||match.players.length!==2)reject('exactly two competitors required');
  const playerIds=new Set();
  for(const player of match.players){
