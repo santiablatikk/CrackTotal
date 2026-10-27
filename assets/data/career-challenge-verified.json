@@ -828,7 +828,16 @@
       "source_urls": [
         "https://www.uefa.com/uefachampionsleague/news/0266-118ae97c2773-d8735a218d6b-1000--busquets-ramos-pique-who-are-spain-s-top-uefa-champions-le/"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Ra%C3%BAl_Gonz%C3%A1lez_footballer.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Ra%C3%BAl_Gonz%C3%A1lez_footballer.jpg",
+        "creator": "Infosord-catalunya",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Raúl González en la inauguración de una sede del Comité Olímpico Español (2007), foto de Infosord-catalunya, recorte de FMSky.",
+        "checked_at": "2026-10-27"
+      }
     },
     {
       "id": "neuer",
@@ -919,7 +928,16 @@
       "source_urls": [
         "https://www.uefa.com/uefachampionsleague/news/0266-118ae97c2773-d8735a218d6b-1000--busquets-ramos-pique-who-are-spain-s-top-uefa-champions-le/"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gerard_Piqu%C3%A9.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Gerard_Piqu%C3%A9.jpg",
+        "creator": "Анна Нэсси / soccer.ru",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Gerard Piqué durante Portugal-España, Mundial masculino 2018. Fotografía de Анна Нэсси / soccer.ru.",
+        "checked_at": "2026-10-27"
+      }
     },
     {
       "id": "seedorf",
@@ -971,7 +989,16 @@
       "source_urls": [
         "https://www.uefa.com/uefachampionsleague/news/025a-0e9f8a3d1e40-d534e8b4a897-1000--all-time-champions-league-most-appearances/"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gianluigi_buffon.JPG?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Gianluigi_buffon.JPG",
+        "creator": "Roberto Vicario",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Gianluigi Buffon en una fotografía de Roberto Vicario (3 de septiembre de 2012), licencia VRT Wikimedia verificada.",
+        "checked_at": "2026-10-27"
+      }
     },
     {
       "id": "ibrahimovic",
@@ -1097,7 +1124,16 @@
       "source_urls": [
         "https://www.uefa.com/uefachampionsleague/news/0266-1190ecaf35c9-0d3e4c5a230e-1000/"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Antoine_Griezmann_%28cropped%29.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Antoine_Griezmann_%28cropped%29.jpg",
+        "creator": "(:Julien:)",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Antoine Griezmann con Francia sub-21 en un partido ante Kazajistán, 7 de octubre de 2011. Fotografía de (:Julien:).",
+        "checked_at": "2026-10-27"
+      }
     },
     {
       "id": "salah",
@@ -1138,7 +1174,7 @@
     }
   ],
   "visual_asset_policy": "Solo imágenes reales con permiso verificable y atribución. Retratos ocultos durante la pregunta; resto de jugadores con fallback textual.",
-  "media_revision": "2026-10-27-ct75-licensed-portraits-v1",
+  "media_revision": "2026-10-27-ct78-licensed-portraits-v2",
   "media_policy": "Portraits are individually credited Creative Commons photographs from Wikimedia Commons. Player visibility strictly follows the result phase. Other players have text-only fallback. Club emblems require trademark review.",
   "club_crests": {
     "Boca Juniors": {
