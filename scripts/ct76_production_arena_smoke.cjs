@@ -31,9 +31,11 @@ function wsHandshake(url,origin){
    const opts={handshakeTimeout:4000};
    if(origin!==undefined)opts.origin=origin;
    const ws=new WebSocket(url,opts);
+   const messages=[];
+   ws.on('message',raw=>{try{messages.push(JSON.parse(String(raw)))}catch{}});
    let done=false;
    const settle=(result,error)=>{if(done)return;done=true;ws.on('error',()=>{});if(error)reject(error);else resolve(result);};
-   ws.once('open',()=>settle({allowed:true,ws}));
+   ws.once('open',()=>settle({allowed:true,ws,messages}));
    ws.once('unexpected-response',(_req,res)=>{res.resume();settle({allowed:false,status:res.statusCode});});
    ws.once('error',e=>settle(null,e));
  });
@@ -66,12 +68,13 @@ function wsHandshake(url,origin){
       const result=await wsHandshake('ws://127.0.0.1:'+port,origin);
       assert(result.allowed,origin+' should connect');
       sockets.push(result.ws);
-      const message=await new Promise((resolve,reject)=>{
-        const timeout=setTimeout(()=>reject(Error('No arena:hello')),3000);
-        result.ws.on('message',raw=>{const data=JSON.parse(String(raw));
-          if(data.type==='arena:hello'){clearTimeout(timeout);resolve(data);}
-        });
-      });
+      let message;
+      for(let attempt=0;attempt<120;attempt++){
+        message=result.messages.find(data=>data.type==='arena:hello');
+        if(message)break;
+        await sleep(25);
+      }
+      assert(message,'No arena:hello');
       assert.equal(message.payload.protocol,'cracktotal-arena-5.2');
       assert.equal(message.payload.features.pasalaDuel,true);
    }
