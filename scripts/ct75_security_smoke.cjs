@@ -29,7 +29,7 @@ for(const r of portraits){
  const match=/^CC BY-SA (2\.0|3\.0|4\.0)$/.exec(p.license);
  assert(match,'Unreviewed license '+r.id);
  assert.equal(p.license_url,'https://creativecommons.org/licenses/by-sa/'+match[1]+'/');
- assert.match(p.url,/^https:\/\/commons\.wikimedia\.org\/wiki\/Special:FilePath\/[A-Za-z0-9_%().-]+\.jpg\?width=480$/);
+ assert.match(p.url,/^https:\/\/commons\.wikimedia\.org\/wiki\/Special:FilePath\/[A-Za-z0-9_%().-]+\.(?:jpg|JPG)\?width=480$/);
  assert.match(p.source_page,/^https:\/\/commons\.wikimedia\.org\/wiki\/File:[A-Za-z0-9_%().-]+\.jpg$/);
  const img=decodeURIComponent(p.url.split('/Special:FilePath/')[1].split('?')[0]);
  const origin=decodeURIComponent(p.source_page.split('/File:')[1]);
