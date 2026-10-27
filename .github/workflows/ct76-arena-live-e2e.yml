@@ -21,5 +21,5 @@ jobs:
       - run: npm ci
       - name: Verify exact deployed Arena and two external competitors
         env:
-          CT_EXPECTED_ARENA_SHA: c27f06ac3898fc1332f64844406d43a253450f0e
+          CT_EXPECTED_ARENA_SHA: eae745e276b38d32f7af5bf0cb750291c362369e
         run: node scripts/ct76_prod_remote_ws.cjs
