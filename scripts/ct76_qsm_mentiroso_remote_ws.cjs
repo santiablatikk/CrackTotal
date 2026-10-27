@@ -41,6 +41,10 @@ async function connect(label){
  });
  const hello=await wait(c,'arena:hello',()=>true,0,5000);
  assert.equal(hello.protocol,'cracktotal-arena-5.2');
+ assert.equal(hello.features.qsmResume,true);
+ assert.equal(hello.features.mentirosoObjective,true);
+ assert.equal(hello.contentVersions.mentiroso,catalog.version,
+   'Frontend must never connect to a different objective-answer bank version');
  return c;
 }
 function send(c,type,payload={}){
