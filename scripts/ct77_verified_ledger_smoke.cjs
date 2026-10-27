@@ -69,7 +69,7 @@ async function main(){
  assert.equal(entry('mentiroso','firebaseUidA').gamesPlayed,1);
  assert.equal(entry('global','firebaseUidA').gamesPlayed,2);
  assert.equal(entry('global','firebaseUidA').victories,1);
- assert.equal(data.size,10);
+ assert.equal(data.size,8,'Existing global entries updated; only new Mentiroso entries and match audit created');
  const sizeBefore=data.size;
  completed={...completed,matchId:'match_1234567890abcdef1234567892'};
  await assert.rejects(build(async()=>null).commitCompletedMatch(completed.matchId),/missing Firebase Admin verified binding/);
