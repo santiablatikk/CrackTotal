@@ -58,10 +58,13 @@ function createCompetitiveIdentity({verifyIdToken,now=Date.now}={}) {
     // to the exact same user ID (including revoked-session checks).
     return bind(roomId,serverPlayerId,token);
   }
+  function forgetParticipant(roomId,serverPlayerId) {
+    rooms.delete(liveKey(roomId,serverPlayerId));
+  }
   function forgetRoom(roomId){
     if(typeof roomId!=='string'||!ROOM.test(roomId))return;
     for(const key of rooms.keys())if(key.startsWith(roomId+':'))rooms.delete(key);
   }
-  return Object.freeze({bind,revalidate,resolveAuthenticatedUid,forgetRoom});
+  return Object.freeze({bind,revalidate,resolveAuthenticatedUid,forgetParticipant,forgetRoom});
 }
 module.exports={createCompetitiveIdentity};
