@@ -3,7 +3,7 @@
  * Offline play is limited to four editorial SOLO modes; competitive play needs network.
  */
 'use strict';
-const VERSION='ct78-20261027-offline-5';
+const VERSION='ct78-20261028-offline-6';
 const PREFIX='ct7-offline-';
 const CACHE=PREFIX+VERSION;
 const LEGACY=/^crack-total(?:-static|-dynamic|-images|-api)?-v/i;

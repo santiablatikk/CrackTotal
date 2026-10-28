@@ -451,7 +451,16 @@
       "source_urls": [
         "https://www.fifa.com/es/articles/marcelo-retirada-real-madrid-fluminense"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Marcelo_Vieira.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Marcelo_Vieira.jpg",
+        "creator": "Vladimir Mayorov (Майоров Владимир)",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Marcelo Vieira, fotografía tomada el 20 de febrero de 2012 por Vladimir Mayorov, vía soccer.ru.",
+        "checked_at": "2026-10-28"
+      }
     },
     {
       "id": "zidane",
@@ -546,7 +555,16 @@
       "source_urls": [
         "https://www.uefa.com/news/0246-0e98e228fe16-d5ff2a10c737-1000--europe-s-top-portuguese-players/"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Luis_Figo.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Luis_Figo.jpg",
+        "creator": "Arie R.",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Luís Figo con la selección de Portugal, 21 de junio de 2006. Fotografía de Arie R.",
+        "checked_at": "2026-10-28"
+      }
     },
     {
       "id": "casillas",
@@ -1064,7 +1082,16 @@
       "source_urls": [
         "https://www.uefa.com/uefachampionsleague/news/0266-118ae97c2773-d8735a218d6b-1000--busquets-ramos-pique-who-are-spain-s-top-uefa-champions-le/"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Xabi_Alonso_Training_2016-11_FC_Bayern_Muenchen-3.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Xabi_Alonso_Training_2016-11_FC_Bayern_Muenchen-3.jpg",
+        "creator": "Rufus46",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Xabi Alonso en un entrenamiento del Bayern de Múnich, 7 de noviembre de 2016. Fotografía de Rufus46.",
+        "checked_at": "2026-10-28"
+      }
     },
     {
       "id": "henry",
@@ -1174,7 +1201,7 @@
     }
   ],
   "visual_asset_policy": "Solo imágenes reales con permiso verificable y atribución. Retratos ocultos durante la pregunta; resto de jugadores con fallback textual.",
-  "media_revision": "2026-10-27-ct78-licensed-portraits-v2",
+  "media_revision": "2026-10-28-ct78-28-licensed-portraits",
   "media_policy": "Portraits are individually credited Creative Commons photographs from Wikimedia Commons. Player visibility strictly follows the result phase. Other players have text-only fallback. Club emblems require trademark review.",
   "club_crests": {
     "Boca Juniors": {
