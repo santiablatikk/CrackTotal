@@ -1,0 +1,29 @@
+name: CT7.9 production Arena independent-client regression
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ct79-production-arena-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  real-production-multiplayer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Independent clients, real public Arena WSS and server-validated Pasala
+        env:
+          CT_EXPECTED_ARENA_SHA: 9a2a31a6823aafc4501420c48af6eb2c4c72f6aa
+        run: node scripts/ct76_prod_remote_ws.cjs
+      - name: Two-client QSM and Mentiroso production WSS, server scores and reconnection
+        env:
+          CT_EXPECTED_ARENA_SHA: 9a2a31a6823aafc4501420c48af6eb2c4c72f6aa
+        run: node scripts/ct76_qsm_mentiroso_remote_ws.cjs

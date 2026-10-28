@@ -21,7 +21,7 @@ helper.showError(attack);assert(!tbody.innerHTML.includes(attack),'Error message
 helper.showEmpty(attack);assert(!tbody.innerHTML.includes(attack),'Empty state must be escaped');
 const bank=JSON.parse(read('assets/data/career-challenge-verified.json'));
 const portraits=bank.records.filter(p=>p.portrait);
-assert.equal(bank.records.length,35);assert.equal(portraits.length,28);
+assert.equal(bank.records.length,35);assert.equal(portraits.length,35);
 const ids=new Set();
 for(const r of portraits){
  assert(!ids.has(r.id),'Duplicate portrait');ids.add(r.id);
@@ -48,4 +48,4 @@ for(const [club,item] of Object.entries(bank.club_crests)){
  assert.match(item.source_page,/^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);
  assert(item.usage.includes('sin afiliación'));
 }
-console.log('PASS CT7.5: 28 licensed portraits, 2 sourced crests, provenance, and no legacy ranking XSS');
+console.log('PASS CT7.9: 35 licensed portraits, 2 sourced crests, provenance, and no legacy ranking XSS');
