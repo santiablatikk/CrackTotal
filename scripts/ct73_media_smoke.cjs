@@ -6,7 +6,7 @@ const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
 const bank=JSON.parse(read('assets/data/career-challenge-verified.json'));
 const engine=read('assets/js/ct7-games.js');
 const featured=bank.records.filter(p=>Boolean(p.portrait));
-assert.equal(featured.length,28,'Twenty-eight individually reviewed photos must map to stable player IDs');
+assert.equal(featured.length,35,'Thirty-five individually reviewed photos must map to stable player IDs');
 for(const rec of featured){
   const p=rec.portrait;
   assert(p&&p.creator&&p.caption&&['2026-10-26','2026-10-27','2026-10-28'].includes(p.checked_at));
@@ -15,15 +15,16 @@ for(const rec of featured){
   assert.match(p.source_page,/^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);
   assert.match(p.url,/^https:\/\/commons\.wikimedia\.org\/wiki\/Special:FilePath\//);
 }
-assert.equal(bank.records.filter(p=>p.portrait).length,28,'Only reviewed records may have a photo');
+assert.equal(bank.records.filter(p=>p.portrait).length,35,'Only reviewed records may have a photo');
 for(const page of ['quien-soy.html','adivina-carrera.html']){
   assert.equal((read(page).match(/id="answerPortrait"/g)||[]).length,1);
   assert.match(read(page),/id="answerPortrait"[^>]*hidden/);
 }
 assert.match(read('assets/css/ct7-games.css'),/\.ct7-player-portrait/);
 assert(!/\.innerHTML\s*=|leaderboard_scopes|window\.db/.test(engine));
-const fallback=bank.records.find(p=>!p.portrait);
-assert(fallback,'At least one player must exercise the no-photo fallback');
+// Explicit synthetic unlicensed fixture: production bank now has full legal photo coverage.
+const fallback={...bank.records[0],id:'fixture-no-photo',name:'Jugador de prueba sin imagen'};
+delete fallback.portrait;
 class Store{
   constructor(){this.data=new Map();}
   getItem(id){return this.data.get(id)||null;}
@@ -85,15 +86,17 @@ async function verifyMode(mode,group){
   assert.deepEqual(seen.sort(),group.filter(p=>p.portrait).map(p=>p.id).sort());
 }
 (async()=>{
-  const noPhoto=bank.records.filter(p=>!p.portrait);
   const groups=[];
-  for(let i=0;i<featured.length;i+=5){
-    const photos=featured.slice(i,i+5);
-    groups.push(photos.concat(noPhoto.slice(0,6-photos.length)));
+  for(let i=0;i<featured.length;i+=6){
+    const photos=featured.slice(i,i+6);
+    if(photos.length<6)photos.push(fallback);
+    groups.push(photos);
   }
+  // The no-image behavior remains tested even with complete licensed coverage.
+  groups.push(featured.slice(0,5).concat(fallback));
   for(const group of groups){
     await verifyMode('identity',group);
     await verifyMode('career',group);
   }
-  console.log('PASS CT7.5: twenty-eight licensed portraits, attribution, no spoiler, missing/broken-image fallbacks');
+  console.log('PASS CT7.5: thirty-five licensed portraits, attribution, no spoiler, missing/broken-image fallbacks');
 })().catch(e=>{console.error(e);process.exitCode=1});
