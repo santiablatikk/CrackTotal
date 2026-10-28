@@ -34,7 +34,7 @@ for(const r of portraits){
  const img=decodeURIComponent(p.url.split('/Special:FilePath/')[1].split('?')[0]);
  const origin=decodeURIComponent(p.source_page.split('/File:')[1]);
  assert.equal(img,origin,'Incorrect source credit '+r.id);
- assert(p.creator&&p.caption&&/^2026-10-2[67]$/.test(p.checked_at),'Missing image attribution '+r.id);
+ assert(p.creator&&p.caption&&/^2026-10-2[678]$/.test(p.checked_at),'Missing image attribution '+r.id);
 }
 const game=read('assets/js/ct7-games.js');
 assert.match(game,/renderAnswerPortrait\(null\)/);
