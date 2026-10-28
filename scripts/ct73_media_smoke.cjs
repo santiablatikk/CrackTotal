@@ -9,7 +9,7 @@ const featured=bank.records.filter(p=>Boolean(p.portrait));
 assert.equal(featured.length,28,'Twenty-eight individually reviewed photos must map to stable player IDs');
 for(const rec of featured){
   const p=rec.portrait;
-  assert(p&&p.creator&&p.caption&&['2026-10-26','2026-10-27'].includes(p.checked_at));
+  assert(p&&p.creator&&p.caption&&['2026-10-26','2026-10-27','2026-10-28'].includes(p.checked_at));
   assert(['CC BY-SA 3.0','CC BY-SA 2.0','CC BY-SA 4.0'].includes(p.license));
   assert.equal(p.license_url,'https://creativecommons.org/licenses/by-sa/'+(p.license.slice(-3))+'/');
   assert.match(p.source_page,/^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);
