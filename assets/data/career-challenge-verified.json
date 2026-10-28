@@ -624,7 +624,16 @@
       "source_urls": [
         "https://www.uefa.com/news/0246-0e98e228fe16-d5ff2a10c737-1000--europe-s-top-portuguese-players/"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jo%C3%A3o_Moutinho_2018.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Jo%C3%A3o_Moutinho_2018.jpg",
+        "creator": "Anna Nessi",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "João Moutinho durante el Portugal–España del Mundial 2018; fotografía de Anna Nessi / soccer.ru.",
+        "checked_at": "2026-10-28"
+      }
     },
     {
       "id": "quaresma",
@@ -651,7 +660,16 @@
       "source_urls": [
         "https://www.uefa.com/news/0246-0e98e228fe16-d5ff2a10c737-1000--europe-s-top-portuguese-players/"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Ricardo_Quaresma.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Ricardo_Quaresma.jpg",
+        "creator": "Anna Nessi",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Ricardo Quaresma durante Uruguay–Portugal, Mundial 2018; fotografía de Anna Nessi / soccer.ru.",
+        "checked_at": "2026-10-28"
+      }
     },
     {
       "id": "pepe",
@@ -676,7 +694,16 @@
       "source_urls": [
         "https://www.uefa.com/news/0246-0e98e228fe16-d5ff2a10c737-1000--europe-s-top-portuguese-players/"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pepe_-_K%C3%A9pler_Laveran_Lima_Ferreira.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Pepe_-_K%C3%A9pler_Laveran_Lima_Ferreira.jpg",
+        "creator": "Eskil Malmberg",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Pepe en Funchal, diciembre de 2013; fotografía de Eskil Malmberg.",
+        "checked_at": "2026-10-28"
+      }
     },
     {
       "id": "rui-costa",
@@ -700,7 +727,16 @@
       "source_urls": [
         "https://www.uefa.com/news/0246-0e98e228fe16-d5ff2a10c737-1000--europe-s-top-portuguese-players/"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rui_Costa.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Rui_Costa.jpg",
+        "creator": "José Goulão",
+        "license": "CC BY-SA 2.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+        "caption": "Rui Costa después de marcar para Benfica ante Naval, septiembre de 2007; fotografía de José Goulão.",
+        "checked_at": "2026-10-28"
+      }
     },
     {
       "id": "reina",
@@ -728,7 +764,16 @@
       "source_urls": [
         "https://www.uefa.com/uefachampionsleague/news/0257-0e9a0f70e31c-e6f6d51eef60-1000--who-has-made-the-most-uefa-club-competition-appearances/"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pepe_Reina_2020.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Pepe_Reina_2020.jpg",
+        "creator": "Kirill Venediktov",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Pepe Reina con Lazio en un partido ante Zenit, noviembre de 2020; fotografía de Kirill Venediktov / soccer.ru.",
+        "checked_at": "2026-10-28"
+      }
     },
     {
       "id": "simao",
@@ -755,7 +800,16 @@
       "source_urls": [
         "https://www.uefa.com/news/0246-0e98e228fe16-d5ff2a10c737-1000--europe-s-top-portuguese-players/"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/SimaoSabrosaBJK.JPG?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:SimaoSabrosaBJK.JPG",
+        "creator": "Ultraslansi",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "caption": "Simão Sabrosa con Beşiktaş en febrero de 2012; fotografía de Ultraslansi.",
+        "checked_at": "2026-10-28"
+      }
     },
     {
       "id": "benzema",
@@ -981,7 +1035,16 @@
       "source_urls": [
         "https://www.uefa.com/uefachampionsleague/news/0257-0e9a0f70e31c-e6f6d51eef60-1000--most-uefa-club-appearances/"
       ],
-      "verified_at": "2026-10-24"
+      "verified_at": "2026-10-24",
+      "portrait": {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Clarence_Seedorf.jpg?width=480",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Clarence_Seedorf.jpg",
+        "creator": "Simone S.",
+        "license": "CC BY-SA 2.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+        "caption": "Clarence Seedorf con AC Milan, agosto de 2008; fotografía de Simone S.",
+        "checked_at": "2026-10-28"
+      }
     },
     {
       "id": "buffon",
