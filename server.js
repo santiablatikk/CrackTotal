@@ -6,6 +6,7 @@ const path = require('path'); // Added for constructing file paths
 const { createPasalaDuelService } = require('./server/pasala-duel');
 const objectiveMentiroso = require('./server/multiplayer/objective-mentiroso');
 const { secureCode, safePlayerName } = require('./server/multiplayer/core');
+const { createArenaAdmission } = require('./server/rankings/arena-admission');
 // Dedicated Arena runtime, separate from the historical QSM/Mentiroso host.
 // This flag is NOT an authentication mechanism; competition publication stays disabled.
 // Staging integration tests spawn child servers; staging must take precedence
@@ -463,6 +464,45 @@ const rooms = new Map(); // Map<string, Room>
 // Independent duel service: does not alter QSM or Mentiroso room semantics.
 const pasalaDuels = createPasalaDuelService();
 const LEGACY_SESSION_RECOVERY = CT_ARENA_RUNTIME;
+// This is deliberately OFF for the existing public Arena until the Admin SDK,
+// Render secret credentials and two-account admission have been provisioned.
+// Never silently fall back to trusting browser identities or session names.
+const COMPETITIVE_AUTH_ENABLED = process.env.CT_COMPETITIVE_AUTH_ENABLED === 'true';
+if(COMPETITIVE_AUTH_ENABLED && !CT_ARENA_RUNTIME)
+    throw new Error('Competitive authentication requires the isolated Arena server');
+function privateCompetitorFromSocket(ws) {
+    // Derive participation solely from server-owned maps. Spectators do not
+    // appear in players, and client-supplied room/player fields are ignored.
+    if (!clients.has(ws)) return null;
+    for (const room of pasalaDuels.rooms.values()) {
+        for (const player of room.players) {
+            if (player && player.ws === ws) {
+                return { roomId: room.id, serverPlayerId: player.id };
+            }
+        }
+    }
+    const c = clients.get(ws);
+    const room = c?.roomId && rooms.get(c.roomId);
+    const member = room && roomPlayers(room).find(p => p.id === c.id && p.ws === ws);
+    return member ? { roomId: room.roomId, serverPlayerId: member.id } : null;
+}
+let arenaAdmission = null;
+if (COMPETITIVE_AUTH_ENABLED) {
+    // Admin SDK is not in the current runtime yet. Setting the flag without
+    // installing it and configuring Render ADC must FAIL STARTUP, not weaken
+    // verification. No service account JSON belongs in this repository.
+    const admin = require('firebase-admin');
+    if (!admin.apps.length) {
+        admin.initializeApp({
+            credential: admin.credential.applicationDefault(),
+            projectId: 'cracktotal-cd2e7'
+        });
+    }
+    arenaAdmission = createArenaAdmission({
+        verifyIdToken: (token, revoked) => admin.auth().verifyIdToken(token, revoked),
+        resolveCompetitor: privateCompetitorFromSocket
+    });
+}
 const ROOM_GRACE_MS = 45000;
 const QSM_QUESTION_MS = process.env.CT_STAGING === 'true' && process.env.CT_QSM_TEST_QUESTION_MS
     ? Math.max(600, Math.min(20000, Number(process.env.CT_QSM_TEST_QUESTION_MS) || 20000)) : 20000;
@@ -654,6 +694,27 @@ function handleClientMessage(ws, message) {
 
     // // console.log(`Handling message type: ${message.type} from player ${clientInfo.id}`); // ELIMINAR ESTA LÍNEA
 
+    // Bearer JWT accepted ONLY through this dedicated message and checked by
+    // Firebase Admin against the actual server-side room participant.
+    // No score is written by this handler, even on successful admission.
+    if (message.type === 'arena:authenticate') {
+        if (!arenaAdmission) {
+            safeSend(ws, {type:'arena:authStatus',payload:{
+                authenticated:false,competitive:false,reason:'rankings-not-enabled'
+            }});
+            return;
+        }
+        void arenaAdmission.authenticate(ws,message.payload).then(status => {
+            if(ws.readyState === WebSocket.OPEN)
+                safeSend(ws,{type:'arena:authStatus',payload:status});
+        }).catch(() => {
+            if(ws.readyState === WebSocket.OPEN)
+                safeSend(ws,{type:'arena:authStatus',payload:{
+                    authenticated:false,competitive:false,reason:'authentication-unavailable'
+                }});
+        });
+        return;
+    }
     // Pasala Che duel messages have an isolated protocol and authoritative state.
     if (pasalaDuels.handle(ws, message, clientInfo)) return;
     if (pasalaDuels.hasPeer(ws)) {
