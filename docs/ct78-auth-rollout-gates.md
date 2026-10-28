@@ -15,6 +15,33 @@ single-account play, keeps UID bound across reconnections, and treats expired
 tokens as invalid. The bearer token is never written to stored match/room
 records. `forgetRoom` removes private state after room expiry.
 
+## 7.8 incremental admission work
+
+- `server/rankings/arena-admission.js` now validates bearer ID tokens for a
+  **server-resolved existing room competitor** only, not a browser-supplied
+  room/seat. Spectators cannot authenticate as a player.
+- In `server.js`, `arena:authenticate` returns a safe
+  `arena:authStatus`. It never publishes scores, echoes a JWT or discloses UID.
+  Default public status is `rankings-not-enabled`.
+- The gate remains **strictly opt-in** via
+  `CT_COMPETITIVE_AUTH_ENABLED=true` on an isolated Arena runtime.
+  When opted in, `firebase-admin` is REQUIRED at startup and must obtain
+  server-side credentials via Render ADC; missing SDK/credentials cannot be
+  replaced by browser Firebase or an unsigned JWT.
+- **No production operator should enable that flag yet:** this repository's
+  package/lockfile does not install `firebase-admin`, and there is not yet
+  a verified Render service-account configuration, authenticated login UI,
+  real match-scoped IDs or finalization hooks.
+- In the future, a real registered user must join/resume a casual match, then
+  send `arena:authenticate` with `{idToken: await user.getIdToken()}`.
+  A verified, non-anonymous token permits the identity gate to bind that
+  *specific socket's actual competitor seat*. Both seats must bind to
+  distinct verified UIDs for a match to be eligible.
+- `arena-admission` rejects stale verification completing after a socket
+  changes rooms, rejects duplicate UID rivals, masks Firebase errors and
+  never retains bearer tokens in room data. Passing this test is NOT
+  proof of the future Firebase Admin integration or live ranking writes.
+
 ## Production prerequisites — blockers
 
 1. Add a server-only Firebase Admin SDK dependency and its lockfile, enable an
