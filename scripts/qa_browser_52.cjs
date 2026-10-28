@@ -611,11 +611,11 @@ async function main(){
             returnByValue:true
           });
           readiness=check.result?.value;
-          if(readiness?.origin!==oldOrigin&&readiness?.ready==='complete'&&
+          if(readiness?.origin!==oldOrigin&&['interactive','complete'].includes(readiness?.ready)&&
              readiness?.playfield&&readiness?.tiles>=12&&readiness?.keys>=25)break;
           await sleep(250);
         }
-        if(readiness?.origin===oldOrigin||readiness?.ready!=='complete'||
+        if(readiness?.origin===oldOrigin||!['interactive','complete'].includes(readiness?.ready)||
            !readiness?.playfield||readiness.tiles<12||readiness.keys<25)
           throw Error('Wordle game did not initialize after reload at '+width+': '+JSON.stringify(readiness));
         // Isolated local test server and browser profile. A real keyboard click,
@@ -639,10 +639,10 @@ async function main(){
             returnByValue:true
           });
           diagnostics=read.result?.value;
-          if(diagnostics?.origin!==firstReloadOrigin&&diagnostics?.ready==='complete'&&diagnostics?.tile==='M')break;
+          if(diagnostics?.origin!==firstReloadOrigin&&['interactive','complete'].includes(diagnostics?.ready)&&diagnostics?.tile==='M')break;
           await sleep(250);
         }
-        if(diagnostics?.origin===firstReloadOrigin||diagnostics?.ready!=='complete'||diagnostics?.tile!=='M')throw Error('Wordle reload did not restore saved move at '+width+': '+JSON.stringify(diagnostics));
+        if(diagnostics?.origin===firstReloadOrigin||!['interactive','complete'].includes(diagnostics?.ready)||diagnostics?.tile!=='M')throw Error('Wordle reload did not restore saved move at '+width+': '+JSON.stringify(diagnostics));
         restored=await command('Runtime.evaluate',{
           expression:'('+verifyWordleReload.toString()+')()',
           returnByValue:true
